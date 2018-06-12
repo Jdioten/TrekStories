@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrekStories", "TrekStories\TrekStories.csproj", "{5E6C1909-1016-446F-BDEF-12AA5D5DBA58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrekStories.Tests", "TrekStories.Tests\TrekStories.Tests.csproj", "{C6DF44C3-8BCA-461F-B374-6CC81FE8910A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E6C1909-1016-446F-BDEF-12AA5D5DBA58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E6C1909-1016-446F-BDEF-12AA5D5DBA58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E6C1909-1016-446F-BDEF-12AA5D5DBA58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E6C1909-1016-446F-BDEF-12AA5D5DBA58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6DF44C3-8BCA-461F-B374-6CC81FE8910A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6DF44C3-8BCA-461F-B374-6CC81FE8910A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6DF44C3-8BCA-461F-B374-6CC81FE8910A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6DF44C3-8BCA-461F-B374-6CC81FE8910A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8EBB5BE2-A0EC-48F1-A3C9-B71727581A1B}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,8 @@
+﻿/* --- Footer Styling --- */
+
+footer ul {
+    list-style-type: none;
+}
+footer ul li {
+    display: inline;
+}
