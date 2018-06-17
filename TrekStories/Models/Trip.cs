@@ -37,6 +37,7 @@ namespace TrekStories.Models
         [Required(ErrorMessage = "Please indicate the trip start date.")]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
+
         public int Duration { get; set; }
 
         [StringLength(500, ErrorMessage = "Notes are limited to 500 characters maximum.")]
@@ -47,10 +48,8 @@ namespace TrekStories.Models
         [DataType(DataType.Currency)]
         public double TotalCost { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter a positive distance.")]
         public int TotalWalkingDistance { get; set; }
 
-        [Required]
         public string TripOwner { get; set; }
 
         public virtual ICollection<Step> Steps { get; set; }

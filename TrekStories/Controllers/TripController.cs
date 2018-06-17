@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using TrekStories.DAL;
 using TrekStories.Models;
@@ -47,15 +44,22 @@ namespace TrekStories.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TripId,Title,Country,TripCategory,StartDate,Duration,Notes,TotalCost,TotalWalkingDistance,TripOwner")] Trip trip)
+        public ActionResult Create([Bind(Include = "Title,Country,TripCategory,StartDate,Notes")] Trip trip)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Trips.Add(trip);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Trips.Add(trip);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
+            catch (DataException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
+            }
             return View(trip);
         }
 
@@ -77,44 +81,71 @@ namespace TrekStories.Controllers
         // POST: Trip/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "TripId,Title,Country,TripCategory,StartDate,Duration,Notes,TotalCost,TotalWalkingDistance,TripOwner")] Trip trip)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(trip).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(trip);
-        }
-
-        // GET: Trip/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult EditPost(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Trip trip = db.Trips.Find(id);
-            if (trip == null)
+            var tripToUpdate = db.Trips.Find(id);
+            if (TryUpdateModel(tripToUpdate, "",
+               new string[] { "Title", "Country", "TripCategory", "StartDate", "Notes" }))
             {
-                return HttpNotFound();
+                try
+                {
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                catch (DataException /* dex */)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
+                }
             }
-            return View(trip);
+            return View(tripToUpdate);
         }
 
-        // POST: Trip/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Trip trip = db.Trips.Find(id);
-            db.Trips.Remove(trip);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        // GET: Trip/Delete/5
+        //public ActionResult Delete(int? id, bool? saveChangesError = false)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    if (saveChangesError.GetValueOrDefault())
+        //    {
+        //        ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists, contact the system administrator.";
+        //    }
+        //    Trip trip = db.Trips.Find(id);
+        //    if (trip == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(trip);
+        //}
+
+        //// POST: Trip/Delete/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Delete(int id)
+        //{
+
+        //    try
+        //    {
+        //        Trip tripToDelete = new Trip() { TripId = id };
+        //        db.Entry(tripToDelete).State = EntityState.Deleted;
+        //        db.SaveChanges();
+        //    }
+        //    catch (DataException/* dex */)
+        //    {
+        //        //Log the error (uncomment dex variable name and add a line here to write a log.
+        //        return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+        //    }
+        //    return RedirectToAction("Index");
+        //}
 
         protected override void Dispose(bool disposing)
         {

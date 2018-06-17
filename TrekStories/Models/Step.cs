@@ -21,6 +21,7 @@ namespace TrekStories.Models
         [Display(Name = "Walking Time")]
         public int WalkingTime { get; set; }
         [Display(Name = "Walking Distance")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter a positive distance.")]
         public int WalkingDistance { get; set; }
         public int Ascent { get; set; }
 
