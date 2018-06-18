@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using Microsoft.AspNet.Identity;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -40,14 +41,17 @@ namespace TrekStories.Controllers
         }
 
         // POST: Trip/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Title,Country,TripCategory,StartDate,Notes")] Trip trip)
         {
             try
             {
+                trip.Duration = 0;
+                trip.TotalCost = 0;
+                trip.TotalWalkingDistance = 0;
+                trip.TripOwner = "User1";   //User.Identity.GetUserId();
+
                 if (ModelState.IsValid)
                 {
                     db.Trips.Add(trip);
