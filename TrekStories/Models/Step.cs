@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -8,6 +9,7 @@ namespace TrekStories.Models
 {
     public class Step
     {
+
         [Key]
         public int StepId { get; set; }
         [Required]
@@ -16,8 +18,16 @@ namespace TrekStories.Models
         public string From { get; set; }
         [Required (ErrorMessage = "Please enter an arrival point.")]
         public string To { get; set; }
+
+        [NotMapped]
         [DataType(DataType.Date)]
-        public DateTime Date { get; set; }
+        public DateTime Date {
+            get
+            {
+                return Trip.StartDate.AddDays(SequenceNo-1.0);
+            }
+        }
+
         [Display(Name = "Walking Time")]
         public int WalkingTime { get; set; }
         [Display(Name = "Walking Distance")]

@@ -155,5 +155,25 @@ namespace TrekStories.Controllers
             }
             base.Dispose(disposing);
         }
+
+        /*public ActionResult DisplayFullTripDetails()
+        {
+
+        }
+
+        public void GenerateSummaryReport()
+        {
+
+        }
+
+        public ActionResult DisplaySummarisedTripDetails()
+        {
+
+        }
+
+        public void GenerateSouvenirReport()
+        {
+
+        }*/
     }
 }

@@ -1,28 +1,38 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TrekStories.Models;
 
 namespace TrekStories.Tests
 {
     [TestClass]
-    class ActivityTests
+    public class ActivityTests
     {
         [TestMethod]
-        public void CanSetArrivalTime()
+        public void CanGetArrivalTime()
         {
-            Transport transport1 = new Transport {
+            Transport transport1 = new Transport
+            {
+                ID = 1,
+                Name = "Test1",
+                TransportType = TransportType.tram,
                 StartTime = new DateTime(2018, 6, 12, 9, 22, 0),
                 Duration = 20
             };
 
             Transport transport2 = new Transport
             {
+                ID = 2,
+                Name = "Test2",
+                TransportType = TransportType.train,
                 StartTime = new DateTime(2018, 6, 12, 9, 22, 0),
                 Duration = 70
             };
 
             Transport transport3 = new Transport
             {
+                ID = 3,
+                Name = "Test3",
+                TransportType = TransportType.boat,
                 StartTime = new DateTime(2018, 6, 12, 9, 22, 0),
                 Duration = 1440 //24 hrs
             };

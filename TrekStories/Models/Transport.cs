@@ -14,8 +14,6 @@ namespace TrekStories.Models
 
     public class Transport : Activity
     {
-        private DateTime arrivalTime;
-
         [Required (ErrorMessage = "Indicate the Transport Type.")]
         [Display(Name = "Transport Type")]
         public TransportType TransportType { get; set; }
@@ -29,11 +27,7 @@ namespace TrekStories.Models
         public DateTime ArrivalTime {
             get
             {
-                return arrivalTime;
-            }
-            set
-            {
-                arrivalTime = StartTime.AddMinutes(Duration);
+                return StartTime.AddMinutes(Duration);
             }
         }
     }
