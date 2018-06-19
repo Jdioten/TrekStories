@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
 
@@ -11,7 +12,14 @@ namespace TrekStories.Controllers
 {
     public class TripController : Controller
     {
-        private TrekStoriesContext db = new TrekStoriesContext();
+        private ITrekStoriesContext db = new TrekStoriesContext();
+
+        public TripController() { }
+
+        public TripController(ITrekStoriesContext context)
+        {
+            db = context;
+        }
 
         // GET: Trip
         public ActionResult Index()

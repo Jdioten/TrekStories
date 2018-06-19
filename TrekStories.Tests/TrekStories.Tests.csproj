@@ -95,10 +95,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\TripControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="StepTests.cs" />
     <Compile Include="ActivityTests.cs" />
+    <Compile Include="TestDbSet.cs" />
+    <Compile Include="TestTDbSet.cs" />
+    <Compile Include="TestTrekStoriesContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

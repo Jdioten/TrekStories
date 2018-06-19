@@ -13,7 +13,7 @@ namespace TrekStories.Abstract
         DbSet<Trip> Trips { get; }
         DbSet<Step> Steps { get; }
         DbSet<Accommodation> Accommodations { get; }
-        DbSet<Activity> Activites { get; }
+        DbSet<Activity> Activities { get; }
         DbSet<Review> Reviews { get; }
         int SaveChanges();
         void MarkAsModified(Object item);
