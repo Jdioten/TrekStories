@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using TrekStories.Tests;
 using TrekStories.Models;
+using System.Web.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace TrekStories.Controllers.Tests
 {
@@ -38,41 +40,98 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void CreateTest()
+        public void CanValidateTrip()
         {
-            TestTrekStoriesContext tc = new TestTrekStoriesContext();
-
-            tc.Trips.Add(new Trip
+            Trip newTrip = new Trip
             {
                 Title = "Test Trip",
                 Country = "Ireland",
                 TripCategory = TripCategory.forest,
                 StartDate = new DateTime(2015, 4, 12),
                 TripOwner = "ABC123"
-            });
+            };
+            var context = new ValidationContext(newTrip, null, null);
+            var result = new List<ValidationResult>();
 
-            //var controller = new DeploymentsController(tdc);
-            //var result = controller.Details("a12");
-            //Assert.IsNotNull(result);
-            //Assert.IsInstanceOfType(result, typeof(ViewResult));
-            //Deployment d = (Deployment)((ViewResult)result).Model;
-            //Assert.AreEqual(d.AppName, "MyApp");
+            // Act
+            var valid = Validator.TryValidateObject(newTrip, context, result, true);
 
-            //Of course I should also add a test that asserts a failure when running the details method 
-            //with an invalid DeploymentID or an empty Deployments list.
-
-            Assert.Fail();
+            Assert.IsTrue(valid);
         }
 
         [TestMethod()]
-        public void CreateTest1()
+        public void DoesNotValidateTripWithNoName()
         {
-            Assert.Fail();
+            // Arrange
+            Trip newTrip = new Trip
+            {
+                Title = "",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123"
+            };
+            var context = new ValidationContext(newTrip, null, null);
+            var result = new List<ValidationResult>();
+
+            // Act
+            var valid = Validator.TryValidateObject(newTrip, context, result, true);
+
+            Assert.IsFalse(valid);
+            Assert.AreEqual(result.First().ErrorMessage, "Please give your trip a descriptive title.");
+        }
+
+        [TestMethod()]
+        public void CanCreateTrip()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Trip newTrip = new Trip
+            {
+                Title = "Test Trip",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123"
+            };
+
+            var controller = new TripController(tc);
+            var result = controller.Create(newTrip) as RedirectToRouteResult;
+
+            Assert.AreEqual("Index", result.RouteValues["action"]);            
+        }
+
+        [TestMethod()]
+        public void CannotCreateTripWithModelErrors()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Trip newTrip = new Trip
+            {
+                Title = "",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123"
+            };
+
+            var controller = new TripController(tc);
+            controller.ModelState.AddModelError("", "Error");
+            var result = controller.Create(newTrip) as ViewResult;
+
+            Assert.AreEqual("", result.ViewName);
+            Assert.AreEqual(false, result.ViewData.ModelState.IsValid);
+            Assert.IsNotNull(result.ViewData.ModelState[""].Errors);
         }
 
         [TestMethod()]
         public void EditTest()
         {
+           // Trip t = (Trip)((ViewResult)result).Model;
+           // Assert.AreEqual(t.Title, "Test Trip");
+            //Assert.AreEqual(t.TripCategory, TripCategory.forest);
+            //Assert.AreEqual(t.Duration, 0);
+            //Assert.AreEqual(t.TotalCost, 0);
+            //Assert.AreEqual(t.TotalWalkingDistance, 0);
+
             Assert.Fail();
         }
 
