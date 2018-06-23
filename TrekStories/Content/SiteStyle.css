@@ -1,13 +1,26 @@
-﻿/*.body-content {
-    padding-bottom: 15px;
-}*/
-
-/* --- Navigation Bar Styling ---*/
+﻿/* --- Navigation Bar Styling ---*/
 .centered-brand {
     position: absolute;
     left: 48%;
+    background-color: #729f98;
 }
 
+.navbar-inverse {
+    background-color: #f0eceb;
+    border-color: #283018;
+}
+
+.navbar-inverse .navbar-brand {
+        color: #334431;
+    }
+
+.navbar-inverse .navbar-text {
+        color: #283018;
+    }
+
+.navbar-inverse .navbar-nav > li > a {
+        color: #283018;
+    }
 
 /* --- Footer Styling --- */
 html {
@@ -41,10 +54,10 @@ footer {
     left: 0;
     /*padding: 1rem;*/
     width: 100%;
-    background: #1d2120;
+    background: #242b15; /*#283018;*/
     border-top: 1px solid black;
     padding-top: 15px;
-    color: #bcd5d1;
+    color: #f0eceb;
 }
 
 footer ul {
@@ -63,4 +76,11 @@ footer ul li {
     margin: 3em auto;
     background: rgba(255, 255, 255, 0.65);
     padding: 1em;
+}
+
+/* --- Button Styling --- */
+.btn-trekstories {
+    color: #202613;
+    background-color: #729f98;
+    border-color: #cccccc; /*#f0eceb;*/
 }

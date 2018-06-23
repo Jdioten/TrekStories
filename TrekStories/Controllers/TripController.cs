@@ -45,6 +45,7 @@ namespace TrekStories.Controllers
         // GET: Trip/Create
         public ActionResult Create()
         {
+            ViewBag.Title = "Create";
             ViewBag.CountryList = Trip.GetCountries();
             return View();
         }
@@ -85,6 +86,7 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.CountryList = Trip.GetCountries();
             return View(trip);
         }
 
@@ -106,7 +108,6 @@ namespace TrekStories.Controllers
                 try
                 {
                     db.SaveChanges();
-
                     return RedirectToAction("Index");
                 }
                 catch (DataException /* dex */)
