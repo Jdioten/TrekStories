@@ -10,8 +10,8 @@ namespace TrekStories.Models
     {
         [Key]
         public int ID { get; set; }
-        [Required]
-        [StringLength(40, ErrorMessage = "Activity Name cannot be longer than 40 characters.")]
+        
+        [StringLength(40, MinimumLength=1, ErrorMessage = "Activity Name is required and cannot be longer than 40 characters.")]
         public string Name { get; set; }
 
         [Required(ErrorMessage ="The start time is required to order the activities chronologically.")]
@@ -25,6 +25,7 @@ namespace TrekStories.Models
         public double Price { get; set; }
 
         [DataType(DataType.MultilineText)]
+        [StringLength(200, ErrorMessage = "Notes are limited to 200 characters maximum.")]
         public string Notes { get; set; }
 
         [Required]

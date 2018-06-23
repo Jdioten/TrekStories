@@ -1,8 +1,66 @@
-﻿/* --- Footer Styling --- */
+﻿/*.body-content {
+    padding-bottom: 15px;
+}*/
+
+/* --- Navigation Bar Styling ---*/
+.centered-brand {
+    position: absolute;
+    left: 48%;
+}
+
+
+/* --- Footer Styling --- */
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    position: relative;
+    margin: 0;
+    padding-top: 40px;
+    padding-bottom: 6rem; /*check if ok with all pages?*/
+    min-height: 100%;
+    /*font-family: "Helvetica Neue", Arial, sans-serif;*/
+}
+
+#outer {
+    margin: 0 auto;
+}
+
+footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    /*padding: 1rem;*/
+    width: 100%;
+    background: #1d2120;
+    border-top: 1px solid black;
+    padding-top: 15px;
+    color: #bcd5d1;
+}
 
 footer ul {
     list-style-type: none;
 }
 footer ul li {
     display: inline;
+}
+
+
+/* --- Form Styling --- */
+#form-container {
+    background-image: linear-gradient(to top, rgba(205, 156, 242, 0.40) 0%, rgba(246, 255, 255, 0.71) 100%);
+    box-shadow: 0 15px 30px 1px rgba(128, 128, 128, 0.31);
+    border-radius: 5px;
+    margin: 3em auto;
+    background: rgba(255, 255, 255, 0.65);
+    padding: 1em;
 }

@@ -9,41 +9,46 @@
 
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("TREK STORiES", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Search", "Index", "Home")</li>
-                    <li>@Html.ActionLink("My Trips", "Index", "Trip")</li>
-                    <li>@Html.ActionLink("Plan?", "Create", "Trip")</li>
-                    <li>@Html.ActionLink("Trek Stories", "Index", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
+    <div id="outer">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("TREK STORiES", "Index", "Home", new { area = "" }, new { @class = "navbar-brand visible-xs" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="visible-xs">@Html.ActionLink("Search", "Index", "Home")</li>
+                        <li class="hidden-xs"><a href=@Url.Action("Index", "Search")><span class="glyphicon glyphicon-search"></span></a></li>
+                        <li>@Html.ActionLink("My Trips", "Index", "Trip")</li>
+                        <li>@Html.ActionLink("Start Planning", "Create", "Trip")</li>
+                    </ul>
+                    @Html.ActionLink("TREK STORiES", "Index", "Home", new { area = "" }, new { @class = "navbar-brand hidden-xs centered-brand" })
+                    @Html.Partial("_LoginPartial")
+                </div>
             </div>
         </div>
+        <div class="container body-content">
+            @RenderBody()
+            @*<hr />*@
+        </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
         <footer>
-            <ul class="text-center">
-                <li>@Html.ActionLink("About", "About", "Home")</li> |
-                <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-            </ul>
-            <p>
-                <span>&copy; @DateTime.Now.Year - TREK STORIES</span>
-                <span class="pull-right">Site designed and developed by Carole van Damme</span>
-            </p>
+            <div class="container">
+                <ul class="text-center">
+                    <li>@Html.ActionLink("About", "About", "Home")</li> |
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+                <p>
+                    <span>&copy; @DateTime.Now.Year - TREK STORIES</span>
+                    <span class="pull-right">Site designed and developed by Carole van Damme</span>
+                </p>
+            </div>
         </footer>
-    </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

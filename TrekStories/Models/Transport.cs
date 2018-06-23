@@ -21,6 +21,7 @@ namespace TrekStories.Models
         public string Company { get; set; }
         [Required(ErrorMessage = "Indicate the Destination.")]
         public string Destination { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "The duration is invalid.")]
         [Required(ErrorMessage = "Indicate the Duration.")]
         public double Duration { get; set; }
 

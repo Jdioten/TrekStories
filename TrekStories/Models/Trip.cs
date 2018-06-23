@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Linq;
 
 namespace TrekStories.Models
 {
@@ -9,17 +11,7 @@ namespace TrekStories.Models
         coastal, mountainous, forest, desert, cultural, unclassifiable
     }
 
-    //public enum Country?
-    //or use below?
-    // GetCountries() method
-    //IEnumerable<string> GetCountries()
-    //{
-    //    return CultureInfo.GetCultures(CultureTypes.SpecificCultures)
-    //                      .Select(x => new RegionInfo(x.LCID).EnglishName)
-    //                      .Distinct()
-    //                      .OrderBy(x => x);
-    //}
-
+    
     public class Trip
     {
         [Key]
@@ -31,14 +23,16 @@ namespace TrekStories.Models
 
         [Required(ErrorMessage = "Please specify a country.")]
         public string Country { get; set; }
+
         [Required(ErrorMessage = "Please specify a category.")]
         public TripCategory TripCategory { get; set; }
 
         [Required(ErrorMessage = "Please indicate the trip start date.")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
 
-        public int Duration { get; set; }
+        public int Duration { get; private set; }
 
         [StringLength(500, ErrorMessage = "Notes are limited to 500 characters maximum.")]
         [DataType(DataType.MultilineText)]
@@ -56,6 +50,15 @@ namespace TrekStories.Models
 
         //public string UserId { get; set; }
         ////[ForeignKey("UserId")]
-        //public virtual ApplicationUser TripOwner { get; set; }  
+        //public virtual ApplicationUser TripOwner { get; set; }
+
+        //to create list of countries
+        public static IEnumerable<string> GetCountries()
+        {
+            return CultureInfo.GetCultures(CultureTypes.SpecificCultures)
+                              .Select(x => new RegionInfo(x.LCID).EnglishName)
+                              .Distinct()
+                              .OrderBy(x => x);
+        }
     }
 }

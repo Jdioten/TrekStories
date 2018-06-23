@@ -9,7 +9,7 @@ namespace TrekStories.Models
         [Key]
         public int AccommodationId { get; set; }
         [Required(ErrorMessage = "Please enter the name of your accommodation.")]
-        [StringLength(40, ErrorMessage = "Accommodation Name cannot be longer than 40 characters.")]
+        [StringLength(40, MinimumLength=1, ErrorMessage = "Accommodation Name is required and cannot be longer than 40 characters.")]
         public string Name { get; set; }
 
         [StringLength(150)]

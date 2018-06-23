@@ -14,9 +14,9 @@ namespace TrekStories.Models
         public int StepId { get; set; }
         [Required]
         public int SequenceNo { get; set; }
-        [Required (ErrorMessage = "Please enter a starting point.")]
+        [StringLength(20, MinimumLength = 1, ErrorMessage = "Enter a starting point of maximum 20 characters.")]
         public string From { get; set; }
-        [Required (ErrorMessage = "Please enter an arrival point.")]
+        [StringLength(20, MinimumLength = 1, ErrorMessage = "Enter an arrival point of maximum 20 characters.")]
         public string To { get; set; }
 
         [NotMapped]
@@ -35,9 +35,10 @@ namespace TrekStories.Models
         public int WalkingDistance { get; set; }
         public int Ascent { get; set; }
 
-        [StringLength(500, ErrorMessage = "The description cannot be longer than 500 characters.")]
+        [StringLength(100, ErrorMessage = "The description cannot be longer than 100 characters.")]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
+
         [StringLength(500, ErrorMessage = "Notes are limited to 500 characters.")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }

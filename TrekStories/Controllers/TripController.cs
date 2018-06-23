@@ -45,6 +45,7 @@ namespace TrekStories.Controllers
         // GET: Trip/Create
         public ActionResult Create()
         {
+            ViewBag.CountryList = Trip.GetCountries();
             return View();
         }
 
@@ -54,14 +55,11 @@ namespace TrekStories.Controllers
         public ActionResult Create([Bind(Include = "Title,Country,TripCategory,StartDate,Notes")] Trip trip)
         {
             try
-            {
-                trip.Duration = 0;
-                trip.TotalCost = 0;
-                trip.TotalWalkingDistance = 0;
-                trip.TripOwner = "User1";   //User.Identity.GetUserId();
-
+            {              
                 if (ModelState.IsValid)
                 {
+                    trip.TripOwner = "User1";   //User.Identity.GetUserId();
+
                     db.Trips.Add(trip);
                     db.SaveChanges();
                     return RedirectToAction("Index");
