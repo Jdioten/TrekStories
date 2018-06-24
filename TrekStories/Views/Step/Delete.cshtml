@@ -1,0 +1,112 @@
+﻿@model TrekStories.Models.Step
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Step</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Accommodation.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Accommodation.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Review.PrivateNotes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Review.PrivateNotes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Trip.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Trip.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SequenceNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SequenceNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.From)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.From)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.To)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.To)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WalkingTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WalkingTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WalkingDistance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WalkingDistance)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ascent)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ascent)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

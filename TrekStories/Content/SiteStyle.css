@@ -83,4 +83,25 @@ footer ul li {
     color: #202613;
     background-color: #729f98;
     border-color: #cccccc; /*#f0eceb;*/
+    padding: 7px 13px;  
+}
+
+.btn-trekstories:hover,
+.btn-trekstories:focus,
+.btn-trekstories:active,
+.btn-trekstories.active,
+.open .dropdown-toggle.btn-trekstories {
+    color: #202613;
+    background-color: #668f88; /*#9cbbb6;*/
+    border-color: #adadad;
+}
+
+.btn-trekstories:active,
+.btn-trekstories.active,
+.open .dropdown-toggle.btn-trekstories {
+    background-image: none;
+}
+
+.btn-default {
+    color: #202613;
 }

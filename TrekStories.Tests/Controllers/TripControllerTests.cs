@@ -156,10 +156,26 @@ namespace TrekStories.Controllers.Tests
             Assert.AreEqual(expectedTrip.TotalWalkingDistance, resultData.TotalWalkingDistance);
         }
 
-        [TestMethod()]
-        public void EditPostTest()
+        [TestMethod]
+        public void Cannot_Edit_Nonexistent_Product()
         {
-            Assert.Fail();
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            var expectedTrip = new Trip
+            {
+                TripId = 1,
+                Title = "Test Trip",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123",
+            };
+            tc.Trips.Add(expectedTrip);
+            var controller = new TripController(tc);
+
+            // Act
+            var badResult = controller.Edit(2);
+            // Assert
+            Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
         }
     }
 }

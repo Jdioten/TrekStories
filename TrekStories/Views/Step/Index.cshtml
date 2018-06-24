@@ -1,0 +1,93 @@
+﻿@model IEnumerable<TrekStories.Models.Step>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Accommodation.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Review.PrivateNotes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Trip.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SequenceNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.From)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.To)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WalkingTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WalkingDistance)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ascent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Notes)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Accommodation.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Review.PrivateNotes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Trip.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SequenceNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.From)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.To)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WalkingTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WalkingDistance)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ascent)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Notes)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.StepId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.StepId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.StepId })
+        </td>
+    </tr>
+}
+
+</table>

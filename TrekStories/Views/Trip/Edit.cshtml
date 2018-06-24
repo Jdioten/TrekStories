@@ -6,7 +6,7 @@
 
 <style>
     body {
-        background-image: url(../../Images/hikers-on-a-meadow-1336616.jpg);
+        background-image: url(../../Images/HikerShoes.jpg);
         background-attachment: fixed;
         background-size: cover;
         margin: 0;
@@ -14,7 +14,7 @@
 </style>
 
 <div id="form-container">
-    <h2>Edit a Trip</h2>
+    <h2>Edit @Model.Title</h2>
     <hr />
 
     @using (Html.BeginForm())
@@ -73,14 +73,16 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Save" class="btn btn-trekstories" />
+                    &emsp;
+                    <a class="btn btn-default" href="@Url.Action("Index")">Cancel</a>
                 </div>
             </div>
         </div>
     }
 
-    <div>
+    @*<div>
         @Html.ActionLink("Back to List", "Index")
-    </div>
+    </div>*@
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

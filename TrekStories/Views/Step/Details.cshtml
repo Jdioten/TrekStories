@@ -1,0 +1,106 @@
+﻿@model TrekStories.Models.Step
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Step</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Accommodation.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Accommodation.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Review.PrivateNotes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Review.PrivateNotes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Trip.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Trip.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SequenceNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SequenceNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.From)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.From)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.To)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.To)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WalkingTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WalkingTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WalkingDistance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WalkingDistance)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ascent)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ascent)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.StepId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
