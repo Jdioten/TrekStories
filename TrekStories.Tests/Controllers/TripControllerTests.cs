@@ -1,14 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TrekStories.Controllers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TrekStories.Tests;
-using TrekStories.Models;
-using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web.Mvc;
+using TrekStories.Models;
+using TrekStories.Tests;
 
 namespace TrekStories.Controllers.Tests
 {
@@ -36,6 +33,14 @@ namespace TrekStories.Controllers.Tests
         [TestMethod()]
         public void DetailsTest()
         {
+            
+            // Trip t = (Trip)((ViewResult)result).Model;
+            // Assert.AreEqual(t.Title, "Test Trip");
+            //Assert.AreEqual(t.TripCategory, TripCategory.forest);
+            //Assert.AreEqual(t.Duration, 0);
+            //Assert.AreEqual(t.TotalCost, 0);
+            //Assert.AreEqual(t.TotalWalkingDistance, 0);
+
             Assert.Fail();
         }
 
@@ -123,16 +128,32 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void EditTest()
+        public void EditTripReturnsCorrectDetails()
         {
-           // Trip t = (Trip)((ViewResult)result).Model;
-           // Assert.AreEqual(t.Title, "Test Trip");
-            //Assert.AreEqual(t.TripCategory, TripCategory.forest);
-            //Assert.AreEqual(t.Duration, 0);
-            //Assert.AreEqual(t.TotalCost, 0);
-            //Assert.AreEqual(t.TotalWalkingDistance, 0);
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
 
-            Assert.Fail();
+            var expectedTrip = new Trip
+            {
+                TripId = 1,
+                Title = "Test Trip",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123",
+                TotalWalkingDistance = 45
+            };
+
+            tc.Trips.Add(expectedTrip);
+            var controller = new TripController(tc);
+
+            // act
+            var result = controller.Edit(1) as ViewResult;
+            var resultData = (Trip)result.ViewData.Model;
+
+            // assert
+            Assert.AreEqual(expectedTrip.Title, resultData.Title);
+            Assert.AreEqual(expectedTrip.Country, resultData.Country);
+            Assert.AreEqual(expectedTrip.TotalWalkingDistance, resultData.TotalWalkingDistance);
         }
 
         [TestMethod()]
