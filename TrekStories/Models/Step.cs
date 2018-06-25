@@ -29,10 +29,10 @@ namespace TrekStories.Models
         }
 
         [Display(Name = "Walking Time")]
-        public int WalkingTime { get; set; }
+        public double WalkingTime { get; set; }
         [Display(Name = "Walking Distance")]
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter a positive distance.")]
-        public int WalkingDistance { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "Please enter a positive distance.")]
+        public double WalkingDistance { get; set; }
         public int Ascent { get; set; }
 
         [StringLength(100, ErrorMessage = "The description cannot be longer than 100 characters.")]

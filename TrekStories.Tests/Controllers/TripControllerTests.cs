@@ -157,7 +157,7 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod]
-        public void Cannot_Edit_Nonexistent_Product()
+        public void Cannot_Edit_Nonexistent_Trip()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             var expectedTrip = new Trip

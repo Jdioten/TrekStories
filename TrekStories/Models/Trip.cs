@@ -25,11 +25,13 @@ namespace TrekStories.Models
         public string Country { get; set; }
 
         [Required(ErrorMessage = "Please specify a category.")]
+        [Display(Name = "Trip Category")]
         public TripCategory TripCategory { get; set; }
 
         [Required(ErrorMessage = "Please indicate the trip start date.")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 
         public int Duration { get; private set; }
@@ -42,7 +44,7 @@ namespace TrekStories.Models
         [DataType(DataType.Currency)]
         public double TotalCost { get; set; }
 
-        public int TotalWalkingDistance { get; set; }
+        public double TotalWalkingDistance { get; set; }
 
         public string TripOwner { get; set; }
 

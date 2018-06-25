@@ -3,6 +3,13 @@
     position: absolute;
     left: 48%;
     background-color: #729f98;
+    border-radius: 30px;
+    font-family: Bookman, "Times New Roman", Times, serif;
+    font-size: 22px;
+}
+
+.navbar {
+    max-height: 66px;
 }
 
 .navbar-inverse {
@@ -11,7 +18,7 @@
 }
 
 .navbar-inverse .navbar-brand {
-        color: #334431;
+        color: #141b13;
     }
 
 .navbar-inverse .navbar-text {
@@ -21,6 +28,10 @@
 .navbar-inverse .navbar-nav > li > a {
         color: #283018;
     }
+
+.big-search{
+    font-size: 20px;
+}
 
 /* --- Footer Styling --- */
 html {
@@ -78,12 +89,16 @@ footer ul li {
     padding: 1em;
 }
 
+input, select, textarea {
+    max-width: 450px;
+}
+
 /* --- Button Styling --- */
 .btn-trekstories {
-    color: #202613;
+    color: #141b13;
     background-color: #729f98;
     border-color: #cccccc; /*#f0eceb;*/
-    padding: 7px 13px;  
+    padding: 7px 13px;
 }
 
 .btn-trekstories:hover,
