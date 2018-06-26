@@ -9,7 +9,7 @@
 }
 
 .navbar {
-    max-height: 66px;
+    max-height: 65.5px;
 }
 
 .navbar-inverse {
@@ -85,12 +85,25 @@ footer ul li {
     box-shadow: 0 15px 30px 1px rgba(128, 128, 128, 0.31);
     border-radius: 5px;
     margin: 3em auto;
-    background: rgba(255, 255, 255, 0.65);
+    background: rgba(255, 255, 255, 0.72);
     padding: 1em;
 }
 
 input, select, textarea {
     max-width: 450px;
+}
+
+.form-control::-moz-placeholder {
+    color: #7d7d7d;
+    opacity: 1;
+}
+
+.form-control:-ms-input-placeholder {
+    color: #7d7d7d;
+}
+
+.form-control::-webkit-input-placeholder {
+    color: #7d7d7d;
 }
 
 /* --- Button Styling --- */

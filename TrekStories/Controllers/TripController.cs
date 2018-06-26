@@ -63,7 +63,7 @@ namespace TrekStories.Controllers
 
                     db.Trips.Add(trip);
                     db.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Step"); //pass object route values!!
                 }
             }
             catch (DataException /* dex */)
