@@ -8,7 +8,7 @@ namespace TrekStories.Models
 {
     public enum TransportType
     {
-        boat, plane, train, tram, metro //populate further!!!
+        boat, plane, train, tram, metro, bus, car, hitchhiking, bike, foot
     }
 
 
