@@ -13,11 +13,11 @@ namespace TrekStories.DAL
         {
             var trips = new List<Trip>
             {
-            new Trip{Title="GR201 in Mallorca", Country="Spain", TripCategory=TripCategory.coastal,
+            new Trip{Title="GR201 in Mallorca", Country="Spain", TripCategory=TripCategory.coast,
                 StartDate = new DateTime(2015, 8, 2), TripOwner = "ABC123"},
             new Trip{Title="Slieve Bloom Way", Country="Ireland", TripCategory=TripCategory.forest,
                 StartDate = new DateTime(2015, 4, 12), TripOwner = "ABC123"},
-            new Trip{Title="Cooley Peninsula", Country="Ireland", TripCategory=TripCategory.coastal,
+            new Trip{Title="Cooley Peninsula", Country="Ireland", TripCategory=TripCategory.coast,
                 StartDate = new DateTime(2016, 4, 22), TripOwner = "ABC123"},
             new Trip{Title="Zagori Circuit", Country="Greece", TripCategory=TripCategory.cultural,
                 StartDate = new DateTime(2016, 10, 7), TripOwner = "ABC123"},

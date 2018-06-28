@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using TrekStories.Abstract;
 using TrekStories.DAL;
@@ -53,7 +54,7 @@ namespace TrekStories.Controllers
         // POST: Trip/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Title,Country,TripCategory,StartDate,Notes")] Trip trip)
+        public async Task<ActionResult> Create([Bind(Include = "Title,Country,TripCategory,StartDate,Notes")] Trip trip)
         {
             try
             {              
@@ -62,7 +63,7 @@ namespace TrekStories.Controllers
                     trip.TripOwner = "User1";   //User.Identity.GetUserId();
 
                     db.Trips.Add(trip);
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                     return RedirectToAction("Index", "Step"); //pass object route values!!
                 }
             }
@@ -75,13 +76,13 @@ namespace TrekStories.Controllers
         }
 
         // GET: Trip/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Trip trip = db.Trips.Find(id);
+            Trip trip = await db.Trips.FindAsync(id);
             if (trip == null)
             {
                 return HttpNotFound();
@@ -95,7 +96,7 @@ namespace TrekStories.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPost(int? id)
+        public async Task<ActionResult> EditPost(int? id)
         {
             if (id == null)
             {
@@ -107,7 +108,7 @@ namespace TrekStories.Controllers
             {
                 try
                 {
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
                 catch (DataException /* dex */)

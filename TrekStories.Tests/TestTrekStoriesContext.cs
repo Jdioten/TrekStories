@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Threading.Tasks;
 using TrekStories.Abstract;
 using TrekStories.Models;
 
@@ -23,6 +24,11 @@ namespace TrekStories.Tests
         public DbSet<Review> Reviews { get; set; }
 
         public int SaveChanges()
+        {
+            return 0;
+        }
+
+        public async Task<int> SaveChangesAsync()
         {
             return 0;
         }
