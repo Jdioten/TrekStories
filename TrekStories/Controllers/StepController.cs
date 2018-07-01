@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using TrekStories.DAL;
@@ -38,11 +39,21 @@ namespace TrekStories.Controllers
         }
 
         // GET: Step/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create(int? tripId, int seqNo)
         {
-            ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name");
-            ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes");
-            ViewBag.TripId = new SelectList(db.Trips, "TripId", "Title");
+            if (tripId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Trip trip = await db.Trips.FindAsync(tripId);
+            if (trip == null)
+            {
+                return HttpNotFound();
+            }
+
+            //ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name");
+            //ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes");
+            ViewBag.TripId = tripId;
             return View();
         }
 

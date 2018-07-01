@@ -29,13 +29,13 @@ namespace TrekStories.Controllers
         }
 
         // GET: Trip/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Trip trip = db.Trips.Find(id);
+            Trip trip = await db.Trips.FindAsync(id); //do I need to include steps?
             if (trip == null)
             {
                 return HttpNotFound();

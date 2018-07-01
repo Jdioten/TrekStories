@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using TrekStories.Models;
 
 namespace TrekStories.Tests
@@ -8,6 +10,16 @@ namespace TrekStories.Tests
         public override Trip Find(params object[] keyValues)
         {
             return this.SingleOrDefault(trip => trip.TripId == (int)keyValues.Single());
+        }
+
+        public override Task<Trip> FindAsync(params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
+        }
+
+        public override Task<Trip> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
         }
     }
 

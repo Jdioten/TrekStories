@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using TrekStories.Models;
 using TrekStories.Tests;
@@ -87,7 +88,7 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void CanCreateTrip()
+        public async Task CanCreateTrip()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             Trip newTrip = new Trip
@@ -100,13 +101,13 @@ namespace TrekStories.Controllers.Tests
             };
 
             var controller = new TripController(tc);
-            var result = controller.Create(newTrip) as RedirectToRouteResult;
+            var result = await controller.Create(newTrip) as RedirectToRouteResult;
 
             Assert.AreEqual("Index", result.RouteValues["action"]);            
         }
 
         [TestMethod()]
-        public void CannotCreateTripWithModelErrors()
+        public async Task CannotCreateTripWithModelErrors()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             Trip newTrip = new Trip
@@ -120,7 +121,7 @@ namespace TrekStories.Controllers.Tests
 
             var controller = new TripController(tc);
             controller.ModelState.AddModelError("", "Error");
-            var result = controller.Create(newTrip) as ViewResult;
+            var result = await controller.Create(newTrip) as ViewResult;
 
             Assert.AreEqual("", result.ViewName);
             Assert.AreEqual(false, result.ViewData.ModelState.IsValid);
@@ -128,7 +129,7 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void EditTripReturnsCorrectDetails()
+        public async Task EditTripReturnsCorrectDetails()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
 
@@ -147,7 +148,7 @@ namespace TrekStories.Controllers.Tests
             var controller = new TripController(tc);
 
             // act
-            var result = controller.Edit(1) as ViewResult;
+            var result = await controller.Edit(1) as ViewResult;
             var resultData = (Trip)result.ViewData.Model;
 
             // assert
@@ -157,7 +158,7 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod]
-        public void Cannot_Edit_Nonexistent_Trip()
+        public async Task Cannot_Edit_Nonexistent_Trip()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             var expectedTrip = new Trip
@@ -173,7 +174,7 @@ namespace TrekStories.Controllers.Tests
             var controller = new TripController(tc);
 
             // Act
-            var badResult = controller.Edit(2);
+            var badResult = await controller.Edit(2);
             // Assert
             Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
         }
