@@ -23,9 +23,9 @@ namespace TrekStories.Controllers
         }
 
         // GET: Trip
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(db.Trips.ToList());
+            return View(await db.Trips.ToListAsync());  //add where userid =vlogged in user
         }
 
         // GET: Trip/Details/5
