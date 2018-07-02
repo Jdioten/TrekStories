@@ -21,10 +21,11 @@ namespace TrekStories.Models
 
         [NotMapped]
         [DataType(DataType.Date)]
-        public DateTime Date {
+        public DateTime Date
+        {
             get
             {
-                return Trip.StartDate.AddDays(SequenceNo-1.0);
+                return Trip.StartDate.AddDays(SequenceNo - 1.0);
             }
         }
 

@@ -9,7 +9,7 @@ namespace TrekStories.Models
         [Key]
         public int AccommodationId { get; set; }
         [Required(ErrorMessage = "Please enter the name of your accommodation.")]
-        [StringLength(40, MinimumLength=1, ErrorMessage = "Accommodation Name is required and cannot be longer than 40 characters.")]
+        [StringLength(40, MinimumLength=1, ErrorMessage = "Accommodation Name cannot be longer than 40 characters.")]
         public string Name { get; set; }
 
         [StringLength(150)]
@@ -40,5 +40,29 @@ namespace TrekStories.Models
         public double Price { get; set; }
 
         public virtual ICollection<Step> Steps { get; set; }
+
+        public bool IsCheckInBeforeCheckOut()
+        {
+            if (CheckIn.Date < CheckOut.Date)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public List<DateTime> GetDatesBetweenInAndOut()
+        {
+            var dates = new List<DateTime>();
+
+            for (var dt = CheckIn.Date; dt < CheckOut.Date; dt = dt.AddDays(1))  //<= if I need check-out date
+            {
+                dates.Add(dt);
+            }
+
+            return dates;
+        }
     }
 }

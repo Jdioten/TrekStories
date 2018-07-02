@@ -29,6 +29,16 @@ namespace TrekStories.Tests
         {
             return this.SingleOrDefault(step => step.StepId == (int)keyValues.Single());
         }
+
+        public override Task<Step> FindAsync(params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
+        }
+
+        public override Task<Step> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
+        }
     }
 
     class TestAccommodationDbSet : TestDbSet<Accommodation>
@@ -36,6 +46,16 @@ namespace TrekStories.Tests
         public override Accommodation Find(params object[] keyValues)
         {
             return this.SingleOrDefault(a => a.AccommodationId == (int)keyValues.Single());
+        }
+
+        public override Task<Accommodation> FindAsync(params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
+        }
+
+        public override Task<Accommodation> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
         }
     }
 
@@ -45,6 +65,16 @@ namespace TrekStories.Tests
         {
             return this.SingleOrDefault(act => act.ID == (int)keyValues.Single());
         }
+
+        public override Task<Activity> FindAsync(params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
+        }
+
+        public override Task<Activity> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
+        }
     }
 
     class TestReviewDbSet : TestDbSet<Review>
@@ -52,6 +82,16 @@ namespace TrekStories.Tests
         public override Review Find(params object[] keyValues)
         {
             return this.SingleOrDefault(review => review.ReviewId == (int)keyValues.Single());
+        }
+
+        public override Task<Review> FindAsync(params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
+        }
+
+        public override Task<Review> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
         }
     }
 }
