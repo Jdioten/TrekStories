@@ -226,7 +226,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\architecture.jpg" />
     <Content Include="Images\ben-silhouette-1389811.jpg" />
+    <Content Include="Images\coast.jpg" />
+    <Content Include="Images\countryside.jpg" />
+    <Content Include="Images\desert.jpg" />
+    <Content Include="Images\forest.jpg" />
     <Content Include="Images\hikers-on-a-meadow-1336616.jpg" />
     <Content Include="Images\HikerShoes.jpg" />
     <Content Include="ApplicationInsights.config">
@@ -234,6 +239,8 @@
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-1.12.4-vsdoc.js" />
+    <Content Include="Images\mountains.jpg" />
+    <Content Include="Images\unclassifiable.jpg" />
     <Content Include="Scripts\jquery-1.12.4.js" />
     <Content Include="Scripts\jquery-1.12.4.min.js" />
     <Content Include="Scripts\jquery-1.12.4.min.map" />

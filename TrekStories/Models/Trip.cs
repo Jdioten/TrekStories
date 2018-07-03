@@ -8,7 +8,7 @@ namespace TrekStories.Models
 {
     public enum TripCategory
     {
-        coast, countryside, hills, mountains, forest, desert, towns, cultural, unclassifiable
+        coast, countryside, mountains, forest, desert, architecture, unclassifiable
     }
 
     

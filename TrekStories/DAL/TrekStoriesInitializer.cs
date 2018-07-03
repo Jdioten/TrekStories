@@ -19,7 +19,7 @@ namespace TrekStories.DAL
                 StartDate = new DateTime(2015, 4, 12), TripOwner = "ABC123"},
             new Trip{Title="Cooley Peninsula", Country="Ireland", TripCategory=TripCategory.coast,
                 StartDate = new DateTime(2016, 4, 22), TripOwner = "ABC123"},
-            new Trip{Title="Zagori Circuit", Country="Greece", TripCategory=TripCategory.cultural,
+            new Trip{Title="Zagori Circuit", Country="Greece", TripCategory=TripCategory.architecture,
                 StartDate = new DateTime(2016, 10, 7), TripOwner = "ABC123"},
             };
 

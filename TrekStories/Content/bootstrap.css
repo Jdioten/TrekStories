@@ -1895,7 +1895,7 @@ blockquote {
         display: block;
         font-size: 80%;
         line-height: 1.42857143;
-        color: red;
+        color: #333333;
     }
 
         blockquote footer:before,

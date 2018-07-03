@@ -10,7 +10,7 @@ namespace TrekStories.Tests
         [TestMethod]
         public void CanCalculateStepDate()
         {
-            Trip trip1 = new Trip
+            Trip trip123 = new Trip
             {
                 Country = "Ireland",
                 TripId = 1,
@@ -18,8 +18,8 @@ namespace TrekStories.Tests
                 TripCategory = TripCategory.forest,
                 StartDate = new DateTime(2018, 4, 12)
             };
-            Step step1 = new Step { StepId = 1, SequenceNo = 1, From = "Paris", To = "Beauvais", TripId = 1, Trip = trip1 };
-            Step step10 = new Step { StepId = 2, SequenceNo = 10, From = "La Rochelle", To = "Nantes", TripId = 1, Trip = trip1 };
+            Step step1 = new Step { StepId = 1, SequenceNo = 1, From = "Paris", To = "Beauvais", TripId = 1, Trip = trip123 };
+            Step step10 = new Step { StepId = 2, SequenceNo = 10, From = "La Rochelle", To = "Nantes", TripId = 1, Trip = trip123 };
 
             DateTime expectedResult1 = new DateTime(2018, 4, 12);
             DateTime expectedResult2 = new DateTime(2018, 4, 21);

@@ -133,3 +133,27 @@ input, select, textarea {
 .btn-default {
     color: #202613;
 }
+
+
+/* --- Blockquote Styling --- */
+
+blockquote {
+    margin: 0 0 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.32875rem;
+    font-style: italic;
+    border-left: none;
+}
+
+blockquote small {
+        color: #868e96;
+    }
+
+.jumbotron p {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.mb-0{
+    margin-bottom: 0 !important;
+}
