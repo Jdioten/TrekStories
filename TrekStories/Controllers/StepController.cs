@@ -39,9 +39,9 @@ namespace TrekStories.Controllers
         }
 
         // GET: Step/Create
-        public async Task<ActionResult> Create(int? tripId, int seqNo)
+        public async Task<ActionResult> Create(int? tripId, int? seqNo)
         {
-            if (tripId == null)
+            if (tripId == null || seqNo == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -54,6 +54,8 @@ namespace TrekStories.Controllers
             //ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name");
             //ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes");
             ViewBag.TripId = tripId;
+            ViewBag.SeqNo = seqNo;
+            ViewBag.TripTitle = trip.Title;
             return View();
         }
 
@@ -62,14 +64,14 @@ namespace TrekStories.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SequenceNo,From,To,WalkingTime,WalkingDistance,Ascent,Description,Notes,TripId,AccommodationId")] Step step)
+        public async Task<ActionResult> Create([Bind(Include = "SequenceNo,From,To,WalkingTime,WalkingDistance,Ascent,Description,Notes,TripId,AccommodationId")] Step step)
         {
             try
             {
                 if (ModelState.IsValid)
             {
                 db.Steps.Add(step);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             }

@@ -87,9 +87,10 @@
 
 </table>
 
-@foreach (var item in Model)
-{
-    <div class="row">
+<div class="row">
+    @foreach (var item in Model)
+    {
+
         <div class="col-sm-6 col-md-3">
             <div class="thumbnail">
                 <img src="~/Images/@(item.TripCategory).jpg" alt="trip category picture" class="img-responsive">
@@ -100,8 +101,8 @@
                 </div>
             </div>
         </div>
-    </div>
-}
+    }
+</div>
 
             @*@Html.DisplayFor(modelItem => item.Country)
         

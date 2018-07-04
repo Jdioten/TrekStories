@@ -85,7 +85,7 @@ footer ul li {
     box-shadow: 0 15px 30px 1px rgba(128, 128, 128, 0.31);
     border-radius: 5px;
     margin: 3em auto;
-    background: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.75);
     padding: 1em;
 }
 
@@ -156,4 +156,16 @@ blockquote small {
 
 .mb-0{
     margin-bottom: 0 !important;
+}
+
+/* --- Panel Styling --- */
+
+/*.panel-trekstories > .panel-heading {
+    background-color: #f8f3e8;
+}*/
+
+/* Keep content out of nav bar and footer */
+.mycontainer {
+    margin: 2.5em auto;
+    padding: 1em;
 }
