@@ -4,110 +4,151 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<div class="mycontainer">
+    <div class="panel panel-default container-fluid">
+        <div class="panel-heading row">
+                <div class="col-sm-4 hidden-xs">
+                    <img src="~/Images/@(Model.TripCategory).jpg" alt="Trip Picture" class="img-thumbnail">
+                </div>
+                <div class="col-sm-8 col-xs-12">
+                    <h3>@Model.Title</h3>
+                    <p>
+                        @(Model.TotalWalkingDistance) Km in <em>@Model.Country</em><br />
+                        @Model.Duration  Day(s) starting on <strong>@Model.StartDate.ToLongDateString()</strong><br />
+                        Budget: <span style="color:#729f98">@string.Format("{0:C}", Model.TotalCost)</span><br />
+                        <button type="button" class="btn btn-info btn-xs" data-toggle="collapse" data-target="#notescontent">Notes</button>
+                        <div id="notescontent" class="collapse">
+                            @Model.Notes
+                        </div>
+                    </p>
+                    <p class="pull-right">
+                        <a href="@Url.Action("Edit", new { id = Model.TripId })">
+                            <span class="glyphicon glyphicon-edit mytooltip">
+                                <span class="mytooltiptext">Edit Trip Details</span>
+                            </span>
+                        </a>
+                    </p>
+                </div>
+        </div> @*end panel heading*@
+        <div class="panel-body">
+            <p>...</p>
+        </div>
 
-<div>
-    <h4>Trip</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+        <!-- List group -->
+        <ul class="list-group">
+            <li class="list-group-item">Cras justo odio</li>
+            <li class="list-group-item">Dapibus ac facilisis in</li>
+            <li class="list-group-item">Morbi leo risus</li>
+            <li class="list-group-item">Porta ac consectetur ac</li>
+            <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
+    <div>
+        <h4>Trip</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Country)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Country)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Country)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TripCategory)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Country)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.TripCategory)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.TripCategory)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TripCategory)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Duration)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.StartDate)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Duration)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Duration)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Notes)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Duration)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Notes)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Notes)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalCost)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Notes)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.TotalCost)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.TotalCost)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalWalkingDistance)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TotalCost)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.TotalWalkingDistance)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.TotalWalkingDistance)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TripOwner)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TotalWalkingDistance)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.TripOwner)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.TripOwner)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Steps)
-        </dt>
-        <dd>
-            <table class="table">
-                <tr>
-                    <th>From</th>
-                    <th>To</th>
-                </tr>
-                @foreach (var item in Model.Steps)
-                {
+            <dd>
+                @Html.DisplayFor(model => model.TripOwner)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Steps)
+            </dt>
+            <dd>
+                <table class="table">
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.From)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.To)
-                        </td>
+                        <th>From</th>
+                        <th>To</th>
                     </tr>
-                }
-            </table>
-        </dd>
+                    @foreach (var item in Model.Steps)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.From)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.To)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </dd>
 
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.TripId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.TripId }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+
+
+</div> @*end of container*@
