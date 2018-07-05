@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
 
@@ -14,7 +15,14 @@ namespace TrekStories.Controllers
 {
     public class StepController : Controller
     {
-        private TrekStoriesContext db = new TrekStoriesContext();
+        private ITrekStoriesContext db = new TrekStoriesContext();
+
+        public StepController() { }
+
+        public StepController(ITrekStoriesContext context)
+        {
+            db = context;
+        }
 
         // GET: Step
         public async Task<ActionResult> Index()
@@ -56,7 +64,7 @@ namespace TrekStories.Controllers
             ViewBag.TripId = tripId;
             ViewBag.SeqNo = seqNo;
             ViewBag.TripTitle = trip.Title;
-            return View();
+            return View("Create");
         }
 
         // POST: Step/Create

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TrekStories.Tests;
 using TrekStories.Models;
+using System.Web.Mvc;
 
 namespace TrekStories.Controllers.Tests
 {
@@ -26,9 +27,23 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void CreateTest()
+        public async Task CreateViewTest()
         {
-            Assert.Fail();
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            var trip = new Trip
+            {
+                TripId = 1,
+                Title = "Test Trip",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123",
+                TotalWalkingDistance = 45
+            };
+            tc.Trips.Add(trip);
+            var controller = new StepController(tc);
+            var result = await controller.Create(1, 1) as ViewResult;
+            Assert.AreEqual("Create", result.ViewName);
         }
 
         [TestMethod()]
