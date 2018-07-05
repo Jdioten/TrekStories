@@ -204,6 +204,10 @@
     <Compile Include="Migrations\201806291747556_InitialCreate.Designer.cs">
       <DependentUpon>201806291747556_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807052139563_RequiredAttributeForNonNullable.cs" />
+    <Compile Include="Migrations\201807052139563_RequiredAttributeForNonNullable.Designer.cs">
+      <DependentUpon>201807052139563_RequiredAttributeForNonNullable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Accommodation.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -319,6 +323,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201806291747556_InitialCreate.resx">
       <DependentUpon>201806291747556_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807052139563_RequiredAttributeForNonNullable.resx">
+      <DependentUpon>201807052139563_RequiredAttributeForNonNullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

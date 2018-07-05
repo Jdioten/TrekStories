@@ -11,7 +11,8 @@ namespace TrekStories.Models
         [Key]
         public int ID { get; set; }
         
-        [StringLength(40, MinimumLength=1, ErrorMessage = "Activity Name is required and cannot be longer than 40 characters.")]
+        [Required(ErrorMessage = "Activity Name is required.")]
+        [StringLength(40, ErrorMessage = "Activity Name cannot be longer than 40 characters.")]
         public string Name { get; set; }
 
         [Required(ErrorMessage ="The start time is required to order the activities chronologically.")]

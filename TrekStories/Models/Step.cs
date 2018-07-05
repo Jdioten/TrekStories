@@ -14,9 +14,11 @@ namespace TrekStories.Models
         public int StepId { get; set; }
         [Required]
         public int SequenceNo { get; set; }
-        [StringLength(20, MinimumLength = 1, ErrorMessage = "Enter a starting point of maximum 20 characters.")]
+        [Required]
+        [StringLength(20, ErrorMessage = "Enter a starting point of maximum 20 characters.")]
         public string From { get; set; }
-        [StringLength(20, MinimumLength = 1, ErrorMessage = "Enter an arrival point of maximum 20 characters.")]
+        [Required]
+        [StringLength(20, ErrorMessage = "Enter an arrival point of maximum 20 characters.")]
         public string To { get; set; }
 
         [NotMapped]

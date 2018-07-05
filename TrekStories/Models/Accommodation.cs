@@ -9,7 +9,7 @@ namespace TrekStories.Models
         [Key]
         public int AccommodationId { get; set; }
         [Required(ErrorMessage = "Please enter the name of your accommodation.")]
-        [StringLength(40, MinimumLength=1, ErrorMessage = "Accommodation Name cannot be longer than 40 characters.")]
+        [StringLength(40, ErrorMessage = "Accommodation Name cannot be longer than 40 characters.")]
         public string Name { get; set; }
 
         [StringLength(150)]
@@ -39,7 +39,6 @@ namespace TrekStories.Models
         //and add in web config <globalization culture = "auto" uiCulture="auto" />
         public double Price { get; set; }
 
-        public virtual ICollection<Step> Steps { get; set; }
 
         public bool IsCheckInBeforeCheckOut()
         {
