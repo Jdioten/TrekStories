@@ -20,9 +20,9 @@
                         <div id="notescontent" class="collapse">
                             @Model.Notes
                         </div>
-                    </p>
-                    <p class="pull-right">
-                        <a href="@Url.Action("Edit", new { id = Model.TripId })">
+                    @*</p>
+                    <p class="pull-right">*@
+                        <a href="@Url.Action("Edit", new { id = Model.TripId })" class="btn btn-default pull-right">
                             <span class="glyphicon glyphicon-edit mytooltip">
                                 <span class="mytooltiptext">Edit Trip Details</span>
                             </span>
@@ -31,124 +31,25 @@
                 </div>
         </div> @*end panel heading*@
         <div class="panel-body">
-            <p>...</p>
-        </div>
-
-        <!-- List group -->
-        <ul class="list-group">
-            <li class="list-group-item">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Morbi leo risus</li>
-            <li class="list-group-item">Porta ac consectetur ac</li>
-            <li class="list-group-item">Vestibulum at eros</li>
-        </ul>
-    </div>
-
-    <div>
-        <h4>Trip</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Country)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Country)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.TripCategory)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.TripCategory)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.StartDate)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Duration)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Duration)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Notes)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Notes)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.TotalCost)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.TotalCost)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.TotalWalkingDistance)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.TotalWalkingDistance)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.TripOwner)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.TripOwner)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Steps)
-            </dt>
-            <dd>
-                <table class="table">
-                    <tr>
-                        <th>From</th>
-                        <th>To</th>
-                    </tr>
+            <table class="table table-striped table-bordered">
+                <tbody>
                     @foreach (var item in Model.Steps)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.From)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.To)
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>Day @item.SequenceNo<br />
+                        @item.Date.ToShortDateString()</td>
+                        <td>From @item.From to @item.To<br />
+                        @item.WalkingDistance Km in @item.WalkingTime Hours</td>
+                        <td align="center">
+                            <a class="btn btn-default" href="@Url.Action("Edit", "Step", new { stepId = item.StepId})">
+                                <em class="glyphicon glyphicon-pencil"></em></a><br />
+                            <a class="btn btn-danger" href="@Url.Action("Delete", "Step", new { stepId = item.StepId})">
+                                <em class="glyphicon glyphicon-trash"></em></a>
+                        </td>
+                    </tr>
                     }
-                </table>
-            </dd>
-
-        </dl>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.TripId }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-
-
 </div> @*end of container*@

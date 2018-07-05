@@ -17,10 +17,10 @@ namespace TrekStories.Controllers
         private TrekStoriesContext db = new TrekStoriesContext();
 
         // GET: Step
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var steps = db.Steps.Include(s => s.Accommodation).Include(s => s.Review).Include(s => s.Trip);
-            return View(steps.ToList());
+            return View(await steps.ToListAsync());
         }
 
         // GET: Step/Details/5
@@ -64,25 +64,25 @@ namespace TrekStories.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "SequenceNo,From,To,WalkingTime,WalkingDistance,Ascent,Description,Notes,TripId,AccommodationId")] Step step)
+        public async Task<ActionResult> Create([Bind(Include = "SequenceNo,From,To,WalkingTime,WalkingDistance,Ascent,Description,Notes,TripId")] Step step)
         {
             try
             {
                 if (ModelState.IsValid)
-            {
-                db.Steps.Add(step);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
+                {
+                    db.Steps.Add(step);
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Details", new { id = step.StepId });
+                }
             }
             catch (DataException /* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
             }
-            ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name", step.AccommodationId);
-            ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes", step.StepId);
-            ViewBag.TripId = new SelectList(db.Trips, "TripId", "Title", step.TripId);
+            //ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name", step.AccommodationId);
+            //ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes", step.StepId);
+            //ViewBag.TripId = new SelectList(db.Trips, "TripId", "Title", step.TripId);
             return View(step);
         }
 

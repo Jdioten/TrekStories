@@ -35,7 +35,7 @@ namespace TrekStories.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Trip trip = await db.Trips.FindAsync(id); //do I need to include steps?
+            Trip trip = await db.Trips.FindAsync(id);
             if (trip == null)
             {
                 return HttpNotFound();

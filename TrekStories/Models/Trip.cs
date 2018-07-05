@@ -30,7 +30,7 @@ namespace TrekStories.Models
 
         [Required(ErrorMessage = "Please indicate the trip start date.")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 
@@ -49,10 +49,6 @@ namespace TrekStories.Models
         public string TripOwner { get; set; }
 
         public virtual ICollection<Step> Steps { get; set; }
-
-        //public string UserId { get; set; }
-        ////[ForeignKey("UserId")]
-        //public virtual ApplicationUser TripOwner { get; set; }
 
         //to create list of countries
         public static IEnumerable<string> GetCountries()
