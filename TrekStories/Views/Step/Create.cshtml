@@ -1,4 +1,4 @@
-﻿@model TrekStories.Models.Step
+﻿@model TrekStories.Models.StepViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -24,14 +24,6 @@
         <div class="form-horizontal">
             
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @*<div class="form-group">
-                @Html.LabelFor(model => model.SequenceNo, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.SequenceNo, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.SequenceNo, "", new { @class = "text-danger" })
-                </div>
-            </div>*@
-
             <div class="form-group">
                 @Html.LabelFor(model => model.From, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -49,17 +41,21 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.WalkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.WalkingTime, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.WalkingTime, "", new { @class = "text-danger" })
+                <label class = "control-label col-md-2">Walking Time</label>
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.WalkingTimeHours, new { htmlAttributes = new { @class = "form-control", placeholder = "Hours" } })
+                    @Html.ValidationMessageFor(model => model.WalkingTimeHours, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.WalkingTimeMinutes, new { htmlAttributes = new { @class = "form-control", placeholder = "Minutes" } })
+                    @Html.ValidationMessageFor(model => model.WalkingTimeMinutes, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.WalkingDistance, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.WalkingDistance, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.WalkingDistance, new { htmlAttributes = new { @class = "form-control", placeholder = "In kilometers" } })
                     @Html.ValidationMessageFor(model => model.WalkingDistance, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -67,7 +63,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Ascent, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.Ascent, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.Ascent, new { htmlAttributes = new { @class = "form-control", placeholder = "In meters" } })
                     @Html.ValidationMessageFor(model => model.Ascent, "", new { @class = "text-danger" })
                 </div>
             </div>

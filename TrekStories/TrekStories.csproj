@@ -213,6 +213,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\Step.cs" />
+    <Compile Include="Models\StepViewModel.cs" />
     <Compile Include="Models\Transport.cs" />
     <Compile Include="Models\Trip.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
