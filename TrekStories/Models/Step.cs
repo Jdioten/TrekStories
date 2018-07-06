@@ -27,7 +27,14 @@ namespace TrekStories.Models
         {
             get
             {
-                return Trip.StartDate.AddDays(SequenceNo - 1.0);
+                if (Trip != null)
+                {
+                    return Trip.StartDate.AddDays(SequenceNo - 1.0);
+                }
+                else
+                {
+                    return DateTime.Now;
+                }
             }
         }
 

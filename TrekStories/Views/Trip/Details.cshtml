@@ -31,18 +31,19 @@
                 </div>
         </div> @*end panel heading*@
         <div class="panel-body">
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered @*table-responsive-sm*@">
                 <tbody>
                     @foreach (var item in Model.Steps)
                     {
                     <tr>
-                        <td>Day @item.SequenceNo<br />
+                        <td><h6>Day @item.SequenceNo</h6>
                         @item.Date.ToShortDateString()</td>
-                        <td>From @item.From to @item.To<br />
+                        <td><h6>From @item.From to @item.To</h6>
                         @item.WalkingDistance Km in @item.WalkingTime Hours</td>
                         <td align="center">
                             <a class="btn btn-default" href="@Url.Action("Edit", "Step", new { stepId = item.StepId})">
-                                <em class="glyphicon glyphicon-pencil"></em></a><br />
+                                <em class="glyphicon glyphicon-pencil"></em></a>
+                            &emsp;
                             <a class="btn btn-danger" href="@Url.Action("Delete", "Step", new { stepId = item.StepId})">
                                 <em class="glyphicon glyphicon-trash"></em></a>
                         </td>

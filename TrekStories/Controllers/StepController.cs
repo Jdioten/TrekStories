@@ -68,19 +68,30 @@ namespace TrekStories.Controllers
         }
 
         // POST: Step/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "SequenceNo,From,To,WalkingTime,WalkingDistance,Ascent,Description,Notes,TripId")] Step step)
+        public async Task<ActionResult> Create(StepViewModel stepViewModel)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    db.Steps.Add(step);
+                    Step newStep = new Step()
+                    {
+                        SequenceNo = stepViewModel.SequenceNo,
+                        From = stepViewModel.From,
+                        To = stepViewModel.To,
+                        WalkingTime = stepViewModel.WalkingTimeHours + stepViewModel.WalkingTimeMinutes/60,
+                        WalkingDistance = stepViewModel.WalkingDistance,
+                        Ascent = stepViewModel.Ascent,
+                        Description = stepViewModel.Description,
+                        Notes = stepViewModel.Notes,
+                        TripId = stepViewModel.TripId
+                    };
+                    
+                    db.Steps.Add(newStep);
                     await db.SaveChangesAsync();
-                    return RedirectToAction("Details", new { id = step.StepId });
+                    return RedirectToAction("Details", new { id = newStep.StepId });
                 }
             }
             catch (DataException /* dex */)
@@ -91,7 +102,12 @@ namespace TrekStories.Controllers
             //ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name", step.AccommodationId);
             //ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes", step.StepId);
             //ViewBag.TripId = new SelectList(db.Trips, "TripId", "Title", step.TripId);
-            return View(step);
+            ViewBag.TripId = stepViewModel.TripId;
+            ViewBag.SeqNo = stepViewModel.SequenceNo;
+            ViewBag.TripTitle = await (from t in db.Trips
+                                       where t.TripId == stepViewModel.TripId
+                                       select t.Title).ToListAsync();
+            return View(stepViewModel);
         }
 
         // GET: Step/Edit/5
