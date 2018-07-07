@@ -81,7 +81,7 @@ namespace TrekStories.Controllers
                         SequenceNo = stepViewModel.SequenceNo,
                         From = stepViewModel.From,
                         To = stepViewModel.To,
-                        WalkingTime = stepViewModel.WalkingTimeHours + stepViewModel.WalkingTimeMinutes/60,
+                        WalkingTime = stepViewModel.WalkingTimeHours + stepViewModel.WalkingTimeMinutes/60.0,
                         WalkingDistance = stepViewModel.WalkingDistance,
                         Ascent = stepViewModel.Ascent,
                         Description = stepViewModel.Description,

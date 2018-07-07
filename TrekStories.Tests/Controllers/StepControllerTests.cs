@@ -47,9 +47,70 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void CreateTest1()
+        public async Task CanCreateStep()
         {
-            Assert.Fail();
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Trip newTrip = new Trip
+            {
+                Title = "Test Trip",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123"
+            };
+            tc.Trips.Add(newTrip);
+            StepViewModel stepViewModel = new StepViewModel
+            {
+                SequenceNo = 1,
+                From = "A",
+                To = "B",
+                WalkingTimeHours = 2,
+                WalkingTimeMinutes = 30,
+                WalkingDistance = 12,
+                Ascent = 630,
+                Description = "A lovely walk",
+                Notes = null,
+                TripId = newTrip.TripId
+            };
+            
+            var controller = new StepController(tc);
+            var result = await controller.Create(stepViewModel) as RedirectToRouteResult;
+
+            Step created = tc.Steps.First();
+
+
+            Assert.AreEqual("Details", result.RouteValues["action"]);
+
+            Assert.AreEqual("A", created.From);
+            Assert.AreEqual(2.5, created.WalkingTime);
+            Assert.AreEqual(12, created.WalkingDistance);
+        }
+
+        [TestMethod()]
+        public async Task CannotCreateStepWithModelErrors()   //fails because of ToListAsync
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            StepViewModel stepViewModel = new StepViewModel
+            {
+                SequenceNo = 1,
+                From = "",
+                To = "",
+                WalkingTimeHours = 2,
+                WalkingTimeMinutes = 30,
+                WalkingDistance = 12,
+                Ascent = 630,
+                Description = "A lovely walk",
+                Notes = null,
+                TripId = 1
+            };
+
+            var controller = new StepController(tc);
+            controller.ModelState.AddModelError("", "Error");
+            var result = await controller.Create(stepViewModel) as ViewResult;
+
+            Assert.AreEqual("", result.ViewName);
+            Assert.AreEqual(false, result.ViewData.ModelState.IsValid);
+            Assert.IsNotNull(result.ViewData.ModelState[""].Errors);
         }
 
         [TestMethod()]
