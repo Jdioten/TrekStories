@@ -46,7 +46,7 @@ namespace TrekStories.Controllers
         // GET: Trip/Create
         public ActionResult Create()
         {
-            ViewBag.Title = "Create";
+            //ViewBag.Title = "Create";
             ViewBag.CountryList = Trip.GetCountries();
             return View();
         }
@@ -57,14 +57,22 @@ namespace TrekStories.Controllers
         public async Task<ActionResult> Create([Bind(Include = "Title,Country,TripCategory,StartDate,Notes")] Trip trip)
         {
             try
-            {              
+            {
                 if (ModelState.IsValid)
                 {
-                    trip.TripOwner = "User1";   //User.Identity.GetUserId();
+                    trip.TripOwner = "User1";   //User.Identity.GetUserId();  NB: should this be set in class??
 
+                    //check if user already has a trip with that name
+                    if (db.Trips.Any(t => t.TripOwner == trip.TripOwner && t.Title.ToLower() == trip.Title.ToLower())) //should be anyasync if can fix unit test
+                    {
+                        ModelState.AddModelError("", "You have already created a trip with that title. Please give this trip a different title.");
+                    }
+                    else
+                    {
                     db.Trips.Add(trip);
                     await db.SaveChangesAsync();
-                    return RedirectToAction("Index", "Step"); //pass object route values!!
+                    return RedirectToAction("Details", new { id = trip.TripId});
+                    }
                 }
             }
             catch (DataException /* dex */)
@@ -72,6 +80,7 @@ namespace TrekStories.Controllers
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
             }
+            ViewBag.CountryList = Trip.GetCountries();
             return View(trip);
         }
 

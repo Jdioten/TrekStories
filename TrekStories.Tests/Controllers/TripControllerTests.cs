@@ -170,7 +170,7 @@ namespace TrekStories.Controllers.Tests
             var controller = new TripController(tc);
             var result = await controller.Create(newTrip) as RedirectToRouteResult;
 
-            Assert.AreEqual("Index", result.RouteValues["action"]);            
+            Assert.AreEqual("Details", result.RouteValues["action"]);
         }
 
         [TestMethod()]
@@ -193,6 +193,36 @@ namespace TrekStories.Controllers.Tests
             Assert.AreEqual("", result.ViewName);
             Assert.AreEqual(false, result.ViewData.ModelState.IsValid);
             Assert.IsNotNull(result.ViewData.ModelState[""].Errors);
+        }
+
+        [TestMethod()]
+        public async Task CannotCreateTripWithSameTitleForSameUser() //mind username assigned by controller when getting userid from current user!
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Trip trip = new Trip
+            {
+                Title = "Test",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "User1"
+            };
+            tc.Trips.Add(trip);
+            Trip newTrip = new Trip
+            {
+                Title = "Test",
+                Country = "Spain",
+                TripCategory = TripCategory.coast,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "User1"
+            };
+
+            var controller = new TripController(tc);
+            var result = await controller.Create(newTrip) as ViewResult;
+
+            Assert.AreEqual(false, result.ViewData.ModelState.IsValid);
+            Assert.IsTrue(controller.ViewData.ModelState.Count == 1,
+                 "You have already created a trip with that title. Please give this trip a different title.");
         }
 
         [TestMethod()]
