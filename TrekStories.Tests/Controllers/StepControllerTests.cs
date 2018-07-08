@@ -78,12 +78,53 @@ namespace TrekStories.Controllers.Tests
 
             Step created = tc.Steps.First();
 
-
             Assert.AreEqual("Details", result.RouteValues["action"]);
 
             Assert.AreEqual("A", created.From);
             Assert.AreEqual(2.5, created.WalkingTime);
             Assert.AreEqual(12, created.WalkingDistance);
+        }
+
+        [TestMethod()]
+        public async Task CreateStepEditsSeqNoOfSubsequentSteps()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Trip newTrip = new Trip
+            {
+                Title = "Test Trip",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123"
+            };
+            tc.Trips.Add(newTrip);
+            Step stepA = new Step { StepId = 11, SequenceNo = 1};
+            Step stepB = new Step { StepId = 12, SequenceNo = 2 };
+            Step stepC = new Step { StepId = 10, SequenceNo = 3 };
+            tc.Steps.Add(stepA);
+            tc.Steps.Add(stepB);
+            tc.Steps.Add(stepC);
+
+            StepViewModel stepViewModel = new StepViewModel
+            {
+                SequenceNo = 2,
+                From = "B",
+                To = "C",
+                WalkingTimeHours = 2,
+                WalkingTimeMinutes = 30,
+                WalkingDistance = 12,
+                Ascent = 630,
+                Description = "A lovely walk",
+                Notes = null,
+                TripId = newTrip.TripId
+            };
+
+            var controller = new StepController(tc);
+            var result = await controller.Create(stepViewModel);
+
+            Assert.AreEqual(1, stepA.SequenceNo);
+            Assert.AreEqual(3, stepB.SequenceNo);
+            Assert.AreEqual(4, stepC.SequenceNo);
         }
 
         [TestMethod()]

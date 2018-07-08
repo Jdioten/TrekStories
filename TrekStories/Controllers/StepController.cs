@@ -89,7 +89,18 @@ namespace TrekStories.Controllers
                         TripId = stepViewModel.TripId
                     };
                     
+
+                    //retrieve all subsequent steps and update seq no
+                    foreach (Step item in db.Steps.Where(s => s.TripId == newStep.TripId))
+                    {
+                        if (item.SequenceNo >= newStep.SequenceNo)
+                        {
+                            item.SequenceNo++;
+                        }
+                    }
+
                     db.Steps.Add(newStep);
+
                     await db.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = newStep.StepId });
                 }
