@@ -142,9 +142,9 @@ namespace TrekStories.Controllers
         }
 
         // POST: Step/Edit/5
-        [HttpPost, ActionName("Edit")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditPost(StepViewModel vm)
+        public async Task<ActionResult> Edit(StepViewModel vm)
         {
             if (vm == null)
             {

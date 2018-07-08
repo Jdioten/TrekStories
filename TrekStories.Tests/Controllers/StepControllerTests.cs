@@ -114,15 +114,78 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void EditTest()
+        public async Task EditStepReturnsCorrectStepVm()
         {
-            Assert.Fail();
+            // Arrange - create the mock repository
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Step step = new Step
+            {
+                StepId = 123,
+                SequenceNo = 2,
+                From = "B",
+                To = "C",
+                WalkingDistance = 0,
+                WalkingTime = 3.5
+            };
+            tc.Steps.Add(step);
+            // Arrange - create the controller
+            var controller = new StepController(tc);
+            // Act
+            var result = await controller.Edit(123) as ViewResult;
+            var resultStep = (StepViewModel)result.ViewData.Model;
+
+            // Assert
+            Assert.AreEqual(123, resultStep.StepId);
+            Assert.AreEqual(3, resultStep.WalkingTimeHours);
+            Assert.AreEqual(30, resultStep.WalkingTimeMinutes);
         }
 
         [TestMethod()]
-        public void EditPostTest()
+        public async Task CanEditPostStep()
         {
-            Assert.Fail();
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Step step = new Step
+            {
+                StepId = 123
+            };
+            tc.Steps.Add(step);
+            StepViewModel stepVm = new StepViewModel
+            {
+                StepId = 123,
+                SequenceNo = 2,
+                From = "B",
+                To = "C",
+                WalkingDistance = 0,
+                WalkingTimeHours = 2,
+                WalkingTimeMinutes = 30
+            };
+            // Arrange - create the controller
+            var controller = new StepController(tc);
+            // Act
+            var result = await controller.Edit(stepVm) as RedirectToRouteResult;
+
+            Assert.AreEqual("Details", result.RouteValues["action"]);
+        }
+
+        [TestMethod()]
+        public async Task CannotEditStepWithModelErrors()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Step step = new Step
+            {
+                StepId = 123
+            };
+            tc.Steps.Add(step);
+            StepViewModel stepVm = new StepViewModel { StepId = 123 };
+            // Arrange - create the controller
+            var controller = new StepController(tc);
+            controller.ModelState.AddModelError("", "Error");
+            // Act
+            var result = await controller.Edit(stepVm) as ViewResult;
+
+            Assert.AreEqual("", result.ViewName);
+            Assert.AreEqual(false, result.ViewData.ModelState.IsValid);
+            Assert.IsNotNull(result.ViewData.ModelState[""].Errors);
         }
 
         [TestMethod()]
