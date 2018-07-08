@@ -130,7 +130,6 @@ namespace TrekStories.Controllers
                 From = step.From,
                 To = step.To,
                 WalkingTimeHours = (int)step.WalkingTime,
-                //WalkingTimeMinutes = (int)((step.WalkingTime - (int)step.WalkingTime) * 60),
                 WalkingTimeMinutes = (int)((step.WalkingTime%1) * 60),
                 WalkingDistance = step.WalkingDistance,
                 Ascent = step.Ascent,
@@ -152,13 +151,17 @@ namespace TrekStories.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
+            Step stepToUpdate = await db.Steps.FindAsync(vm.StepId.Value);
+            if (stepToUpdate == null)
+            {
+                return HttpNotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    Step stepToUpdate = await db.Steps.FindAsync(vm.StepId.Value);
-
-                    //assign vm values to booking
+                    //assign vm values to step
                     stepToUpdate.Ascent = vm.Ascent;
                     stepToUpdate.Description = vm.Description;
                     stepToUpdate.From = vm.From;
