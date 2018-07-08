@@ -1,6 +1,7 @@
 ﻿@model TrekStories.Models.Trip
 
 @{
+    Layout = "~/Views/Shared/_LayoutWithDatePicker.cshtml";
     ViewBag.Title = "Create";
 }
 
@@ -50,7 +51,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control date-picker" } })
                         @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
                     </div>
                 </div>
