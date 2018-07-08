@@ -41,10 +41,10 @@
                         <td><h6>From @item.From to @item.To</h6>
                         @item.WalkingDistance Km in @item.WalkingTime Hours</td>
                         <td align="center">
-                            <a class="btn btn-default" href="@Url.Action("Edit", "Step", new { stepId = item.StepId})">
+                            <a class="btn btn-default" href="@Url.Action("Edit", "Step", new { id = item.StepId})">
                                 <em class="glyphicon glyphicon-pencil"></em></a>
                             &emsp;
-                            <a class="btn btn-danger" href="@Url.Action("Delete", "Step", new { stepId = item.StepId})">
+                            <a class="btn btn-danger" href="@Url.Action("Delete", "Step", new { id = item.StepId})">
                                 <em class="glyphicon glyphicon-trash"></em></a>
                         </td>
                     </tr>

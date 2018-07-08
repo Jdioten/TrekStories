@@ -1,114 +1,101 @@
-﻿@model TrekStories.Models.Step
+﻿@model TrekStories.Models.StepViewModel
 
 @{
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
+<style>
+    body {
+        background-image: url(../../Images/antique-blank-camera-269923.jpg);
+        background-attachment: fixed;
+        background-size: cover;
+        margin: 0;
+    }
 
+    input, select, textarea {
+        max-width: 100%;
+    }
+</style>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Step</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.StepId)
+<div id="form-container">
+    <h2>Edit Step @Model.SequenceNo</h2>
+    <hr />
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.SequenceNo, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SequenceNo, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SequenceNo, "", new { @class = "text-danger" })
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.StepId)
+            @Html.HiddenFor(model => model.SequenceNo)
+            @Html.HiddenFor(model => model.TripId)
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.From)
+                    @Html.EditorFor(model => model.From, new { htmlAttributes = new { @class = "form-control", placeholder = "From" } })
+                    @Html.ValidationMessageFor(model => model.From, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.To)
+                    @Html.EditorFor(model => model.To, new { htmlAttributes = new { @class = "form-control", placeholder = "To" } })
+                    @Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.From, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.From, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.From, "", new { @class = "text-danger" })
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="walkingTimeHours">Walking Time</label>
+                    <div class="input-group">
+                        @Html.EditorFor(model => model.WalkingTimeHours, new { htmlAttributes = new { @class = "form-control", placeholder = "Hours" } })
+                        @Html.ValidationMessageFor(model => model.WalkingTimeHours, "", new { @class = "text-danger" })
+                        <span class="input-group-addon" style="border-left: 0; border-right: 0;">h</span>
+                        @Html.EditorFor(model => model.WalkingTimeMinutes, new { htmlAttributes = new { @class = "form-control", placeholder = "Minutes" } })
+                        @Html.ValidationMessageFor(model => model.WalkingTimeMinutes, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.WalkingDistance)
+                    <div class="input-group">
+                        @Html.EditorFor(model => model.WalkingDistance, new { htmlAttributes = new { @class = "form-control", placeholder = "Distance in Kilometers" } })
+                        @Html.ValidationMessageFor(model => model.WalkingDistance, "", new { @class = "text-danger" })
+                        <span class="input-group-addon" style="border-left: 0; border-right: 0;">Km</span>
+                    </div>
+                    </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.Ascent)
+                    <div class="input-group">
+                        @Html.EditorFor(model => model.Ascent, new { htmlAttributes = new { @class = "form-control", placeholder = "Ascent in Meters" } })
+                        @Html.ValidationMessageFor(model => model.Ascent, "", new { @class = "text-danger" })
+                        <span class="input-group-addon" style="border-left: 0; border-right: 0;">m</span>
+                    </div>
+                    </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.To, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.To, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(model => model.Description)
+                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.WalkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.WalkingTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.WalkingTime, "", new { @class = "text-danger" })
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(model => model.Notes)
+                    @Html.EditorFor(model => model.Notes, new
+               {
+                   htmlAttributes =
+                        new { @class = "form-control", rows = 4, placeholder = "Add useful websites or reminders" }
+               })
+                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.WalkingDistance, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.WalkingDistance, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.WalkingDistance, "", new { @class = "text-danger" })
+            <div class="form-row text-center">
+                <input type="submit" value="Edit" class="btn btn-trekstories" />
+                &emsp;
+                <a class="btn btn-default" href="@Url.Action("Index")">Cancel</a>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Ascent, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Ascent, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Ascent, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TripId, "TripId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("TripId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TripId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.AccommodationId, "AccommodationId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("AccommodationId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.AccommodationId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    }
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

@@ -111,43 +111,64 @@ namespace TrekStories.Controllers
         }
 
         // GET: Step/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Step step = db.Steps.Find(id);
+            Step step = await db.Steps.FindAsync(id);
             if (step == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name", step.AccommodationId);
-            ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes", step.StepId);
-            ViewBag.TripId = new SelectList(db.Trips, "TripId", "Title", step.TripId);
-            return View(step);
+
+            StepViewModel stepToEdit = new StepViewModel()
+            {
+                StepId = step.StepId,
+                SequenceNo = step.SequenceNo,
+                From = step.From,
+                To = step.To,
+                WalkingTimeHours = (int)step.WalkingTime,
+                //WalkingTimeMinutes = (int)((step.WalkingTime - (int)step.WalkingTime) * 60),
+                WalkingTimeMinutes = (int)((step.WalkingTime%1) * 60),
+                WalkingDistance = step.WalkingDistance,
+                Ascent = step.Ascent,
+                Description = step.Description,
+                Notes = step.Notes,
+                TripId = step.TripId
+            };
+
+            return View(stepToEdit);
         }
 
         // POST: Step/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPost(int? id)
-            //([Bind(Include = "From,To,WalkingTime,WalkingDistance,Ascent,Description,Notes")] Step step)
+        public async Task<ActionResult> EditPost(StepViewModel vm)
         {
-            if (id == null)
+            if (vm == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var stepToUpdate = db.Steps.Find(id);
-            if (TryUpdateModel(stepToUpdate, "",
-               new string[] { "From", "To", "WalkingTime", "WalkingDistance", "Ascent", "Description", "Notes" }))
+
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                    Step stepToUpdate = await db.Steps.FindAsync(vm.StepId.Value);
+
+                    //assign vm values to booking
+                    stepToUpdate.Ascent = vm.Ascent;
+                    stepToUpdate.Description = vm.Description;
+                    stepToUpdate.From = vm.From;
+                    stepToUpdate.Notes = vm.Notes;
+                    stepToUpdate.To = vm.To;
+                    stepToUpdate.WalkingDistance = vm.WalkingDistance;
+                    stepToUpdate.WalkingTime = vm.WalkingTimeHours + vm.WalkingTimeMinutes / 60.0;
+
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Details", "Trip", new { id = stepToUpdate.TripId});
                 }
                 catch (DataException /* dex */)
                 {
@@ -155,18 +176,7 @@ namespace TrekStories.Controllers
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
                 }
             }
-            return View(stepToUpdate);
-            //---
-            //if (ModelState.IsValid)
-            //{
-            //    db.Entry(step).State = EntityState.Modified;
-            //    db.SaveChanges();
-            //    return RedirectToAction("Index");
-            //}
-            //ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name", step.AccommodationId);
-            //ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes", step.StepId);
-            //ViewBag.TripId = new SelectList(db.Trips, "TripId", "Title", step.TripId);
-            //return View(step);
+            return View(vm);
         }
 
         // GET: Step/Delete/5
