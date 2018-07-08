@@ -147,6 +147,10 @@ blockquote small {
         color: #868e96;
     }
 
+.jumbotron {
+    padding-bottom: 15px;
+}
+
 .jumbotron p {
     margin-bottom: 15px;
     font-size: 16px;
@@ -204,3 +208,24 @@ blockquote small {
     margin: 2.5em auto;
     padding: 1em;
 }
+
+
+/* Display thumbnails on same line */
+.row.display-flex {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom:25px;
+}
+
+.thumbnail {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.thumbnail .caption {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }

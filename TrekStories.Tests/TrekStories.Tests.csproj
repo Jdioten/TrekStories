@@ -95,6 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FakeDbAsyncEnumerator.cs" />
     <Compile Include="Controllers\StepControllerTests.cs" />
     <Compile Include="Controllers\TripControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

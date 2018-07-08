@@ -49,14 +49,13 @@ namespace TrekStories.Controllers.Tests
             // Arrange - create a controller
             var controller = new TripController(tc);
             // Action
-            var viewResult = await controller.Index();
-            //Trip[] result = ((IEnumerable<Trip>)viewResult.ViewData.Model).ToArray();
+            var viewResult = await controller.Index() as ViewResult;
+            Trip[] result = ((IEnumerable<Trip>)viewResult.ViewData.Model).ToArray();
             // Assert
-            Assert.AreEqual(1, 1);
-            //Assert.AreEqual(result.Length, 3);
-            //Assert.AreEqual("Trip 1", result[0].Title);
-            //Assert.AreEqual("Trip 2", result[1].Title);
-            //Assert.AreEqual("Trip 3", result[2].Title);
+            Assert.AreEqual(result.Length, 3);
+            Assert.AreEqual("Trip 1", result[0].Title);
+            Assert.AreEqual("Trip 2", result[1].Title);
+            Assert.AreEqual("Trip 3", result[2].Title);
         }
 
         [TestMethod()]

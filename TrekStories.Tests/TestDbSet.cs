@@ -1,20 +1,23 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace TrekStories.Tests
 {
-    class TestDbSet<T> : DbSet<T>, IQueryable, IEnumerable<T>
+    class TestDbSet<T> : DbSet<T>, IQueryable<T>, IEnumerable<T>, IDbAsyncEnumerable<T>
         where T : class
     {
-        ObservableCollection<T> _data;
-        IQueryable _query;
+        ICollection<T> _data;
+        IQueryable<T> _query;
 
         public TestDbSet()
         {
-            _data = new ObservableCollection<T>();
+            _data = new List<T>();
             _query = _data.AsQueryable();
         }
 
@@ -46,36 +49,67 @@ namespace TrekStories.Tests
             return Activator.CreateInstance<TDerivedEntity>();
         }
 
-        public override ObservableCollection<T> Local
-        {
-            get { return new ObservableCollection<T>(_data); }
-        }
+        //public override ObservableCollection<T> Local
+        //{
+        //    get { return new ObservableCollection<T>(_data); }
+        //}
 
-        Type IQueryable.ElementType
+        public Type ElementType
         {
             get { return _query.ElementType; }
         }
 
-        System.Linq.Expressions.Expression IQueryable.Expression
+        public Expression Expression
         {
             get { return _query.Expression; }
         }
 
-        IQueryProvider IQueryable.Provider
+        public IQueryProvider Provider
         {
             get { return _query.Provider; }
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        //System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        //{
+        //    return _data.GetEnumerator();
+        //}
+
+        //IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        //{
+        //    return _data.GetEnumerator();
+        //}
+
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return _data.GetEnumerator();
+            return _query.GetEnumerator();
         }
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
-            return _data.GetEnumerator();
+            return _query.GetEnumerator();
+        }
+
+        //IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
+        //{
+        //    return ((IDbAsyncEnumerable)_query).GetAsyncEnumerator();
+        //}
+
+        //public IDbAsyncEnumerator<T> GetAsyncEnumerator()
+        //{
+        //    return ((IDbAsyncEnumerable<T>)_query).GetAsyncEnumerator();
+        //}
+
+        public IDbAsyncEnumerator<T> GetAsyncEnumerator()
+        {
+            return new FakeDbAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
+        }
+
+        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
+        {
+            return GetAsyncEnumerator();
         }
     }
 }
 
 //code copied from https://docs.microsoft.com/en-us/aspnet/web-api/overview/testing-and-debugging/mocking-entity-framework-when-unit-testing-aspnet-web-api-2#create-test-context
+// and from https://gist.github.com/axelheer/bdbbd2f92600a45f22d6 for Async
