@@ -229,3 +229,11 @@ blockquote small {
         justify-content: space-between;
         height: 100%;
     }
+
+/* Make first and last colums smaller on Trip details */
+.tripdetailstable td:first-child{
+    width:20%;
+}
+.tripdetailstable td:last-child {
+    width: 20%;
+}
