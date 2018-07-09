@@ -72,6 +72,12 @@ namespace TrekStories.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(StepViewModel stepViewModel)
         {
+            Trip trip = await db.Trips.FindAsync(stepViewModel.TripId);
+            if (trip == null)
+            {
+                return HttpNotFound();
+            }
+
             try
             {
                 if (ModelState.IsValid)

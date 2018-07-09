@@ -128,6 +128,33 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
+        public async Task CannotCreateStepForNonexistentTrip()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+
+            StepViewModel stepViewModel = new StepViewModel
+            {
+                SequenceNo = 1,
+                From = "A",
+                To = "B",
+                WalkingTimeHours = 2,
+                WalkingTimeMinutes = 30,
+                WalkingDistance = 12,
+                Ascent = 630,
+                Description = "A lovely walk",
+                Notes = null,
+                TripId = 2
+            };
+
+            var controller = new StepController(tc);
+
+            var badResult = await controller.Create(stepViewModel);
+
+            Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
+        }
+
+
+        [TestMethod()]
         public async Task CannotCreateStepWithModelErrors()   //fails because of ToListAsync  //query expression / provider
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();

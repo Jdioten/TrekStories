@@ -73,21 +73,17 @@ namespace TrekStories.Controllers.Tests
                 TotalWalkingDistance = 45
             };
             tc.Trips.Add(trip);
-            //tc.Steps.Add(
-            //    new Step { StepId = 11, SequenceNo = 1, From = "Paris", To = "Beauvais", TripId = 1 }
-            //    );
+
             var controller = new TripController(tc);
 
             var result = await controller.Details(1) as ViewResult;
             Trip t = (Trip)((ViewResult)result).Model;
 
-            //Assert.IsNotNull(result);
-            Assert.AreEqual(t.Title, "Test Trip");
-            Assert.AreEqual(t.TripCategory, TripCategory.forest);
-            Assert.AreEqual(t.Duration, 0);
-            Assert.AreEqual(t.TotalCost, 0);
-            Assert.AreEqual(t.TotalWalkingDistance, 45);
-            //test return of steps data?
+            Assert.AreEqual("Test Trip", t.Title);
+            Assert.AreEqual(TripCategory.forest, t.TripCategory);
+            Assert.AreEqual(0, t.Duration);
+            Assert.AreEqual(0, t.TotalCost);
+            Assert.AreEqual(45, t.TotalWalkingDistance);
         }
 
         [TestMethod()]

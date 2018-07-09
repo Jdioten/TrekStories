@@ -237,3 +237,14 @@ blockquote small {
 .tripdetailstable td:last-child {
     width: 20%;
 }
+table.tripdetailstable {
+    border-color: #b4c78c;
+}
+
+table.tripdetailstable > thead > tr > th {
+    border-color: #b4c78c;
+}
+
+table.tripdetailstable > tbody > tr > td {
+    border-color: #b4c78c;
+}
