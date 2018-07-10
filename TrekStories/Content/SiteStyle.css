@@ -230,7 +230,7 @@ blockquote small {
         height: 100%;
     }
 
-/* Make first and last colums smaller on Trip details */
+/* Trip details table styling*/
 .tripdetailstable td:first-child{
     width:20%;
 }
@@ -247,4 +247,14 @@ table.tripdetailstable > thead > tr > th {
 
 table.tripdetailstable > tbody > tr > td {
     border-color: #b4c78c;
+}
+.first-add-step-btn {
+    position: absolute;
+    margin-left: -12px;
+    margin-top: -12px;
+}
+.add-step-btn {
+    position: absolute;
+    margin-left: -22px;
+    margin-top: -2px;
 }

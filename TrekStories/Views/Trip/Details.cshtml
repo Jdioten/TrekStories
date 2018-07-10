@@ -20,8 +20,6 @@
                         <div id="notescontent" class="collapse">
                             @Model.Notes
                         </div>
-                    @*</p>
-                    <p class="pull-right">*@
                         <a href="@Url.Action("Edit", new { id = Model.TripId })" class="btn btn-default pull-right">
                             <span class="glyphicon glyphicon-edit mytooltip">
                                 <span class="mytooltiptext">Edit Trip Details</span>
@@ -31,8 +29,8 @@
                 </div>
         </div> @*end panel heading*@
         <div class="panel-body">
-            <a class="btn btn-success btn-xs" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = 1})"
-               style="position:absolute; margin-left:-12px; margin-top:-12px;" title="Insert a Step Here">
+            <a class="btn btn-success btn-xs first-add-step-btn" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = 1})"
+               title="Insert a Step Here">
                 <em class="glyphicon glyphicon-plus"></em>
             </a>
             <table class="table table-striped table-bordered @*table-responsive-sm*@ tripdetailstable">
@@ -43,8 +41,8 @@
                         <td>
                             <h5>Day @item.SequenceNo</h5>
                             <p>@item.Date.ToShortDateString()</p>
-                            <a class="btn btn-success btn-xs" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = (item.SequenceNo+1)})"
-                               style="position:absolute; margin-left:-22px; margin-top:-2px;" title="Insert a Step Here">
+                            <a class="btn btn-success btn-xs add-step-btn" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = (item.SequenceNo+1)})"
+                               title="Insert a Step Here">
                                 <em class="glyphicon glyphicon-plus"></em>
                             </a>
                         </td>
