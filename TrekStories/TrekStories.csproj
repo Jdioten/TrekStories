@@ -208,6 +208,10 @@
     <Compile Include="Migrations\201807052139563_RequiredAttributeForNonNullable.Designer.cs">
       <DependentUpon>201807052139563_RequiredAttributeForNonNullable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807102051300_increaseDescriptionLength.cs" />
+    <Compile Include="Migrations\201807102051300_increaseDescriptionLength.Designer.cs">
+      <DependentUpon>201807102051300_increaseDescriptionLength.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Accommodation.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -327,6 +331,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201807052139563_RequiredAttributeForNonNullable.resx">
       <DependentUpon>201807052139563_RequiredAttributeForNonNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807102051300_increaseDescriptionLength.resx">
+      <DependentUpon>201807102051300_increaseDescriptionLength.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

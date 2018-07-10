@@ -37,7 +37,7 @@
             </a>
             <table class="table table-striped table-bordered @*table-responsive-sm*@ tripdetailstable">
                 <tbody>
-                    @foreach (var item in Model.Steps)
+                    @foreach (var item in Model.Steps.OrderBy(s => s.SequenceNo))
                     {
                     <tr>
                         <td>

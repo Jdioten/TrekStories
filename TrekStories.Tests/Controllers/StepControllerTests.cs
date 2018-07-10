@@ -155,9 +155,19 @@ namespace TrekStories.Controllers.Tests
 
 
         [TestMethod()]
-        public async Task CannotCreateStepWithModelErrors()   //fails because of ToListAsync  //query expression / provider
+        public async Task CannotCreateStepWithModelErrors()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Trip newTrip = new Trip
+            {
+                TripId = 1,
+                Title = "Test Trip",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123"
+            };
+            tc.Trips.Add(newTrip);
             StepViewModel stepViewModel = new StepViewModel
             {
                 SequenceNo = 1,

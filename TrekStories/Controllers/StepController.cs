@@ -121,9 +121,10 @@ namespace TrekStories.Controllers
             //ViewBag.TripId = new SelectList(db.Trips, "TripId", "Title", step.TripId);
             ViewBag.TripId = stepViewModel.TripId;
             ViewBag.SeqNo = stepViewModel.SequenceNo;
-            ViewBag.TripTitle = await (from t in db.Trips
-                                       where t.TripId == stepViewModel.TripId
-                                       select t.Title).ToListAsync();
+            ViewBag.TripTitle = trip.Title;
+            //ViewBag.TripTitle = await (from t in db.Trips
+            //                           where t.TripId == stepViewModel.TripId
+            //                           select t.Title).ToListAsync();
             return View(stepViewModel);
         }
 

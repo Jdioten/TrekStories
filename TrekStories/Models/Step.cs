@@ -45,7 +45,7 @@ namespace TrekStories.Models
         public double WalkingDistance { get; set; }
         public int Ascent { get; set; }
 
-        [StringLength(100, ErrorMessage = "The description cannot be longer than 100 characters.")]
+        [StringLength(500, ErrorMessage = "The description cannot be longer than 500 characters.")]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
