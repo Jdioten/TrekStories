@@ -169,7 +169,8 @@ namespace TrekStories.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Step stepToUpdate = await db.Steps.FindAsync(vm.StepId.Value);
+            //Step stepToUpdate = await db.Steps.FindAsync(vm.StepId.Value); //chnage to below to avoid object reference null
+            Step stepToUpdate = await db.Steps.Include(t => t.Trip).FirstOrDefaultAsync(x => x.StepId == vm.StepId.Value);
             if (stepToUpdate == null)
             {
                 return HttpNotFound();
@@ -187,6 +188,7 @@ namespace TrekStories.Controllers
                     stepToUpdate.To = vm.To;
                     stepToUpdate.WalkingDistance = vm.WalkingDistance;
                     stepToUpdate.WalkingTime = vm.WalkingTimeHours + vm.WalkingTimeMinutes / 60.0;
+                    //stepToUpdate.Trip =
 
                     await db.SaveChangesAsync();
                     return RedirectToAction("Details", "Trip", new { id = stepToUpdate.TripId});

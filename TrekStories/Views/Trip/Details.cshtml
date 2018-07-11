@@ -41,13 +41,15 @@
                         <td>
                             <h5>Day @item.SequenceNo</h5>
                             <p>@item.Date.ToShortDateString()</p>
-                            <a class="btn btn-success btn-xs add-step-btn" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = (item.SequenceNo+1)})"
+                            <a class="btn btn-success btn-xs add-step-btn" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = (item.SequenceNo + 1) })"
                                title="Insert a Step Here">
                                 <em class="glyphicon glyphicon-plus"></em>
                             </a>
                         </td>
-                        <td><h5>From @item.From to @item.To</h5>
-                        @item.WalkingDistance Km in @String.Format("{0:0.00}", item.WalkingTime) Hours</td>
+                        <td onclick="location.href='@Url.Action("Details", "Step", new { id = item.StepId })'" class="hand-cursor">
+                            <h5>From @item.From to @item.To</h5>
+                            @item.WalkingDistance Km in @String.Format("{0:0.00}", item.WalkingTime) Hours
+                        </td>
                         <td align="center" style="vertical-align:middle;">
                             <a class="btn btn-trekstories btn-sm" href="@Url.Action("Edit", "Step", new { id = item.StepId})">
                                 <em class="glyphicon glyphicon-pencil"></em></a>

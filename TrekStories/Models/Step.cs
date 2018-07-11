@@ -27,14 +27,14 @@ namespace TrekStories.Models
         {
             get
             {
-                if (Trip != null)
-                {
+                //if (Trip != null)
+                //{
                     return Trip.StartDate.AddDays(SequenceNo - 1.0);
-                }
-                else
-                {
-                    return DateTime.Now;
-                }
+                //}
+                //else
+                //{
+                //    return DateTime.Now;  //was getting object reference not set to object instance on step post edit
+                //}
             }
         }
 

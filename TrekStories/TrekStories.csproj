@@ -251,6 +251,7 @@
     <None Include="Scripts\jquery-1.12.4-vsdoc.js" />
     <Content Include="Images\mountains.jpg" />
     <Content Include="Images\unclassifiable.jpg" />
+    <Content Include="Images\Waterfall.jpg" />
     <Content Include="Scripts\jquery-1.12.4.js" />
     <Content Include="Scripts\jquery-1.12.4.min.js" />
     <Content Include="Scripts\jquery-1.12.4.min.map" />

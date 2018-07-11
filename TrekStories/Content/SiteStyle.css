@@ -258,3 +258,13 @@ table.tripdetailstable > tbody > tr > td {
     margin-left: -22px;
     margin-top: -2px;
 }
+
+
+/*Transform cursor into hand and highlight when hovering over table cell of trip details*/
+.hand-cursor{
+    cursor:pointer;
+}
+.hand-cursor:hover {
+    background-color: #f0eceb;
+
+}
