@@ -5,11 +5,81 @@
 }
 
 <div class="mycontainer">
-    <h2>@Model.Trip.Title</h2>
-    <hr />
-    <div>
-        <h4>Step @Model.SequenceNo</h4>
-        
+    <h4>@Model.Trip.Title - Day @Model.SequenceNo</h4>
+    @*<div class="btn-group">
+        @for (int i = 1; i <= ViewBag.NoStep; i++)
+        {
+            <a href="@Url.Action("Details", new { id = i})" class="btn btn-default">@i</a>
+        }
+        Wrong!!
+    </div>*@ 
+    <hr class="thick-hr"/>
+    <section>
+        <div class="row">
+            <div class="@*col-sm-2*@ col-md-2">
+                <strong><em>Walk Details</em></strong>
+            </div>
+            <div class="@*col-sm-5*@ col-md-4">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.From)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.From)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.To)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.To)
+                    </dd>
+
+                    <dt>
+                        Distance
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.WalkingDistance) Km
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Ascent)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Ascent) m
+                    </dd>
+
+                    <dt>
+                        Time
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.WalkingTime) hours
+                    </dd>
+                </dl>
+            </div>
+            <div class="@*col-sm-5*@ col-md-6">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Notes)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Notes)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </section>
+    <hr class="thick-hr"/>
+    <section>
         <dl class="dl-horizontal">
 
             @*<dt>
@@ -20,69 +90,6 @@
                 @Html.DisplayFor(model => model.Review.PrivateNotes)
             </dd>*@
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Trip.Title)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Trip.Title)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.From)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.From)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.To)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.To)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.WalkingTime)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.WalkingTime) hours
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.WalkingDistance)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.WalkingDistance) Km
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Ascent)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Ascent) m
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Notes)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Notes)
-            </dd>
 
             <dt>
                 Accommodation
@@ -93,7 +100,7 @@
             </dd>
 
         </dl>
-    </div>
+    </section>
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.StepId }) |
         @Html.ActionLink("Back to List", "Index")

@@ -32,17 +32,18 @@ namespace TrekStories.Controllers
         }
 
         // GET: Step/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Step step = db.Steps.Find(id);
+            Step step = await db.Steps.FindAsync(id);
             if (step == null)
             {
                 return HttpNotFound();
             }
+            //ViewBag.NoStep = await db.Steps.Where(s => s.TripId == step.TripId).CountAsync();
             return View(step);
         }
 
