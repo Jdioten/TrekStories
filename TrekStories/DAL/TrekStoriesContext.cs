@@ -26,5 +26,10 @@ namespace TrekStories.DAL
         {
             Entry(item).State = EntityState.Modified;
         }
+
+        public void MarkAsDeleted(object item)
+        {
+            Entry(item).State = EntityState.Deleted;
+        }
     }
 }

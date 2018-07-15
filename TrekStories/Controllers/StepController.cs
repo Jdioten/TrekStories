@@ -25,11 +25,11 @@ namespace TrekStories.Controllers
         }
 
         // GET: Step
-        public async Task<ActionResult> Index()
-        {
-            var steps = db.Steps.Include(s => s.Accommodation).Include(s => s.Review).Include(s => s.Trip);
-            return View(await steps.ToListAsync());
-        }
+        //public async Task<ActionResult> Index()
+        //{
+        //    var steps = db.Steps.Include(s => s.Accommodation).Include(s => s.Review).Include(s => s.Trip);
+        //    return View(await steps.ToListAsync());
+        //}
 
         // GET: Step/Details/5
         public async Task<ActionResult> Details(int? id)
@@ -43,7 +43,7 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
-            //ViewBag.NoStep = await db.Steps.Where(s => s.TripId == step.TripId).CountAsync();
+            ViewBag.NoStep = await db.Steps.Where(s => s.TripId == step.TripId).CountAsync();
             return View(step);
         }
 
@@ -204,13 +204,17 @@ namespace TrekStories.Controllers
         }
 
         // GET: Step/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Step step = db.Steps.Find(id);
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed. Please try again, and if the problem persists, contact the system administrator.";
+            }
+            Step step = await db.Steps.FindAsync(id);
             if (step == null)
             {
                 return HttpNotFound();
@@ -221,11 +225,32 @@ namespace TrekStories.Controllers
         // POST: Step/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Step step = db.Steps.Find(id);
-            db.Steps.Remove(step);
-            db.SaveChanges();
+            try
+            {
+                Step stepToDelete = await db.Steps.FindAsync(id);
+                if (stepToDelete == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                //retrieve all subsequent steps and update seq no
+                foreach (Step step in db.Steps.Where(s => s.TripId == stepToDelete.TripId))
+                {
+                    if (step.SequenceNo > stepToDelete.SequenceNo)
+                    {
+                        step.SequenceNo--;
+                    }
+                }
+
+                db.Steps.Remove(stepToDelete);
+                await db.SaveChangesAsync();
+            }
+            catch (DataException)
+            {
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true});
+            }
             return RedirectToAction("Index");
         }
 
@@ -236,6 +261,11 @@ namespace TrekStories.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public async Task<ActionResult> ReorderSteps()
+        {
+            throw new NotImplementedException();
         }
     }
 }

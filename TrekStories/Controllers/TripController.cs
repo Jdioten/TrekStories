@@ -25,7 +25,7 @@ namespace TrekStories.Controllers
         // GET: Trip
         public async Task<ActionResult> Index()
         {
-            return View(await db.Trips.ToListAsync());  //add where userid =vlogged in user
+            return View(await db.Trips.OrderByDescending(t => t.StartDate).ToListAsync());  //add where userid =vlogged in user
         }
 
         // GET: Trip/Details/5

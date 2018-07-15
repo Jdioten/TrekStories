@@ -11,16 +11,32 @@ namespace TrekStories.Controllers.Tests
     [TestClass()]
     public class StepControllerTests
     {
-        [TestMethod()]
-        public void IndexTest()
-        {
-            Assert.Fail();
-        }
+        //[TestMethod()]
+        //public void IndexTest()
+        //{
+        //    Assert.Fail();
+        //}
 
         [TestMethod()]
-        public void DetailsTest()
+        public async Task DetailsReturnsCorrectStep()
         {
-            Assert.Fail();
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            StepController controller = new StepController(tc);
+            Step step = new Step() {
+                StepId = 123,
+                SequenceNo = 2,
+                From = "B",
+                To = "C",
+                WalkingDistance = 0,
+                WalkingTime = 3.5
+            };
+            tc.Steps.Add(step);
+
+            ViewResult result = await controller.Details(123) as ViewResult;
+
+            var step123 = (Step)result.ViewData.Model;
+            Assert.AreEqual(step123.SequenceNo, 2);
+            Assert.AreEqual(step123.From, "B");
         }
 
         [TestMethod()]
@@ -264,15 +280,62 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void DeleteTest()
+        public async Task DeleteReturnsCorrectStep()
         {
-            Assert.Fail();
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Step step = new Step { StepId = 10, SequenceNo = 3 };
+            tc.Steps.Add(step);
+            var controller = new StepController(tc);
+            // Act - delete the product
+            var result = await controller.Delete(10) as ViewResult;
+            var resultStep = (Step)result.ViewData.Model;
+
+            // Assert
+            Assert.AreEqual(10, resultStep.StepId);
+            Assert.AreEqual(3, resultStep.SequenceNo);
+        }
+
+        [TestMethod]
+        public async Task CanDeleteValidSteps()
+        {
+            // Arrange - create a trip wit steps
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Trip trip = new Trip
+            {
+                TripId = 1,
+                Title = "Test Trip",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123",
+            };
+            tc.Trips.Add(trip);
+            Step stepA = new Step { StepId = 11, SequenceNo = 1, TripId = trip.TripId };
+            Step stepB = new Step { StepId = 12, SequenceNo = 2, TripId = trip.TripId };
+            Step stepC = new Step { StepId = 10, SequenceNo = 3, TripId = trip.TripId };
+            tc.Steps.Add(stepA);
+            tc.Steps.Add(stepB);
+            tc.Steps.Add(stepC);
+
+            // Arrange - create the controller
+            var controller = new StepController(tc);
+            // Act - delete the step
+            var result = await controller.DeleteConfirmed(12);
+            // Assert - ensure that step was deleted and sequence no updated
+            Assert.AreEqual(1, stepA.SequenceNo);
+            Assert.AreEqual(2, stepC.SequenceNo);
+            Assert.IsNull(tc.Steps.FirstOrDefault(s => s.StepId == stepB.StepId));
         }
 
         [TestMethod()]
-        public void DeleteConfirmedTest()
+        public async Task DeleteNonExistingStepReturnsNotFound()
         {
-            Assert.Fail();
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            var controller = new StepController(tc);
+
+            var badResult = await controller.Delete(12);
+
+            Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
         }
     }
 }

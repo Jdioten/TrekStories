@@ -34,6 +34,7 @@ namespace TrekStories.Tests
         }
 
         public void MarkAsModified(Object item) { }
+        public void MarkAsDeleted(Object item) { }
         public void Dispose() { }
     }
 }

@@ -190,7 +190,9 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AccommodationController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActivitiesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\StepController.cs" />
@@ -310,6 +312,16 @@
     <Content Include="Views\Step\Edit.cshtml" />
     <Content Include="Views\Step\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutWithDatePicker.cshtml" />
+    <Content Include="Views\Activities\EditTransport.cshtml" />
+    <Content Include="Views\Activities\Delete.cshtml" />
+    <Content Include="Views\Activities\Details.cshtml" />
+    <Content Include="Views\Activities\EditLeisure.cshtml" />
+    <Content Include="Views\Activities\Index.cshtml" />
+    <Content Include="Views\Accommodation\Create.cshtml" />
+    <Content Include="Views\Accommodation\Delete.cshtml" />
+    <Content Include="Views\Accommodation\Details.cshtml" />
+    <Content Include="Views\Accommodation\Edit.cshtml" />
+    <Content Include="Views\Accommodation\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
