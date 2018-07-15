@@ -11,15 +11,15 @@
         {
             <a href="@Url.Action("Details", new { id = i})" class="btn btn-default">@i</a>
         }
-        Wrong!!
+        Wrong!! id = 1 is the problem! need to pass stepId rather! viewbag of list of stepids ordered by seq no?
     </div>*@ 
     <hr class="thick-hr"/>
     <section>
         <div class="row">
-            <div class="@*col-sm-2*@ col-md-2">
+            <div class="col-md-2">
                 <strong><em>Walk Details</em></strong>
             </div>
-            <div class="@*col-sm-5*@ col-md-4">
+            <div class="col-md-4">
                 <dl class="dl-horizontal">
                     <dt>
                         @Html.DisplayNameFor(model => model.From)
@@ -57,7 +57,7 @@
                     </dd>
                 </dl>
             </div>
-            <div class="@*col-sm-5*@ col-md-6">
+            <div class="col-md-6">
                 <dl class="dl-horizontal">
                     <dt>
                         @Html.DisplayNameFor(model => model.Description)
@@ -77,11 +77,47 @@
                 </dl>
             </div>
         </div>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.StepId }) |
+            @Html.ActionLink("Back to Trip", "Details", "Trip", new { id = Model.TripId}, null)
+        </p>
     </section>
     <hr class="thick-hr"/>
     <section>
-        <dl class="dl-horizontal">
+        <div class="row">
+            <div class="col-md-2">
+                <strong><em>Accommodation</em></strong>
+            </div>
+            <div class="col-md-4">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Name?
+                    </dt>
 
+                    <dd>
+                        @Html.DisplayFor(model => model.Accommodation.Name)
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="dl-horizontal">
+                   
+                </dl>
+            </div>
+        </div>
+    </section>
+    <hr class="thick-hr" />
+    <section>
+        <strong><em>Activities</em></strong>
+        <div class="pull-right" id="activity-menu">
+            <div class="btn-group btn-group-sm" role="group">
+                <a class="btn btn-default" href="@Url.Action("CreateTransport", "Activities", new { stepId = Model.StepId})">Add Transport</a>
+                <a class="btn btn-default" href="@Url.Action("CreateLeisure", "Activities", new { stepId = Model.StepId})">Add Leisure Activity</a>
+            </div>
+            <a class="rotating-button btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
+        </div>
+
+        <dl class="dl-horizontal">
             @*<dt>
                 @Html.DisplayNameFor(model => model.Review.PrivateNotes)
             </dt>
@@ -89,20 +125,6 @@
             <dd>
                 @Html.DisplayFor(model => model.Review.PrivateNotes)
             </dd>*@
-
-
-            <dt>
-                Accommodation
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Accommodation.Name)
-            </dd>
-
         </dl>
     </section>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.StepId }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
 </div>

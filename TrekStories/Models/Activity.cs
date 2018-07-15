@@ -22,7 +22,7 @@ namespace TrekStories.Models
 
         [DataType(DataType.Currency)]
         [Range(0.01, double.MaxValue, ErrorMessage = "Please enter a positive price.")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
+        [DisplayFormat(DataFormatString = "{0:c}")]
         public double Price { get; set; }
 
         [DataType(DataType.MultilineText)]

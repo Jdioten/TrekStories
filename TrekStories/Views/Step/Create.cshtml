@@ -44,7 +44,7 @@
                 <div class="input-group">
                     @Html.EditorFor(model => model.WalkingTimeHours, new { htmlAttributes = new { @class = "form-control", placeholder = "Hours" } })
                     @Html.ValidationMessageFor(model => model.WalkingTimeHours, "", new { @class = "text-danger" })
-                    <span class="input-group-addon" style="border-left: 0; border-right: 0;">h</span>
+                    <span class="input-group-addon">h</span>
                     @Html.EditorFor(model => model.WalkingTimeMinutes, new { htmlAttributes = new { @class = "form-control", placeholder = "Minutes" } })
                     @Html.ValidationMessageFor(model => model.WalkingTimeMinutes, "", new { @class = "text-danger" })
                 </div>
@@ -54,7 +54,7 @@
                 <div class="input-group">
                     @Html.EditorFor(model => model.WalkingDistance, new { htmlAttributes = new { @class = "form-control", placeholder = "Distance in Kilometers" } })
                     @Html.ValidationMessageFor(model => model.WalkingDistance, "", new { @class = "text-danger" })
-                    <span class="input-group-addon" style="border-left: 0; border-right: 0;">Km</span>
+                    <span class="input-group-addon">Km</span>
                 </div>
             </div>
             <div class="form-group col-md-4">
@@ -62,7 +62,7 @@
                 <div class="input-group">
                     @Html.EditorFor(model => model.Ascent, new { htmlAttributes = new { @class = "form-control", placeholder = "Ascent in Meters" } })
                     @Html.ValidationMessageFor(model => model.Ascent, "", new { @class = "text-danger" })
-                    <span class="input-group-addon" style="border-left: 0; border-right: 0;">m</span>
+                    <span class="input-group-addon">m</span>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
         <div class="form-row text-center">
             <input type="submit" value="Create" class="btn btn-trekstories" />
             &emsp;
-            <a class="btn btn-default" href="@Url.Action("Index")">Cancel</a>
+            <a class="btn btn-default" href="@Url.Action("Details", "Trip", new { id = ViewBag.TripId})">Cancel</a>
         </div>
             }
         </div>

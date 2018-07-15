@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using TrekStories.DAL;
 using TrekStories.Models;
 using TrekStories.Abstract;
+using System.Globalization;
 
 namespace TrekStories.Controllers
 {
@@ -47,13 +48,34 @@ namespace TrekStories.Controllers
         }
 
         //Create methods use same view as Edit methods
-        public ActionResult CreateLeisure()
+        public async Task<ActionResult> CreateLeisure(int? stepId)
         {
+            if (stepId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Step step = await db.Steps.FindAsync(stepId);
+            if (step == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.StepId = stepId;
+            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
             return View("EditLeisure", new LeisureActivity());
         }
 
-        public ActionResult CreateTransport()
+        public async Task<ActionResult> CreateTransport(int? stepId)
         {
+            if (stepId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Step step = await db.Steps.FindAsync(stepId);
+            if (step == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.StepId = stepId;
             return View("EditTransport", new Transport());
         }
 
