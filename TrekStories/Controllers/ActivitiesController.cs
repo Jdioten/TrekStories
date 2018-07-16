@@ -90,7 +90,7 @@ namespace TrekStories.Controllers
                 {
                     db.Activities.Add(leisureActivity);
                     await db.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", "Step", new { id = leisureActivity.StepId});
                 }
             }
             catch (DataException)
@@ -103,14 +103,14 @@ namespace TrekStories.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateTransport([Bind(Include = "Name,StartTime,Price,Notes,TrasnportType,Company,Destination,Duration")] Transport transport)
+        public async Task<ActionResult> CreateTransport([Bind(Include = "Name,StartTime,Price,Notes,TransportType,Company,Destination,Duration")] Transport transport)
         {
             try { 
                 if (ModelState.IsValid)
                 {
                     db.Activities.Add(transport);
                     await db.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", "Step", new { id = transport.StepId });
                 }
             }
             catch (DataException)

@@ -53,14 +53,10 @@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
-                @*<div class="col-md-10">
-                    @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
-                </div>*@
                 <div class="col-md-10">
-                    <div class="input-group">
+                    <div class="input-group" style="max-width:450px;">
                         @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
-                        @*@Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })*@
+                        @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
                         <span class="input-group-addon">@ViewBag.Currency</span>
                     </div>
                 </div>
