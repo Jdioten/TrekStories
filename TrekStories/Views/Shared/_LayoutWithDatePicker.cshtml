@@ -20,7 +20,8 @@
                 scrollDefault: 'now'
             }
         );
-    })  
+        $('input[type="time"]').attr('type', 'text');  //to prevent default timepicker on Edge and Chrome
+    })    
     </script>
     <meta charset="utf-8">
     <title>@ViewBag.Title</title>

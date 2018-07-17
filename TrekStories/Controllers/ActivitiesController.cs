@@ -80,46 +80,46 @@ namespace TrekStories.Controllers
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateLeisure([Bind(Include = "Name,StartTime,Price,Notes,Address,LeisureCategory")] LeisureActivity leisureActivity)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    db.Activities.Add(leisureActivity);
-                    await db.SaveChangesAsync();
-                    return RedirectToAction("Details", "Step", new { id = leisureActivity.StepId});
-                }
-            }
-            catch (DataException)
-            {
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
-            }
-            //ViewBag.StepId = new SelectList(db.Steps, "StepId", "From", activity.StepId);
-            return View(leisureActivity);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> CreateLeisure([Bind(Include = "Name,StartTime,Price,Notes,Address,LeisureCategory,StepId")] LeisureActivity leisureActivity)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            db.Activities.Add(leisureActivity);
+        //            await db.SaveChangesAsync();
+        //            return RedirectToAction("Details", "Step", new { id = leisureActivity.StepId});
+        //        }
+        //    }
+        //    catch (DataException)
+        //    {
+        //        ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
+        //    }
+        //    //ViewBag.StepId = new SelectList(db.Steps, "StepId", "From", activity.StepId);
+        //    return View(leisureActivity);
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateTransport([Bind(Include = "Name,StartTime,Price,Notes,TransportType,Company,Destination,Duration")] Transport transport)
-        {
-            try { 
-                if (ModelState.IsValid)
-                {
-                    db.Activities.Add(transport);
-                    await db.SaveChangesAsync();
-                    return RedirectToAction("Details", "Step", new { id = transport.StepId });
-                }
-            }
-            catch (DataException)
-            {
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
-            }
-            //ViewBag.StepId = new SelectList(db.Steps, "StepId", "From", activity.StepId);
-            return View(transport);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> CreateTransport([Bind(Include = "Name,StartTime,Price,Notes,TransportType,Company,Destination,Duration,StepId")] Transport transport)
+        //{
+        //    try { 
+        //        if (ModelState.IsValid)
+        //        {
+        //            db.Activities.Add(transport);
+        //            await db.SaveChangesAsync();
+        //            return RedirectToAction("Details", "Step", new { id = transport.StepId });
+        //        }
+        //    }
+        //    catch (DataException)
+        //    {
+        //        ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
+        //    }
+        //    //ViewBag.StepId = new SelectList(db.Steps, "StepId", "From", activity.StepId);
+        //    return View(transport);
+        //}
 
         // GET: Activities/Edit/5
         public async Task<ActionResult> Edit(int? id)
@@ -149,12 +149,32 @@ namespace TrekStories.Controllers
         // POST: Activities/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditLeisure([Bind(Include = "Name,StartTime,Price,Notes,Address,LeisureCategory")] LeisureActivity leisureActivity)
+        public async Task<ActionResult> EditLeisure([Bind(Include = "Name,StartTime,Price,Notes,Address,LeisureCategory, StepId")] LeisureActivity leisureActivity)
         {
             if (ModelState.IsValid)
             {
-                try { 
-                    db.MarkAsModified(leisureActivity);
+                try
+                {
+                    //if new activity, add to db
+                    if (leisureActivity.ID == 0)
+                    {
+                        db.Activities.Add(leisureActivity);
+                    }
+                    else
+                    {
+                        //LeisureActivity dbEntry = (LeisureActivity)db.Activities.FirstOrDefaultAsync(l => l.ID == leisureActivity.ID).Result;
+                        LeisureActivity dbEntry = (LeisureActivity)db.Activities.FindAsync(leisureActivity.ID).Result;
+                        if (dbEntry != null)
+                        {
+                            dbEntry.Name = leisureActivity.Name;
+                            dbEntry.StartTime = leisureActivity.StartTime;
+                            dbEntry.Price = leisureActivity.Price;
+                            dbEntry.Notes = leisureActivity.Notes;
+                            dbEntry.Address = leisureActivity.Address;
+                            dbEntry.LeisureCategory = leisureActivity.LeisureCategory;
+                            dbEntry.StepId = leisureActivity.StepId;
+                        }
+                    }
                     await db.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
@@ -170,7 +190,7 @@ namespace TrekStories.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditTransport([Bind(Include = "Name,StartTime,Price,Notes,TrasnportType,Company,Destination,Duration")] Transport transport)
+        public async Task<ActionResult> EditTransport([Bind(Include = "Name,StartTime,Price,Notes,TrasnportType,Company,Destination,Duration, StepId")] Transport transport)
         {
             if (ModelState.IsValid)
             {

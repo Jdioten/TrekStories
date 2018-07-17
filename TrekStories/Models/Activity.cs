@@ -21,7 +21,7 @@ namespace TrekStories.Models
         public DateTime StartTime { get; set; }
 
         [DataType(DataType.Currency)]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Please enter a positive price.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Please enter a positive price.")]
         [DisplayFormat(DataFormatString = "{0:c}")]
         public double Price { get; set; }
 

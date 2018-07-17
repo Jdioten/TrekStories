@@ -47,11 +47,11 @@ namespace TrekStories.Controllers.Tests
             LeisureActivity leisureToCreate = new LeisureActivity() { Name = "Boat Trip", StartTime = new DateTime(2018, 7, 16, 9, 30, 0), LeisureCategory = LeisureCategory.aquatic };
 
             // Act
-            var result = await controller.CreateLeisure(leisureToCreate) as RedirectToRouteResult;
+            var result = await controller.EditLeisure(leisureToCreate) as RedirectToRouteResult;
 
             // Assert
-            Assert.AreEqual("Details", result.RouteValues["action"]);
-            Assert.AreEqual("Step", result.RouteValues["controller"]);
+            Assert.AreEqual("Index", result.RouteValues["action"]);
+            //Assert.AreEqual("Activities", result.RouteValues["controller"]);
         }
 
         [TestMethod()]
@@ -70,6 +70,28 @@ namespace TrekStories.Controllers.Tests
         public void CreateTransportTest1()
         {
             throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public async Task CanEditTransport()
+        {
+            // Arrange - create the mock repository with leisure activities
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Transport transport1 = new Transport() { ID = 1, Name = "Train" };
+            Transport transport2 = new Transport() { ID = 2, Name = "Bus" };
+            tc.Activities.Add(transport1);
+            tc.Activities.Add(transport2);
+            // Arrange - create the controller
+            ActivitiesController controller = new ActivitiesController(tc);
+            // Act
+            var result1 = await controller.Edit(1) as ViewResult;
+            var t1 = (Transport)result1.ViewData.Model;
+            var result2 = await controller.Edit(2) as ViewResult;
+            var t2 = (Transport)result2.ViewData.Model;
+            // Assert
+            Assert.AreEqual(1, t1.ID);
+            Assert.AreEqual(2, t2.ID);
+            Assert.AreEqual("Train", t1.Name);
         }
 
         [TestMethod]
