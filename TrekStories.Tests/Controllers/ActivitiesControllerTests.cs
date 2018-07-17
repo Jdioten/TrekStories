@@ -72,16 +72,91 @@ namespace TrekStories.Controllers.Tests
             throw new NotImplementedException();
         }
 
-        [TestMethod()]
-        public void EditTest()
+        [TestMethod]
+        public async Task CanEditLeisure()
         {
-            throw new NotImplementedException();
+            // Arrange - create the mock repository with leisure activities
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            LeisureActivity leisure1 = new LeisureActivity() { ID = 1, Name = "Boat Trip"};
+            LeisureActivity leisure2 = new LeisureActivity() { ID = 2, Name = "Museum Visit"};
+            tc.Activities.Add(leisure1);
+            tc.Activities.Add(leisure2);
+            // Arrange - create the controller
+            ActivitiesController controller = new ActivitiesController(tc);
+            // Act
+            var result1 = await controller.Edit(1) as ViewResult;
+            var l1 = (LeisureActivity)result1.ViewData.Model;
+            var result2 = await controller.Edit(2) as ViewResult;
+            var l2 = (LeisureActivity)result2.ViewData.Model;
+            // Assert
+            Assert.AreEqual(1, l1.ID);
+            Assert.AreEqual(2, l2.ID);
+            Assert.AreEqual("Boat Trip", l1.Name);
         }
 
-        [TestMethod()]
-        public void EditLeisureTest()
+        [TestMethod]
+        public async Task CannotEditNonexistentLeisure()
         {
-            throw new NotImplementedException();
+            // Arrange - create the mock repository
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            LeisureActivity leisure1 = new LeisureActivity() { ID = 1, Name = "Boat Trip" };
+            tc.Activities.Add(leisure1);
+            // Arrange - create the controller
+            ActivitiesController controller = new ActivitiesController(tc);
+            // Act
+            var badResult = await controller.Edit(4);
+            // Assert
+            Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
+        }
+
+        [TestMethod]
+        public async Task CanSaveValidLeisureActivityChanges()
+        {
+            // Arrange - create mock repository
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            // Arrange - create the controller
+            ActivitiesController controller = new ActivitiesController(tc);
+            // Arrange - create a leisure activity
+            LeisureActivity leisure = new LeisureActivity() { ID = 1, Name = "Boat Trip" };
+            // Act - try to save the activity
+            ActionResult result = await controller.EditLeisure(leisure);
+
+            // Assert - check the method result type
+            Assert.IsNotInstanceOfType(result, typeof(ViewResult));
+        }
+
+        [TestMethod]
+        public async Task CannotSaveInvalidChanges()
+        {
+            // Arrange - create mock repository
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            // Arrange - create the controller
+            ActivitiesController controller = new ActivitiesController(tc);
+            // Arrange - create a leisure activity
+            LeisureActivity leisure = new LeisureActivity() { ID = 1, Name = "Boat Trip" };
+            // Arrange - add an error to the model state
+            controller.ModelState.AddModelError("error", "error");
+            // Act - try to save the activity
+            ActionResult result = await controller.EditLeisure(leisure);
+
+            // Assert - check the method result type
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+        }
+
+        [TestMethod]
+        public async Task CanDeleteValidLeisureActivity()
+        {
+            // Arrange - create the mock repository
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            tc.Activities.Add(new LeisureActivity() { ID = 1, Name = "Aquapark" });
+            LeisureActivity l2 = new LeisureActivity() { ID = 2, Name = "Test" };
+            tc.Activities.Add(l2);
+            // Arrange - create the controller
+            ActivitiesController controller = new ActivitiesController(tc);
+            // Act - delete an activity
+            var result = await controller.Delete(2);
+            // Assert - ensure that the activity is deleted from repository
+            Assert.IsNull(tc.Activities.FirstOrDefault(l => l.ID == l2.ID));
         }
 
         [TestMethod()]

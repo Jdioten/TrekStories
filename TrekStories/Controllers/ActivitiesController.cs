@@ -135,15 +135,15 @@ namespace TrekStories.Controllers
             }
             if (activity is LeisureActivity)
             {
-                return View("EditLeisure");
+                return View("EditLeisure", activity);
             }
-            else if (activity is Transport)
+            else   //Transport
             {
-                return View("EditTransport");
+                return View("EditTransport", activity);
             }
             //IQueryable<LeisureActivity> bla = from b in db.Activities.OfType<LeisureActivity>() select b;
-            ViewBag.StepId = new SelectList(db.Steps, "StepId", "From", activity.StepId);
-            return View(activity);
+            //ViewBag.StepId = new SelectList(db.Steps, "StepId", "From", activity.StepId);
+            //return View(activity);
         }
 
         // POST: Activities/Edit/5
@@ -191,39 +191,36 @@ namespace TrekStories.Controllers
         }
 
         // GET: Activities/Delete/5
-        public async Task<ActionResult> Delete(int? id, bool? saveChangesError = false)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            if (saveChangesError.GetValueOrDefault())
-            {
-                ViewBag.ErrorMessage = "Delete failed. Please try again, and if the problem persists, contact the system administrator.";
-            }
-            Activity activity = await db.Activities.FindAsync(id);
-            if (activity == null)
-            {
-                return HttpNotFound();
-            }
-            return View(activity);
-        }
+        //public async Task<ActionResult> Delete(int? id, bool? saveChangesError = false)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    if (saveChangesError.GetValueOrDefault())
+        //    {
+        //        ViewBag.ErrorMessage = "Delete failed. Please try again, and if the problem persists, contact the system administrator.";
+        //    }
+        //    Activity activity = await db.Activities.FindAsync(id);
+        //    if (activity == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(activity);
+        //}
 
         // POST: Activities/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            try
-            {
-                Activity activityToDelete = new Activity() { ID = id };
-                db.MarkAsDeleted(activityToDelete);
-                await db.SaveChangesAsync();
-            }
-            catch (DataException)
-            {
-                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
-            }
+            Activity activityToDelete = await db.Activities.FindAsync(id);
+            db.Activities.Remove(activityToDelete);
+            await db.SaveChangesAsync();
+            if (activityToDelete != null)
+                {
+                   TempData["message"] = string.Format("{0} was deleted", activityToDelete.Name);
+                }
             return RedirectToAction("Index");
         }
 
