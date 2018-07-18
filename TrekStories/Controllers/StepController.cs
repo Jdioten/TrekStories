@@ -43,7 +43,8 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.NoStep = await db.Steps.Where(s => s.TripId == step.TripId).CountAsync();
+            //create array for pagination in view
+            ViewBag.Steps = await db.Steps.Where(s => s.TripId == step.TripId).OrderBy(s =>s.SequenceNo).Select(s => s.StepId).ToArrayAsync();
             return View(step);
         }
 

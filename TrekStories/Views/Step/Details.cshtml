@@ -2,17 +2,30 @@
 
 @{
     ViewBag.Title = "Details";
+    string selectClass;
 }
 
 <div class="mycontainer">
-    <h4>@Model.Trip.Title - Day @Model.SequenceNo</h4>
-    @*<div class="btn-group">
-        @for (int i = 1; i <= ViewBag.NoStep; i++)
+    @if (TempData["message"] != null)
+    {
+        <div class="alert alert-success">@TempData["message"]</div>
+    }
+    @*<div class="btn-group" style="margin-left:auto;margin-right:auto;">
+        @for (int i = 1; i <= ViewBag.Steps.Length; i++)
         {
-            <a href="@Url.Action("Details", new { id = i})" class="btn btn-default">@i</a>
+            <a href="@Url.Action("Details", new { id = ViewBag.Steps[i-1]})" class="btn btn-default">@i</a>
         }
-        Wrong!! id = 1 is the problem! need to pass stepId rather! viewbag of list of stepids ordered by seq no?
     </div>*@ 
+    <div class="text-right" >
+        <ul class="pagination pagination-sm">
+            @for (int i = 1; i <= ViewBag.Steps.Length; i++)
+            {
+                selectClass = ViewBag.Steps[i-1] == Model.StepId ? "active" : "";
+                <li class="@selectClass"><a href="@Url.Action("Details", new { id = ViewBag.Steps[i-1]})">@i</a></li>
+            }
+        </ul>
+    </div>
+    <h4>@Model.Trip.Title - Day @Model.SequenceNo</h4>
     <hr class="thick-hr"/>
     <section>
         <div class="row">
@@ -116,15 +129,15 @@
             </div>
             <a class="rotating-button btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
-
-        <dl class="dl-horizontal">
-            @*<dt>
-                @Html.DisplayNameFor(model => model.Review.PrivateNotes)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Review.PrivateNotes)
-            </dd>*@
-        </dl>
+        <div id="activity-thread">
+            <div class="row">
+                <div class="col-xs-2">
+                    9:00
+                </div>
+                <div class="col-xs-10">
+                    Activity Name
+                </div>
+            </div>
+        </div>
     </section>
 </div>

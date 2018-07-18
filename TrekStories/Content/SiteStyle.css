@@ -110,6 +110,7 @@ input, select, textarea {
     border-left: 0;
     border-right: 0;
 }
+
 /* --- Button Styling --- */
 .btn-trekstories {
     color: white /*#141b13*/;
@@ -274,6 +275,30 @@ table.tripdetailstable > tbody > tr > td {
 }
 
 /*Step Details Page Styling*/
+
+.pagination{
+    margin-top:0px;
+    margin-bottom:0px;
+}
+
+    .pagination > .active > a,
+    .pagination > .active > span,
+    .pagination > .active > a:hover,
+    .pagination > .active > span:hover,
+    .pagination > .active > a:focus,
+    .pagination > .active > span:focus {
+        background-color: #eb6864;
+        border-color: #eb6864;
+    }
+
+    .pagination > li > a:hover,
+    .pagination > li > span:hover,
+    .pagination > li > a:focus,
+    .pagination > li > span:focus {
+        background-color: #eb6864;
+        border-color: #eb6864;
+    }
+
 @media (min-width: 480px) {
     .dl-horizontal dt {
         float: left;
@@ -313,3 +338,10 @@ hr.thick-hr {
 #activity-menu .rotating-button:hover btn-group{
     display: inline-table;
 }*/
+
+#activity-thread{
+    margin-top:20px;
+    margin-right:auto;
+    margin-left:auto;
+    max-width:650px;
+}

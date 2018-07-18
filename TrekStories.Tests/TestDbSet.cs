@@ -69,6 +69,15 @@ namespace TrekStories.Tests
             get { return _query.Provider; }
         }
 
+        //Possible FIX when internet!!!
+        //public IQueryProvider Provider
+        //{
+        //    get { return new TestDbAsyncQueryProvider<T>(_query.Provider); }
+        //}
+
+//https://msdn.microsoft.com/en-us/data/dn314431 ef testing eith your own test doubles
+
+
         //System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         //{
         //    return _data.GetEnumerator();
