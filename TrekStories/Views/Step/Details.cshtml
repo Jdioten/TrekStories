@@ -10,12 +10,6 @@
     {
         <div class="alert alert-success">@TempData["message"]</div>
     }
-    @*<div class="btn-group" style="margin-left:auto;margin-right:auto;">
-        @for (int i = 1; i <= ViewBag.Steps.Length; i++)
-        {
-            <a href="@Url.Action("Details", new { id = ViewBag.Steps[i-1]})" class="btn btn-default">@i</a>
-        }
-    </div>*@ 
     <div class="text-right" >
         <ul class="pagination pagination-sm">
             @for (int i = 1; i <= ViewBag.Steps.Length; i++)
@@ -131,12 +125,15 @@
         </div>
         <div id="activity-thread">
             <div class="row">
+                @foreach (var item in Model.Activities)
+                {
                 <div class="col-xs-2">
-                    9:00
+                    @item.StartTime.ToShortTimeString()
                 </div>
                 <div class="col-xs-10">
-                    Activity Name
+                    @item.Name
                 </div>
+                }
             </div>
         </div>
     </section>
