@@ -133,6 +133,8 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.StepId = activity.StepId;
+            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
             if (activity is LeisureActivity)
             {
                 return View("EditLeisure", activity);
@@ -149,7 +151,7 @@ namespace TrekStories.Controllers
         // POST: Activities/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditLeisure([Bind(Include = "Name,StartTime,Price,Notes,Address,LeisureCategory, StepId")] LeisureActivity leisureActivity)
+        public async Task<ActionResult> EditLeisure([Bind(Include = "ID,Name,StartTime,Price,Notes,Address,LeisureCategory, StepId")] LeisureActivity leisureActivity)
         {
             if (ModelState.IsValid)
             {
@@ -176,7 +178,7 @@ namespace TrekStories.Controllers
                         }
                     }
                     await db.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", "Step", new { id = leisureActivity.StepId });
                 }
                 catch (DataException /* dex */)
                 {
@@ -232,16 +234,16 @@ namespace TrekStories.Controllers
         // POST: Activities/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int actId)
         {
-            Activity activityToDelete = await db.Activities.FindAsync(id);
-            db.Activities.Remove(activityToDelete);
-            await db.SaveChangesAsync();
+            Activity activityToDelete = await db.Activities.FindAsync(actId);
             if (activityToDelete != null)
-                {
-                   TempData["message"] = string.Format("{0} was deleted", activityToDelete.Name);
-                }
-            return RedirectToAction("Index");
+            {
+                db.Activities.Remove(activityToDelete);
+                await db.SaveChangesAsync();
+                TempData["message"] = string.Format("Activity '{0}' was deleted successfully.", activityToDelete.Name);
+            }
+            return RedirectToAction("Details", "Step", new { id = activityToDelete.StepId });
         }
 
         protected override void Dispose(bool disposing)
