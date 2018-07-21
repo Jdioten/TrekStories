@@ -37,8 +37,8 @@ namespace TrekStories.Controllers.Tests
             var step123 = (Step)result.ViewData.Model;
             Assert.AreEqual(step123.SequenceNo, 2);
             Assert.AreEqual(step123.From, "B");
-            //Assert.AreEqual(1, controller.ViewBag.Steps.Length);
-            //Assert.AreEqual(123, controller.ViewBag.Steps[0]);
+            Assert.AreEqual(1, controller.ViewBag.Steps.Length);
+            Assert.AreEqual(123, controller.ViewBag.Steps[0]);
         }
 
         [TestMethod()]
