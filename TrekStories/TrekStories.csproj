@@ -252,6 +252,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\TrekStories - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-1.12.4-vsdoc.js" />
     <Content Include="Images\mountains.jpg" />

@@ -228,9 +228,9 @@ namespace TrekStories.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
+            Step stepToDelete = await db.Steps.FindAsync(id);
             try
             {
-                Step stepToDelete = await db.Steps.FindAsync(id);
                 if (stepToDelete == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -252,7 +252,7 @@ namespace TrekStories.Controllers
             {
                 return RedirectToAction("Delete", new { id = id, saveChangesError = true});
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Trip", new { id = stepToDelete.TripId });
         }
 
         protected override void Dispose(bool disposing)
