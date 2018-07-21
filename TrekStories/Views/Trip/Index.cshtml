@@ -11,7 +11,17 @@
         </blockquote>
         <p class="hidden-xs text-center"><a href="@Url.Action("Create")" class="btn btn-primary btn">Prepare the Next Adventure &raquo;</a></p>
     </div>
-    <h3>My Trips <span class="pull-right">Add Search here...</span></h3>
+
+    <h3>
+    My Trips
+</h3>
+    <form class="form-inline search-box" role="form">
+        <div class="form-group">
+            <label class="sr-only" for="search-text">Meeting Room Name</label>
+            @Html.TextBox("SearchString", "", new { @class = "form-control", @placeholder = "Search Trip Name" })
+        </div>
+        <button type="submit" class="btn btn-success" id="search-btn">Search</button>
+    </form>
 
     <div class="row display-flex">
         @foreach (var item in Model)

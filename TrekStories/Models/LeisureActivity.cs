@@ -8,7 +8,7 @@ namespace TrekStories.Models
 {
     public enum LeisureCategory
     {
-        aquatic, sports, museum, musical, cultural, nature, entertainment, celebration, gastronomy, other
+        aquatic, sports, musical, cultural, nature, gastronomy, other
     }
 
     public class LeisureActivity : Activity

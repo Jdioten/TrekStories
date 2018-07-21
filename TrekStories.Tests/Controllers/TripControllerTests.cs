@@ -49,7 +49,7 @@ namespace TrekStories.Controllers.Tests
             // Arrange - create a controller
             var controller = new TripController(tc);
             // Action
-            var viewResult = await controller.Index() as ViewResult;
+            var viewResult = await controller.Index(null) as ViewResult;
             Trip[] result = ((IEnumerable<Trip>)viewResult.ViewData.Model).ToArray();
             // Assert
             Assert.AreEqual(result.Length, 3);

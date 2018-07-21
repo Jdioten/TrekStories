@@ -111,6 +111,12 @@ input, select, textarea {
     border-right: 0;
 }
 
+.search-box{
+    text-align:right;
+    margin-bottom:10px;
+    margin-top:0px;
+    padding-top:0px;
+}
 /* --- Button Styling --- */
 .btn-trekstories {
     color: white /*#141b13*/;
@@ -277,8 +283,8 @@ table.tripdetailstable > tbody > tr > td {
 /*Step Details Page Styling*/
 
 .pagination{
-    margin-top:0px;
-    margin-bottom:0px;
+    margin-top:0;
+    margin-bottom:0;
 }
 
     .pagination > .active > a,
@@ -339,9 +345,16 @@ hr.thick-hr {
     display: inline-table;
 }*/
 
-#activity-thread{
+.activity-thread{
     margin-top:20px;
     margin-right:auto;
     margin-left:auto;
     max-width:650px;
 }
+
+    .activity-thread .col-xs-10{
+        border-left: solid 4px #729f98;
+        /*padding-bottom: 80px;
+        padding-left: 40px;
+        padding-right: 60px;*/
+    }

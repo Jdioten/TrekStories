@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -23,9 +24,15 @@ namespace TrekStories.Controllers
         }
 
         // GET: Trip
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string searchString)
         {
-            return View(await db.Trips.OrderByDescending(t => t.StartDate).ToListAsync());  //add where userid =vlogged in user
+            var trips = from t in db.Trips
+                        select t;  //add where userid =vlogged in user
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                trips = trips.Where(t => t.Title.Contains(searchString));
+            }
+            return View(await trips.OrderByDescending(t => t.StartDate).ToListAsync());
         }
 
         // GET: Trip/Details/5
