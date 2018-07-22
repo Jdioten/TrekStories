@@ -133,18 +133,8 @@
                 <div class="col-xs-2">
                     @item.StartTime.ToShortTimeString()
                 </div>
-                <div class="col-xs-7">
-                    @item.Name
-                </div>
-                <div class="col-xs-3">
-                    @Html.ActionLink("Details", "Details", "Activities", new { id = item.ID }, null) |
-                    @Html.ActionLink("Edit", "Edit", "Activities", new { id = item.ID }, null) |
-                    @using (Html.BeginForm("Delete", "Activities"))
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.Hidden("ActId", item.ID)
-                        <input type="submit" class="btn btn-sm btn-danger" value="Delete" />
-                    }
+                <div class="col-xs-10">
+                    @Html.ActionLink(item.Name, "Details", "Activities", new { id = item.ID}, null)
                 </div>
                 }
             </div>

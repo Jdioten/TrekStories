@@ -354,7 +354,25 @@ hr.thick-hr {
 
     .activity-thread .col-xs-10{
         border-left: solid 4px #729f98;
-        /*padding-bottom: 80px;
+        padding-bottom: 45px;
         padding-left: 40px;
-        padding-right: 60px;*/
+        padding-right: 60px;
     }
+
+        .activity-thread .col-xs-10:before {
+            content: "&";
+            position: absolute;
+            left: -22px; /* = (width + border-left) / 2 */
+            top: -15px;
+            /* form & size */
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            /* colors & text */
+            background: #729f98;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 40px;
+            text-align: center;
+        }

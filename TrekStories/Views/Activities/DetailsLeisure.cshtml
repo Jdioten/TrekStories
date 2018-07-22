@@ -1,0 +1,73 @@
+﻿@model TrekStories.Models.LeisureActivity
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="mycontainer">
+    <h2>Activity Details</h2>
+
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Step.Date)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Step.Date)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.StartTime)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Price)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Notes)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Notes)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Back to Step", "Details", "Step", new { id = Model.StepId }, new { @class = "btn btn-info" }) |
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }, new { @class= "btn btn-trekstories"}) |
+        @using (Html.BeginForm("Delete", "Activities"))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("ActId", Model.ID)
+            <input type="submit" class="btn btn-sm btn-danger" value="Delete" />
+        }
+    </p>
+</div>

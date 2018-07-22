@@ -33,9 +33,28 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void DetailsTest()
+        public async Task DetailsReturnsCorrectView()
         {
-            throw new NotImplementedException();
+            // Arrange - create the mock repository with leisure activities
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Transport transport1 = new Transport() { ID = 1, Name = "Train" };
+            LeisureActivity leisure1 = new LeisureActivity() { ID = 2, Name = "Boat Trip" };
+            LeisureActivity leisure2 = new LeisureActivity() { ID = 3, Name = "Museum Visit" };
+            tc.Activities.Add(transport1);
+            tc.Activities.Add(leisure1);
+            tc.Activities.Add(leisure2);
+            // Arrange - create the controller
+            ActivitiesController controller = new ActivitiesController(tc);
+            // Act
+            var result1 = await controller.Details(1) as ViewResult;
+            var t1 = (Transport)result1.ViewData.Model;
+            var result2 = await controller.Details(3) as ViewResult;
+            var l2 = (LeisureActivity)result2.ViewData.Model;
+            // Assert
+            Assert.AreEqual("DetailsTransport", result1.ViewName);
+            Assert.AreEqual(1, t1.ID);
+            Assert.AreEqual("DetailsLeisure", result2.ViewName);
+            Assert.AreEqual("Museum Visit", l2.Name);
         }
 
         [TestMethod()]
@@ -52,24 +71,6 @@ namespace TrekStories.Controllers.Tests
             // Assert
             Assert.AreEqual("Details", result.RouteValues["action"]);
             Assert.AreEqual("Step", result.RouteValues["controller"]);
-        }
-
-        [TestMethod()]
-        public void CreateTransportTest()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void CreateLeisureTest1()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void CreateTransportTest1()
-        {
-            throw new NotImplementedException();
         }
 
         [TestMethod]

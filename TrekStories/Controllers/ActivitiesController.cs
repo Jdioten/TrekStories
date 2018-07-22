@@ -39,12 +39,19 @@ namespace TrekStories.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activity activity = await db.Activities.FindAsync(id);
+            var activity = await db.Activities.FindAsync(id);
             if (activity == null)
             {
                 return HttpNotFound();
             }
-            return View(activity);
+            if (activity is LeisureActivity)
+            {
+                return View("DetailsLeisure", activity);
+            }
+            else   //Transport
+            {
+                return View("DetailsTransport", activity);
+            }
         }
 
         //Create methods use same view as Edit methods
@@ -60,6 +67,8 @@ namespace TrekStories.Controllers
                 return HttpNotFound();
             }
             ViewBag.StepId = stepId;
+            ViewBag.From = step.From;
+            ViewBag.To = step.To;
             ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
             return View("EditLeisure", new LeisureActivity());
         }
@@ -76,6 +85,8 @@ namespace TrekStories.Controllers
                 return HttpNotFound();
             }
             ViewBag.StepId = stepId;
+            ViewBag.From = step.From;
+            ViewBag.To = step.To;
             return View("EditTransport", new Transport());
         }
 
@@ -134,6 +145,8 @@ namespace TrekStories.Controllers
                 return HttpNotFound();
             }
             ViewBag.StepId = activity.StepId;
+            ViewBag.From = activity.Step.From;
+            ViewBag.To = activity.Step.To;
             ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
             if (activity is LeisureActivity)
             {
@@ -144,8 +157,6 @@ namespace TrekStories.Controllers
                 return View("EditTransport", activity);
             }
             //IQueryable<LeisureActivity> bla = from b in db.Activities.OfType<LeisureActivity>() select b;
-            //ViewBag.StepId = new SelectList(db.Steps, "StepId", "From", activity.StepId);
-            //return View(activity);
         }
 
         // POST: Activities/Edit/5
