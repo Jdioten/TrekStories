@@ -339,5 +339,24 @@ namespace TrekStories.Controllers.Tests
 
             Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
         }
+
+        [TestMethod()]
+        public async Task CannotDeleteStepWithAccommodation()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Step stepA = new Step {
+                StepId = 11,
+                SequenceNo = 1,
+                TripId = 2,
+                Accommodation = new Accommodation { AccommodationId = 1, Name = "Hotel Zuki"}
+            };
+            tc.Steps.Add(stepA);
+
+            var controller = new StepController(tc);
+            var result = await controller.Delete(11) as RedirectToRouteResult;
+
+            Assert.AreEqual("Details", result.RouteValues["action"]);
+            Assert.AreEqual("Step", result.RouteValues["controller"]);
+        }
     }
 }

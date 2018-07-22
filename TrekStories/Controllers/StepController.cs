@@ -220,6 +220,12 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
+            if (step.Accommodation != null)
+            {
+                TempData["message"] = string.Format("Step" + step.SequenceNo + "cannot be deleted because it is linked to an accommodation." +
+                    "Please first edit or delete the accommodation for the step.");
+                return RedirectToAction("Details", "Step", new { id = step.StepId });
+            }
             return View(step);
         }
 
