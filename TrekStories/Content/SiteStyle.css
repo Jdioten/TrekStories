@@ -376,3 +376,9 @@ hr.thick-hr {
             line-height: 40px;
             text-align: center;
         }
+
+
+/*Display Delete Activity button inline in modal*/
+.inline-form{
+    display:inline;
+}
