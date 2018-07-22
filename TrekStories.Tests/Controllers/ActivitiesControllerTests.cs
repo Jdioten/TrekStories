@@ -50,8 +50,8 @@ namespace TrekStories.Controllers.Tests
             var result = await controller.EditLeisure(leisureToCreate) as RedirectToRouteResult;
 
             // Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
-            //Assert.AreEqual("Activities", result.RouteValues["controller"]);
+            Assert.AreEqual("Details", result.RouteValues["action"]);
+            Assert.AreEqual("Step", result.RouteValues["controller"]);
         }
 
         [TestMethod()]
@@ -145,6 +145,7 @@ namespace TrekStories.Controllers.Tests
 
             // Assert - check the method result type
             Assert.IsNotInstanceOfType(result, typeof(ViewResult));
+
         }
 
         [TestMethod]
