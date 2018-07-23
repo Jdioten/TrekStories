@@ -11,12 +11,6 @@ namespace TrekStories.Controllers.Tests
     [TestClass()]
     public class StepControllerTests
     {
-        //[TestMethod()]
-        //public void IndexTest()
-        //{
-        //    Assert.Fail();
-        //}
-
         [TestMethod()]
         public async Task DetailsReturnsCorrectStep()
         {
