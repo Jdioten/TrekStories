@@ -87,6 +87,7 @@ namespace TrekStories.Controllers
             ViewBag.StepId = stepId;
             ViewBag.From = step.From;
             ViewBag.To = step.To;
+            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
             return View("EditTransport", new Transport());
         }
 
@@ -203,15 +204,35 @@ namespace TrekStories.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditTransport([Bind(Include = "Name,StartTime,Price,Notes,TrasnportType,Company,Destination,Duration, StepId")] Transport transport)
+        public async Task<ActionResult> EditTransport([Bind(Include = "ID,Name,StartTime,Price,Notes,TransportType,Company,Destination,Duration,StepId")] Transport transport)
         {
             if (ModelState.IsValid)
             {
                 try
-                { 
-                    db.MarkAsModified(transport);
+                {
+                    //if new transport, add to db
+                    if (transport.ID == 0)
+                    {
+                        db.Activities.Add(transport);
+                    }
+                    else
+                    {
+                        Transport dbEntry = (Transport)db.Activities.FindAsync(transport.ID).Result;
+                        if (dbEntry != null)
+                        {
+                            dbEntry.Name = transport.Name;
+                            dbEntry.StartTime = transport.StartTime;
+                            dbEntry.Price = transport.Price;
+                            dbEntry.Notes = transport.Notes;
+                            dbEntry.TransportType = transport.TransportType;
+                            dbEntry.Company = transport.Company;
+                            dbEntry.Destination = transport.Destination;
+                            dbEntry.Duration = transport.Duration;
+                            dbEntry.StepId = transport.StepId;
+                        }
+                    }
                     await db.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", "Step", new { id = transport.StepId });
                 }
                 catch (DataException /* dex */)
                 {
