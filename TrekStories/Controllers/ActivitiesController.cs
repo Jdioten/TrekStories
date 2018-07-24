@@ -91,48 +91,6 @@ namespace TrekStories.Controllers
             return View("EditTransport", new Transport());
         }
 
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> CreateLeisure([Bind(Include = "Name,StartTime,Price,Notes,Address,LeisureCategory,StepId")] LeisureActivity leisureActivity)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            db.Activities.Add(leisureActivity);
-        //            await db.SaveChangesAsync();
-        //            return RedirectToAction("Details", "Step", new { id = leisureActivity.StepId});
-        //        }
-        //    }
-        //    catch (DataException)
-        //    {
-        //        ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
-        //    }
-        //    //ViewBag.StepId = new SelectList(db.Steps, "StepId", "From", activity.StepId);
-        //    return View(leisureActivity);
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> CreateTransport([Bind(Include = "Name,StartTime,Price,Notes,TransportType,Company,Destination,Duration,StepId")] Transport transport)
-        //{
-        //    try { 
-        //        if (ModelState.IsValid)
-        //        {
-        //            db.Activities.Add(transport);
-        //            await db.SaveChangesAsync();
-        //            return RedirectToAction("Details", "Step", new { id = transport.StepId });
-        //        }
-        //    }
-        //    catch (DataException)
-        //    {
-        //        ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
-        //    }
-        //    //ViewBag.StepId = new SelectList(db.Steps, "StepId", "From", activity.StepId);
-        //    return View(transport);
-        //}
-
         // GET: Activities/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
@@ -176,7 +134,6 @@ namespace TrekStories.Controllers
                     }
                     else
                     {
-                        //LeisureActivity dbEntry = (LeisureActivity)db.Activities.FirstOrDefaultAsync(l => l.ID == leisureActivity.ID).Result;
                         LeisureActivity dbEntry = (LeisureActivity)db.Activities.FindAsync(leisureActivity.ID).Result;
                         if (dbEntry != null)
                         {
@@ -198,7 +155,6 @@ namespace TrekStories.Controllers
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
                 }
             }
-            //ViewBag.StepId = new SelectList(db.Steps, "StepId", "From", activity.StepId);
             return View(leisureActivity);
         }
 
@@ -214,10 +170,15 @@ namespace TrekStories.Controllers
                     if (transport.ID == 0)
                     {
                         db.Activities.Add(transport);
+
+                        //update trip budget
+                        Step step = await db.Steps.FindAsync(transport.StepId);
+                        step.Trip.TotalCost += transport.Price;
                     }
                     else
                     {
                         Transport dbEntry = (Transport)db.Activities.FindAsync(transport.ID).Result;
+                        dbEntry.Step.Trip.TotalCost = dbEntry.Step.Trip.TotalCost - dbEntry.Price + transport.Price;
                         if (dbEntry != null)
                         {
                             dbEntry.Name = transport.Name;
@@ -240,7 +201,6 @@ namespace TrekStories.Controllers
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
                 }
             }
-            //ViewBag.StepId = new SelectList(db.Steps, "StepId", "From", activity.StepId);
             return View(transport);
         }
 
