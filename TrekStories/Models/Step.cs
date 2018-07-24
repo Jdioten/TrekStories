@@ -62,5 +62,12 @@ namespace TrekStories.Models
 
         public virtual ICollection<Activity> Activities { get; set; }
         public virtual Review Review { get; set; }
+
+
+        public string GetWalkingTime()
+        {
+            var ts = TimeSpan.FromHours(WalkingTime);
+            return $"{ts.Hours + (ts.Days * 24)}hr  {ts.Minutes:00}min";
+        }
     }
 }

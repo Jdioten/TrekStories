@@ -25,7 +25,7 @@ namespace TrekStories.Models
 
         [Range(0, int.MaxValue, ErrorMessage = "Please enter a positive value.")]
         public int WalkingTimeHours { get; set; }
-        [Range(0, 59, ErrorMessage = "Please enter a maximum of 59 minutes.")]
+        [Range(0, 59, ErrorMessage = "Please enter a maximum of 59 minutes, otherwise it's 1 hour.")]
         public int WalkingTimeMinutes { get; set; }
 
 

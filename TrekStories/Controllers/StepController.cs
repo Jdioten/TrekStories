@@ -66,7 +66,7 @@ namespace TrekStories.Controllers
             ViewBag.TripId = tripId;
             ViewBag.SeqNo = seqNo;
             ViewBag.TripTitle = trip.Title;
-            return View("Create");
+            return View("Create", new StepViewModel());
         }
 
         // POST: Step/Create

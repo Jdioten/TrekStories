@@ -1,4 +1,11 @@
-﻿/* --- Navigation Bar Styling ---*/
+﻿/*--- Body Styling ---*/
+body {
+    background-attachment: fixed;
+    background-size: cover;
+    margin: 0;
+}
+
+/* --- Navigation Bar Styling ---*/
 .centered-brand {
     position: absolute;
     left: 48%;
@@ -282,10 +289,15 @@ table.tripdetailstable > tbody > tr > td {
 
 /*Step Details Page Styling*/
 
-.pagination{
-    margin-top:0;
-    margin-bottom:0;
+.pagination {
+    margin-top: 0;
+    margin-bottom: 0;
 }
+
+    .pagination > li > a,
+    .pagination > li > span {
+        background-color: #f7f5f5;
+    }
 
     .pagination > .active > a,
     .pagination > .active > span,
@@ -293,7 +305,7 @@ table.tripdetailstable > tbody > tr > td {
     .pagination > .active > span:hover,
     .pagination > .active > a:focus,
     .pagination > .active > span:focus {
-        background-color: #eb6864;
+        background-color: #eb6864; /*punchier #ff3500*/
         border-color: #eb6864;
     }
 
@@ -321,7 +333,7 @@ table.tripdetailstable > tbody > tr > td {
     }
 }
 
-hr.thick-hr {
+.thick-hr {
     margin-top: 12px;
     margin-bottom: 16px;
     border-top: 3px solid #f0eceb;
