@@ -17,12 +17,13 @@ namespace TrekStories.Models
         [Required (ErrorMessage = "Indicate the Transport Type.")]
         [Display(Name = "Transport Type")]
         public TransportType TransportType { get; set; }
-        [Display(Name = "Travelling Company")]
+        [Display(Name = "Transport Company")]
         public string Company { get; set; }
         [Required(ErrorMessage = "Indicate the Destination.")]
         public string Destination { get; set; }
         [Range(0, double.MaxValue, ErrorMessage = "The duration is invalid.")]
         [Required(ErrorMessage = "Indicate the Duration.")]
+        [Display(Name = "Duration (Minutes)")]
         public double Duration { get; set; }
 
         public DateTime ArrivalTime {
