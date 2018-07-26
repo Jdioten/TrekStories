@@ -12,8 +12,14 @@ namespace TrekStories.Models
         [StringLength(40, ErrorMessage = "Accommodation Name cannot be longer than 40 characters.")]
         public string Name { get; set; }
 
-        [StringLength(150)]
-        public string Address { get; set; }
+        [StringLength(100)]
+        [Display(Name = "Street Address")]
+        public string Street { get; set; }
+
+        [StringLength(50)]
+        [Display(Name = "City")]
+        public string City { get; set; }
+
         //[RegularExpression(@"1\d{10}$", ErrorMessage="Number must be 10 digits long."] what if country prefix?
         [Phone]
         [Display(Name = "Phone Number")]

@@ -394,3 +394,7 @@ table.tripdetailstable > tbody > tr > td {
 .inline-form{
     display:inline;
 }
+
+.site-colour {
+    color: #729f98;
+}

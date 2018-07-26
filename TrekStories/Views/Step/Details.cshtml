@@ -99,19 +99,79 @@
                 <strong><em>Accommodation</em></strong>
             </div>
             <div class="col-md-4">
+                @*<address class="text-right">
+                    Name <br/>
+                    Address Street, 
+                    Town<br />
+                    0872134561<br />
+                    €52.30<br />
+                </address>*@
                 <dl class="dl-horizontal">
                     <dt>
-                        Name?
+                        @Html.DisplayNameFor(model => model.Accommodation.Name)
                     </dt>
 
                     <dd>
                         @Html.DisplayFor(model => model.Accommodation.Name)
                     </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Accommodation.Street)
+                    </dt>
+                        
+                    <dd>
+                        @Html.DisplayFor(model => model.Accommodation.Street)
+                    </dd>
+
+                    <dt>
+                       @Html.DisplayNameFor(model => model.Accommodation.City) 
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Accommodation.City)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Accommodation.PhoneNumber)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Accommodation.PhoneNumber)
+                    </dd>
                 </dl>
             </div>
             <div class="col-md-6">
                 <dl class="dl-horizontal">
-                   
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Accommodation.CheckIn)
+                    </dt>
+
+                    <dd>
+                        not needed if in activity thread @Html.DisplayFor(model => model.Accommodation.CheckIn)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Accommodation.CheckOut)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Accommodation.CheckOut)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Accommodation.Price)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Accommodation.Price)
+                    </dd>
+
+                    <dt>
+                        Confirmation
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Accommodation.ConfirmationFileUrl)
+                    </dd>
                 </dl>
             </div>
         </div>
@@ -134,7 +194,8 @@
                     @item.StartTime.ToShortTimeString()
                 </div>
                 <div class="col-xs-10">
-                    @Html.ActionLink(item.Name, "Details", "Activities", new { id = item.ID}, null)
+                    @Html.ActionLink(item.Name, "Details", "Activities", new { id = item.ID}, null) &nbsp;&nbsp;
+                    <small>(@string.Format("{0:C}", item.Price))</small>
                 </div>
                 }
             </div>

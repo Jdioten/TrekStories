@@ -38,7 +38,8 @@ namespace TrekStories.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Step step = await db.Steps.FindAsync(id);
+
+            Step step = await db.Steps.Include(s => s.Accommodation).Include(s => s.Activities).FirstOrDefaultAsync(s => s.StepId == id);
             if (step == null)
             {
                 return HttpNotFound();
