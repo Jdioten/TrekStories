@@ -188,7 +188,7 @@
         </div>
         <div class="activity-thread">
             <div class="row">
-                @foreach (var item in Model.Activities.OrderBy(a => a.StartTime))
+                @foreach (var item in Model.Activities.OrderBy(a => a.StartTime.TimeOfDay))
                 {
                 <div class="col-xs-2">
                     @item.StartTime.ToShortTimeString()
