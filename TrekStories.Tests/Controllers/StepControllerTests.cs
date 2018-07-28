@@ -29,8 +29,8 @@ namespace TrekStories.Controllers.Tests
             ViewResult result = await controller.Details(123) as ViewResult;
 
             var step123 = (Step)result.ViewData.Model;
-            Assert.AreEqual(step123.SequenceNo, 2);
-            Assert.AreEqual(step123.From, "B");
+            Assert.AreEqual(2, step123.SequenceNo);
+            Assert.AreEqual("B", step123.From);
             Assert.AreEqual(1, controller.ViewBag.Steps.Length);
             Assert.AreEqual(123, controller.ViewBag.Steps[0]);
         }

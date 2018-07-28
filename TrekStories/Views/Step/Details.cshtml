@@ -99,14 +99,13 @@
                 <strong><em>Accommodation</em></strong>
             </div>
             <div class="col-md-4">
-                @*<address class="text-right">
-                    Name <br/>
-                    Address Street, 
-                    Town<br />
-                    0872134561<br />
-                    €52.30<br />
-                </address>*@
-                <dl class="dl-horizontal">
+                <address class="text-right">
+                    @Html.DisplayFor(model => model.Accommodation.Name) <br/>
+                    @Html.DisplayFor(model => model.Accommodation.Street) <br/> 
+                    @Html.DisplayFor(model => model.Accommodation.City)<br />
+                    @Html.DisplayFor(model => model.Accommodation.PhoneNumber)<br />
+                </address>
+                @*<dl class="dl-horizontal">
                     <dt>
                         @Html.DisplayNameFor(model => model.Accommodation.Name)
                     </dt>
@@ -137,7 +136,7 @@
                     <dd>
                         @Html.DisplayFor(model => model.Accommodation.PhoneNumber)
                     </dd>
-                </dl>
+                </dl>*@
             </div>
             <div class="col-md-6">
                 <dl class="dl-horizontal">
