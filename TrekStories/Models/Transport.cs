@@ -26,11 +26,10 @@ namespace TrekStories.Models
         [Display(Name = "Duration (Minutes)")]
         public double Duration { get; set; }
 
-        public DateTime ArrivalTime {
-            get
-            {
-                return StartTime.AddMinutes(Duration);
-            }
+        public DateTime GetArrivalTime()
+        {
+            DateTime start = new DateTime(Step.Date.Year, Step.Date.Month, Step.Date.Day, StartTime.Hour, StartTime.Minute, StartTime.Second);
+            return start.AddMinutes(Duration);
         }
     }
 }
