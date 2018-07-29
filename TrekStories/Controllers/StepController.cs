@@ -235,7 +235,7 @@ namespace TrekStories.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Step stepToDelete = await db.Steps.FindAsync(id);
+            Step stepToDelete = await db.Steps.Include(s => s.Trip).SingleOrDefaultAsync(s => s.StepId == id);
             try
             {
                 if (stepToDelete == null)
