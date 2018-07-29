@@ -26,10 +26,35 @@ namespace TrekStories.Controllers.Tests
             throw new NotImplementedException();
         }
 
-        [TestMethod()]
-        public void IndexTest()
+        [TestMethod]
+        public async Task IndexContainsAllAccommodationsForTrip()
         {
-            throw new NotImplementedException();
+            // Arrange - create the mock repository
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Accommodation acc1 = new Accommodation { AccommodationId = 1 };
+            Accommodation acc2 = new Accommodation { AccommodationId = 2 };
+            tc.Accommodations.Add(acc1);
+            tc.Accommodations.Add(acc2);
+            Trip trip = new Trip
+            {
+                TripId = 123,
+                Steps = new List<Step>()
+                {
+                    new Step {StepId = 11, AccommodationId = 1},
+                    new Step {StepId = 12, AccommodationId = 2},
+                    new Step {StepId = 13 }
+                }
+            };
+            tc.Trips.Add(trip);
+            // Arrange - create a controller
+            AccommodationController controller = new AccommodationController(tc);
+            // Action
+            var viewResult = await controller.Index(123) as ViewResult;
+            Accommodation[] result = ((IEnumerable<Accommodation>)viewResult.ViewData.Model).ToArray();
+            // Assert
+            Assert.AreEqual(result.Length, 2);
+            Assert.AreEqual(1, result[0].AccommodationId);
+            Assert.AreEqual(2, result[1].AccommodationId);
         }
 
         [TestMethod()]

@@ -2,68 +2,76 @@
 
 @{
     ViewBag.Title = "Index";
+    ViewBag.TotalNights = 0;
+    ViewBag.TotalPrice = 0;
 }
 
-<h2>Index</h2>
+<div class="mycontainer">
+    <h2>Accommodations for @ViewBag.TripTitle</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CheckIn)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CheckOut)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ConfirmationFileUrl)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th></th>
-    </tr>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table table-responsive">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckIn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckOut)
+            </th>
+            <th>
+                No of Nights
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th></th>
+        </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Address)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PhoneNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CheckIn)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CheckOut)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ConfirmationFileUrl)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.AccommodationId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.AccommodationId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.AccommodationId })
-        </td>
-    </tr>
-}
-
-</table>
+        @foreach (var item in Model)
+        {
+            ViewBag.TotalNights += item.GetDatesBetweenInAndOut().Count;
+            ViewBag.TotalPrice += item.Price;
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CheckIn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CheckOut)
+                </td>
+                <td>
+                    @item.GetDatesBetweenInAndOut().Count
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.AccommodationId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.AccommodationId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.AccommodationId })
+                </td>
+            </tr>
+        }
+        <tr bgcolor="#e2ebea">
+            <td>Total:</td>
+            <td></td>
+            <td></td>
+            <td>@ViewBag.TotalNights Nights</td>
+            <td></td>
+            <td>@ViewBag.TotalPrice @ViewBag.Currency</td>
+        </tr>
+    </table>
+</div>

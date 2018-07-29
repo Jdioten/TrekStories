@@ -15,7 +15,7 @@
                     <p>
                         @(Model.TotalWalkingDistance) Km in <em>@Model.Country</em><br />
                         @Model.Duration  Day(s) starting on <strong>@Model.StartDate.ToLongDateString()</strong><br />
-                        Budget: <span style="color:#729f98">@string.Format("{0:C}", Model.TotalCost)</span><br />
+                        Budget: <span class="site-colour">@string.Format("{0:C}", Model.TotalCost)</span><br />
                         <button type="button" class="btn btn-info btn-xs" data-toggle="collapse" data-target="#notescontent">Notes</button>
                         <div id="notescontent" class="collapse">
                             @Model.Notes
@@ -63,5 +63,6 @@
             </table>
         </div>
     </div>
-    <p>@Html.ActionLink("Re-Order All Steps", "ReorderSteps", "Step")</p>
+    <p>@Html.ActionLink("Re-Order All Steps", "ReorderSteps", "Step") |
+    @Html.ActionLink("View All Trip Accommodations", "Index", "Accommodation", new { tripId = Model.TripId}, null)</p>
 </div> @*end of container*@

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Net;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
-using TrekStories.Abstract;
 
 namespace TrekStories.Controllers
 {
@@ -25,9 +25,29 @@ namespace TrekStories.Controllers
         }
 
         // GET: Accommodation
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? tripId)
         {
-            return View(await db.Accommodations.ToListAsync());
+            if (tripId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Trip trip = await db.Trips.Include(t => t.Steps).SingleOrDefaultAsync(t => t.TripId == tripId);
+            if (trip == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.TripTitle = trip.Title;
+
+            //SHOULD THIS BE WRITTEN ASYNC?
+            //return accommodations just for trip...
+            var tripAccommodations = from s in trip.Steps
+                                     join a in db.Accommodations
+                                     on s.AccommodationId equals a.AccommodationId
+                                     select a;
+
+            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+
+            return View(tripAccommodations);
         }
 
         // GET: Accommodation/Details/5
@@ -63,9 +83,30 @@ namespace TrekStories.Controllers
                 {
                     ModelState.AddModelError("", "Please check the check-in and check-out dates. Check-out cannot be before check-in.");
                 }
+
+                //if before trip start date -> error
+
+
+
                 else if (ModelState.IsValid)
                 {
+
+                    //for any existing step within dates, check no accommodation exists
+                    //and if not step create it
+                    List<DateTime> dates = accommodation.GetDatesBetweenInAndOut();
+                    //foreach date in dates
+                    //is step date the same
+                    
+                    //create any non-existing step?
+
+
+                    //give feedback to user about which step to check?
+
                     db.Accommodations.Add(accommodation);
+
+                    //add accommodation against relevant steps
+                    //...
+
                     await db.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
