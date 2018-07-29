@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TrekStories.Models;
+using System.Collections.Generic;
 
 namespace TrekStories.Tests
 {
@@ -35,6 +36,24 @@ namespace TrekStories.Tests
 
             Assert.AreEqual(acc1.IsCheckInBeforeCheckOut(), false);
             Assert.AreEqual(acc2.IsCheckInBeforeCheckOut(), false);
+        }
+
+        [TestMethod]
+        public void CanGetDatesBetweenCheckInAndCheckOut()
+        {
+            Accommodation acc1 = new Accommodation()
+            {
+                CheckIn = new DateTime(2018, 2, 3, 9, 0, 0),
+                CheckOut = new DateTime(2018, 2, 5, 14, 0, 0)
+            };
+
+            var dates = acc1.GetDatesBetweenInAndOut();
+            var expected = new List<DateTime>();
+            expected.Add(new DateTime(2018, 2, 3, 0, 0, 0));
+            expected.Add(new DateTime(2018, 2, 4, 0, 0, 0));
+
+            Assert.AreEqual(2, dates.Count);
+            CollectionAssert.AreEqual(expected, dates);
         }
     }
 }

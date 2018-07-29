@@ -113,8 +113,8 @@ namespace TrekStories.Controllers.Tests
             //Arrange
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             ActivitiesController controller = new ActivitiesController(tc);
-            Trip trip = new Trip { TripId = 1, TotalCost = 10 };
-            Step step = new Step { StepId = 2, TripId = 1, Trip = trip };
+            Trip trip = new Trip { TripId = 1, TotalCost = 10, StartDate = new DateTime(2018, 7, 15, 9, 30, 0) };
+            Step step = new Step { StepId = 2, TripId = 1, Trip = trip, SequenceNo = 1 };
             tc.Trips.Add(trip);
             tc.Steps.Add(step);
             Transport transportToCreate = new Transport() { Name = "Train to Paris", StartTime = new DateTime(2018, 7, 16, 9, 30, 0), Duration = 120, Price = 23, StepId = 2, Step = step };
@@ -126,7 +126,7 @@ namespace TrekStories.Controllers.Tests
             Assert.AreEqual("Details", result.RouteValues["action"]);
             Assert.AreEqual("Step", result.RouteValues["controller"]);
             Assert.AreEqual(33, trip.TotalCost);
-            Assert.AreEqual(new DateTime(2018, 7, 16, 11, 30, 0), transportToCreate.ArrivalTime);  //keep this?
+            Assert.AreEqual(new DateTime(2018, 7, 15, 11, 30, 0), transportToCreate.GetArrivalTime());  //keep this?
         }
 
         [TestMethod]
