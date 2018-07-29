@@ -131,10 +131,17 @@ namespace TrekStories.Controllers
                     if (leisureActivity.ID == 0)
                     {
                         db.Activities.Add(leisureActivity);
+
+                        //REFACTOR THIS METHOD??
+                        //update trip budget
+                        Step step = await db.Steps.Include(s => s.Trip).FirstOrDefaultAsync(s => s.StepId == leisureActivity.StepId);
+                        step.Trip.TotalCost += leisureActivity.Price;
                     }
                     else
                     {
                         LeisureActivity dbEntry = (LeisureActivity)db.Activities.FindAsync(leisureActivity.ID).Result;
+                        //update trip budget
+                        dbEntry.Step.Trip.TotalCost = dbEntry.Step.Trip.TotalCost - dbEntry.Price + leisureActivity.Price;
                         if (dbEntry != null)
                         {
                             dbEntry.Name = leisureActivity.Name;
@@ -172,12 +179,13 @@ namespace TrekStories.Controllers
                         db.Activities.Add(transport);
 
                         //update trip budget
-                        Step step = await db.Steps.FindAsync(transport.StepId);
+                        Step step = await db.Steps.Include(s => s.Trip).FirstOrDefaultAsync(s => s.StepId == transport.StepId);
                         step.Trip.TotalCost += transport.Price;
                     }
                     else
                     {
                         Transport dbEntry = (Transport)db.Activities.FindAsync(transport.ID).Result;
+                        //update trip budget
                         dbEntry.Step.Trip.TotalCost = dbEntry.Step.Trip.TotalCost - dbEntry.Price + transport.Price;
                         if (dbEntry != null)
                         {
@@ -232,6 +240,11 @@ namespace TrekStories.Controllers
             if (activityToDelete != null)
             {
                 db.Activities.Remove(activityToDelete);
+
+                //update trip budget
+                Step step = await db.Steps.FindAsync(activityToDelete.StepId);
+                step.Trip.TotalCost -= activityToDelete.Price;
+
                 await db.SaveChangesAsync();
                 TempData["message"] = string.Format("Activity '{0}' was deleted successfully.", activityToDelete.Name);
             }
