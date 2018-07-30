@@ -371,11 +371,28 @@ table.tripdetailstable > tbody > tr > td {
         padding-right: 60px;
     }
 
-        .activity-thread .col-xs-10:before {
+        /*.activity-thread .col-xs-10:before {
             content: "&";
             position: absolute;
-            left: -22px; /* = (width + border-left) / 2 */
+            left: -22px;
             top: -15px;
+
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+
+            background: #729f98;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 40px;
+            text-align: center;
+        }*/
+
+        .activity-thread .icon {
+            position: absolute;
+            left: -22px; /* = (width + border-left) / 2 */
+            top: -10px;
             /* form & size */
             border-radius: 50%;
             height: 40px;

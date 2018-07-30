@@ -1,0 +1,23 @@
+﻿@model List<TrekStories.Models.ActivityThreadViewModel>
+
+@* or should Model be a list? *@
+
+    <div class="activity-thread">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-xs-2">
+                    @item.StartTime.ToShortTimeString()
+                </div>
+                <div class="col-xs-10">
+                    <span class="icon @item.Icon"></span>
+                    @Html.ActionLink(item.Name, "Details", item.Controller, new { id = item.ID }, null) &nbsp;&nbsp;
+                    <small>(@string.Format("{0:C}", item.Price))</small> <br />
+                    @if (item.ArrivalTime.HasValue)
+                    {
+                        <span>Arrival: @item.ArrivalTime.Value.ToShortTimeString()</span>
+                    }
+                </div>
+            }
+        </div>
+    </div>

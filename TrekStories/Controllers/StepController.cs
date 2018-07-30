@@ -39,13 +39,17 @@ namespace TrekStories.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Step step = await db.Steps.Include(s => s.Accommodation).Include(s => s.Activities).FirstOrDefaultAsync(s => s.StepId == id);
+            Step step = await db.Steps.Include(s => s.Accommodation).FirstOrDefaultAsync(s => s.StepId == id);
             if (step == null)
             {
                 return HttpNotFound();
             }
             //create array for pagination in view
             ViewBag.Steps = await db.Steps.Where(s => s.TripId == step.TripId).OrderBy(s =>s.SequenceNo).Select(s => s.StepId).ToArrayAsync();
+
+            //create activity thread
+            ViewBag.ActivityThread = CreateActivityThread(step).OrderBy(a => a.StartTime.TimeOfDay).ToList();
+
             return View(step);
         }
 
@@ -269,6 +273,109 @@ namespace TrekStories.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+
+
+
+        public List<ActivityThreadViewModel> CreateActivityThread(Step step)
+        {
+            List<ActivityThreadViewModel> activityThread = new List<ActivityThreadViewModel>();
+
+            //add to list the leisure activities
+            foreach (LeisureActivity activity in db.Activities.OfType<LeisureActivity>().Where(a => a.StepId == step.StepId).ToList())
+            {
+                activityThread.Add(new ActivityThreadViewModel
+                {
+                    ID = activity.ID,
+                    StartTime = activity.StartTime,
+                    Name = activity.Name,
+                    Price = activity.Price,
+                    Icon = GetIcon(activity.LeisureCategory.ToString()),
+                    Controller = "Activities"
+                }
+            );
+            }
+
+            //add to list the transports
+            foreach (Transport activity in db.Activities.OfType<Transport>().Where(a => a.StepId == step.StepId).ToList())
+            {
+                activityThread.Add(new ActivityThreadViewModel
+                {
+                    ID = activity.ID,
+                    StartTime = activity.StartTime,
+                    Name = activity.Name,
+                    Price = activity.Price,
+                    Icon = GetIcon(activity.TransportType.ToString()),
+                    ArrivalTime = activity.GetArrivalTime(),
+                    Controller = "Activities"
+                }
+            );
+            }
+
+            //Add check-in and check-out as activities if happening on step date
+
+            if (step.Accommodation != null)
+            {
+                //REVIEW THIS IF CHANGING DB SCHEMA
+                //needs to search in accommodations for matching check-in --separate method?
+                if (step.Accommodation.CheckIn.Day == step.Date.Day)
+                {
+                    activityThread.Add(new ActivityThreadViewModel
+                    {
+                        ID = step.Accommodation.AccommodationId,
+                        StartTime = step.Accommodation.CheckIn,
+                        Name = "Check-In at " + step.Accommodation.Name,
+                        Price = step.Accommodation.Price,
+                        Icon = "fas fa-bed",
+                        Controller = "Accommodation"
+                    }
+                    );
+                }
+                //REVIEW THIS IF CHANGING DB SCHEMA
+                if (step.Accommodation.CheckOut.Day == step.Date.Day)
+                {
+                    activityThread.Add(new ActivityThreadViewModel
+                    {
+                        ID = step.Accommodation.AccommodationId,
+                        StartTime = step.Accommodation.CheckOut,
+                        Name = "Check-Out at " + step.Accommodation.Name,
+                        Price = step.Accommodation.Price,
+                        Icon = "fas fa-bed",
+                        Controller = "Accommodation"
+                    }
+                    );
+                }
+            }
+            return activityThread;
+        }
+
+        public string GetIcon(string type)
+        {
+            switch (type)
+            {
+                case "boat": return "fas fa-ship";
+                case "plane": return "fas fa-plane";
+                case "train":
+                case "tram":
+                case "metro":
+                    { return "fas fa-subway"; }
+                case "bus": return "fas fa-bus";
+                case "car": return "fas fa-car";
+                case "hitchhiking": return "fas fa-thumbs-up";
+                case "bike": return "fas fa-bicycle";
+                case "foot": return "fas fa-walking";
+
+                case "aquatic": return "fas fa-swimmer";
+                case "sports": return "fas fa-dribble";
+                case "musical": return "fas fa-music";
+                case "cultural": return "fas fa-university";
+                case "nature": return "fas fa-paw";
+                case "gastronomy": return "fas fa-utensils";
+                case "other": return "fas fa-puzzle-piece";
+
+                default: return "";
+            }
         }
 
         public async Task<ActionResult> ReorderSteps()

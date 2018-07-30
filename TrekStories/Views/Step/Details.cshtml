@@ -1,4 +1,6 @@
-﻿@model TrekStories.Models.Step
+﻿@using TrekStories.Models
+@model TrekStories.Models.Step
+
 
 @{
     ViewBag.Title = "Details";
@@ -185,9 +187,10 @@
             </div>
             <a class="rotating-button btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
-        <div class="activity-thread">
-            <div class="row">
-                @foreach (var item in Model.Activities.OrderBy(a => a.StartTime.TimeOfDay))
+        @Html.Partial("_ActivityThread", (List<ActivityThreadViewModel>)ViewBag.ActivityThread)
+        @*<div class="activity-thread">
+            <div class="row">*@
+                @*@foreach (var item in Model.Activities.OrderBy(a => a.StartTime.TimeOfDay))
                 {
                 <div class="col-xs-2">
                     @item.StartTime.ToShortTimeString()
@@ -196,8 +199,12 @@
                     @Html.ActionLink(item.Name, "Details", "Activities", new { id = item.ID}, null) &nbsp;&nbsp;
                     <small>(@string.Format("{0:C}", item.Price))</small>
                 </div>
-                }
-            </div>
-        </div>
+                }*@
+                @*@foreach (var a in ViewBag.ActivityThread)
+                {
+                    @Html.Partial("_ActivityThread", (ActivityThreadViewModel)a)
+                }*@
+            @*</div>
+        </div>*@
     </section>
 </div>

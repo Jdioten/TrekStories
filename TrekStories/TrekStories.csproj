@@ -223,6 +223,7 @@
     <Compile Include="Models\Accommodation.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activity.cs" />
+    <Compile Include="Models\ActivityThreadViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LeisureActivity.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -333,6 +334,7 @@
     <Content Include="Views\Accommodation\Details.cshtml" />
     <Content Include="Views\Accommodation\Edit.cshtml" />
     <Content Include="Views\Accommodation\Index.cshtml" />
+    <Content Include="Views\Shared\_ActivityThread.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
