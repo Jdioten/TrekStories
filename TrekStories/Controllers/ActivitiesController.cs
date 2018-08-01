@@ -26,11 +26,11 @@ namespace TrekStories.Controllers
         }
 
         // GET: Activities
-        public async Task<ActionResult> Index()
-        {
-            var activities = db.Activities.Include(a => a.Step);
-            return View(await activities.ToListAsync());
-        }
+        //public async Task<ActionResult> Index()
+        //{
+        //    var activities = db.Activities.Include(a => a.Step);
+        //    return View(await activities.ToListAsync());
+        //}
 
         // GET: Activities/Details/5
         public async Task<ActionResult> Details(int? id)
@@ -132,7 +132,7 @@ namespace TrekStories.Controllers
                     {
                         db.Activities.Add(leisureActivity);
 
-                        //REFACTOR THIS METHOD??
+                        //REFACTOR THIS METHOD?
                         //update trip budget
                         Step step = await db.Steps.Include(s => s.Trip).FirstOrDefaultAsync(s => s.StepId == leisureActivity.StepId);
                         step.Trip.TotalCost += leisureActivity.Price;

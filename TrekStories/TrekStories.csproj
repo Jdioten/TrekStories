@@ -251,6 +251,7 @@
     <Content Include="Images\architecture.jpg" />
     <Content Include="Images\ben-silhouette-1389811.jpg" />
     <Content Include="Images\bridge-clouds-forest-461772.jpg" />
+    <Content Include="Images\ChataPriZelenomPlese.jpg" />
     <Content Include="Images\coast.jpg" />
     <Content Include="Images\countryside.jpg" />
     <Content Include="Images\desert.jpg" />
@@ -335,6 +336,7 @@
     <Content Include="Views\Accommodation\Edit.cshtml" />
     <Content Include="Views\Accommodation\Index.cshtml" />
     <Content Include="Views\Shared\_ActivityThread.cshtml" />
+    <Content Include="Views\Activities\DetailsTransport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

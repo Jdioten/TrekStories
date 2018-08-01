@@ -14,17 +14,6 @@ namespace TrekStories.Controllers.Tests
     [TestClass()]
     public class ActivitiesControllerTests
     {
-        [TestMethod()]
-        public void ActivitiesControllerTest()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void ActivitiesControllerTest1()
-        {
-            throw new NotImplementedException();
-        }
 
         [TestMethod()]
         public void IndexTest()
@@ -92,12 +81,14 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public async Task CanCreateLeisureWithEditMethod()
+        public async Task CanCreateLeisureWithEditMethodAndUpdateBudget()
         {
             //Arrange
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             ActivitiesController controller = new ActivitiesController(tc);
-            LeisureActivity leisureToCreate = new LeisureActivity() { Name = "Boat Trip", StartTime = new DateTime(2018, 7, 16, 9, 30, 0), LeisureCategory = LeisureCategory.aquatic };
+            Step step = new Step { StepId = 2, Trip = new Trip { TripId = 321, TotalCost = 100} };
+            tc.Steps.Add(step);
+            LeisureActivity leisureToCreate = new LeisureActivity() { Name = "Boat Trip", StartTime = new DateTime(2018, 7, 16, 9, 30, 0), LeisureCategory = LeisureCategory.aquatic, Price = 20, StepId = 2 };
 
             // Act
             var result = await controller.EditLeisure(leisureToCreate) as RedirectToRouteResult;
@@ -105,6 +96,7 @@ namespace TrekStories.Controllers.Tests
             // Assert
             Assert.AreEqual("Details", result.RouteValues["action"]);
             Assert.AreEqual("Step", result.RouteValues["controller"]);
+            Assert.AreEqual(120, step.Trip.TotalCost);
         }
 
         [TestMethod()]
@@ -126,7 +118,7 @@ namespace TrekStories.Controllers.Tests
             Assert.AreEqual("Details", result.RouteValues["action"]);
             Assert.AreEqual("Step", result.RouteValues["controller"]);
             Assert.AreEqual(33, trip.TotalCost);
-            Assert.AreEqual(new DateTime(2018, 7, 15, 11, 30, 0), transportToCreate.GetArrivalTime());  //keep this?
+            Assert.AreEqual(new DateTime(2018, 7, 15, 11, 30, 0), transportToCreate.GetArrivalTime());
         }
 
         [TestMethod]
@@ -205,11 +197,48 @@ namespace TrekStories.Controllers.Tests
             ActivitiesController controller = new ActivitiesController(tc);
             // Arrange - create a leisure activity
             LeisureActivity leisure = new LeisureActivity() { ID = 1, Name = "Boat Trip" };
+            leisure.Step = new Step { StepId = 123, Trip = new Trip { TripId = 321, TotalCost = 100 } };
+            tc.Activities.Add(leisure);
+            LeisureActivity updatedLeisure = new LeisureActivity()
+            {
+                ID = 1,
+                Name = "Name Changed",
+                StartTime = new DateTime(2018, 8, 1, 14, 30, 0)
+            };
             // Act - try to save the activity
             ActionResult result = await controller.EditLeisure(leisure);
 
             // Assert - check the method result type
             Assert.IsNotInstanceOfType(result, typeof(ViewResult));
+        }
+
+        [TestMethod]
+        public async Task EditTransportUpdatesBudget()
+        {
+            // Arrange - create mock repository
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            // Arrange - create the controller
+            ActivitiesController controller = new ActivitiesController(tc);
+            // Arrange - create a transport
+            Trip trip = new Trip { TripId = 321, TotalCost = 100 };
+            Transport transport = new Transport() { ID = 1, Name = "Bus Transportation", Price = 60 };
+            transport.Step = new Step { StepId = 123, Trip = trip };
+            tc.Trips.Add(trip);
+            tc.Activities.Add(transport);
+            Transport updatedTransport = new Transport()
+            {
+                ID = 1,
+                Name = "Name Change",
+                Destination = "Roma",
+                Duration = 20,
+                StartTime = new DateTime(2018,8,1,9,30,0),
+                Price = 50
+            };
+            // Act - try to save the activity
+            ActionResult result = await controller.EditTransport(updatedTransport);
+
+            // Assert - check the method result type
+            Assert.AreEqual(90, trip.TotalCost);
         }
 
         [TestMethod]
@@ -230,15 +259,8 @@ namespace TrekStories.Controllers.Tests
             Assert.IsInstanceOfType(result, typeof(ViewResult));
         }
 
-        [TestMethod()]
-        public void EditTransportTest()
-        {
-            throw new NotImplementedException();
-        }
-
-
         [TestMethod]
-        public async Task CanDeleteValidLeisureActivity()
+        public async Task CanDeleteValidActivityAndUpdateBudget()
         {
             // Arrange - create the mock repository
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
@@ -256,19 +278,6 @@ namespace TrekStories.Controllers.Tests
             Assert.IsNull(tc.Activities.FirstOrDefault(l => l.ID == l2.ID));
             // Assert - ensure that the trip budget was updated
             Assert.AreEqual(trip.TotalCost, 5);
-        }
-
-        
-        [TestMethod()]
-        public void DeleteTest()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void DeleteConfirmedTest()
-        {
-            throw new NotImplementedException();
         }
     }
 }
