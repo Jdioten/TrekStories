@@ -1,13 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TrekStories.Controllers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using TrekStories.Tests;
-using TrekStories.Models;
 using System.Web.Mvc;
+using TrekStories.Models;
+using TrekStories.Tests;
 
 namespace TrekStories.Controllers.Tests
 {
