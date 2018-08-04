@@ -2,79 +2,81 @@
 
 @{
     ViewBag.Title = "Delete";
+    var trClass = String.IsNullOrEmpty(Model.ConfirmationFileUrl) ? "hidden" : "";
 }
 
-<h2>Delete</h2>
-<p class="error">@ViewBag.ErrorMessage</p>
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Accommodation</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+<div class="mycontainer">
+    <p class="error">@ViewBag.ErrorMessage</p>
+    <h3>Are you sure you want to delete this Accommodation<span class="@trClass"> and its confirmation file</span>?</h3>
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
+            <dt>
+                Address
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Address)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Street) @Html.DisplayFor(model => model.City)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CheckIn)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.CheckIn)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CheckIn)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.CheckIn)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CheckOut)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.CheckOut)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CheckOut)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.CheckOut)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ConfirmationFileUrl)
-        </dt>
+            <dt class="@trClass">
+                Booking File
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ConfirmationFileUrl)
-        </dd>
+            <dd class="@trClass">
+                @Html.DisplayFor(model => model.ConfirmationFileUrl)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Price)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Price)
+            </dd>
 
-    </dl>
+        </dl>
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
-    }
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-danger" /> |
+                @Html.ActionLink("Back to Previous Page", null, null, null, new { href = Request.UrlReferrer })
+            </div>
+        }
+    </div>
 </div>

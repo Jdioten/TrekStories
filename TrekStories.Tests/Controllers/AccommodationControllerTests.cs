@@ -149,15 +149,39 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void DeleteTest()
+        public async Task DeleteReturnsCorrectAccommodation()
         {
-            throw new NotImplementedException();
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Accommodation acc = new Accommodation { AccommodationId = 10, Name = "Hotel Test" };
+            tc.Accommodations.Add(acc);
+            var controller = new AccommodationController(tc);
+            // Act - delete the product
+            var result = await controller.Delete(10) as ViewResult;
+            var resultAcc = (Accommodation)result.ViewData.Model;
+
+            // Assert
+            Assert.AreEqual(10, resultAcc.AccommodationId);
+            Assert.AreEqual("Hotel Test", resultAcc.Name);
         }
 
-        [TestMethod()]
-        public void DeleteConfirmedTest()
+        [TestMethod]
+        public async Task CanDeleteAccommodationAndUpdateBudget()
         {
-            throw new NotImplementedException();
+            // Arrange - create the mock repository
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Trip trip = new Trip { TripId = 1, Title = "Trip Name", TotalCost = 120 };
+            tc.Trips.Add(trip);
+            tc.Steps.Add(new Step { StepId = 123, Trip = trip, AccommodationId = 2 });
+            Accommodation a2 = new Accommodation() { AccommodationId = 2, Name = "Test", Price = 70 };
+            tc.Accommodations.Add(a2);
+            // Arrange - create the controller
+            AccommodationController controller = new AccommodationController(tc);
+            // Act - delete an accommodation
+            var result = await controller.DeleteConfirmed(2);
+            // Assert - ensure that the accommodation is deleted from repository
+            Assert.IsNull(tc.Accommodations.FirstOrDefault(a => a.AccommodationId == a2.AccommodationId));
+            // Assert - ensure that the trip budget was updated
+            Assert.AreEqual(trip.TotalCost, 50);
         }
     }
 }

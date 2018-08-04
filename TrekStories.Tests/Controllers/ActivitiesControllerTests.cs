@@ -274,7 +274,7 @@ namespace TrekStories.Controllers.Tests
             // Assert - ensure that the activity is deleted from repository
             Assert.IsNull(tc.Activities.FirstOrDefault(l => l.ID == l2.ID));
             // Assert - ensure that the trip budget was updated
-            Assert.AreEqual(trip.TotalCost, 5);
+            Assert.AreEqual(5, trip.TotalCost);
         }
     }
 }

@@ -36,6 +36,7 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.TripId = tripId;
             ViewBag.TripTitle = trip.Title;
 
             //SHOULD THIS BE WRITTEN ASYNC?
@@ -66,8 +67,17 @@ namespace TrekStories.Controllers
         }
 
         // GET: Accommodation/Create
-        public ActionResult Create()
+        public ActionResult Create(int? id) //tripId
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+            
+            //pass in steps dates as default..
+
             return View();
         }
 
@@ -83,31 +93,29 @@ namespace TrekStories.Controllers
                 {
                     ModelState.AddModelError("", "Please check the check-in and check-out dates. Check-out cannot be before check-in.");
                 }
-
-                //if before trip start date -> error
-
-
-
                 else if (ModelState.IsValid)
                 {
+                    //if before trip start date -> error
+                    Trip trip = new Trip(); //replace this!!!
 
-                    //for any existing step within dates, check no accommodation exists
-                    //and if not step create it
-                    List<DateTime> dates = accommodation.GetDatesBetweenInAndOut();
-                    //foreach date in dates
-                    //is step date the same
-                    
-                    //create any non-existing step?
-
-
-                    //give feedback to user about which step to check?
+                    try
+                    {
+                        AssignAccommodationToStep(accommodation, trip, true);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        //give feedback to user about which step to check
+                        ViewBag.ErrorMessage = ex.Message;
+                        return View(accommodation);
+                    }
 
                     db.Accommodations.Add(accommodation);
 
-                    //add accommodation against relevant steps
-                    //...
+                    //increase trip budget
+
 
                     await db.SaveChangesAsync();
+                    //return update view in case user wants to attach confirmation file
                     return RedirectToAction("Index");
                 }
             }
@@ -148,6 +156,10 @@ namespace TrekStories.Controllers
             if (ModelState.IsValid)
             {
                 db.MarkAsModified(accommodation);
+
+                //update trip budget
+                
+
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -179,9 +191,22 @@ namespace TrekStories.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Accommodation accommodation = await db.Accommodations.FindAsync(id);
+        
+            //set accommodation id to null
+            List<Step> steps = await db.Steps.Include(s => s.Trip).Where(s => s.AccommodationId == accommodation.AccommodationId).ToListAsync();
+            {
+                foreach (Step s in steps)
+                {
+                    s.AccommodationId = null;
+                }
+            }
             db.Accommodations.Remove(accommodation);
+
+            //update trip budget
+            steps.First().Trip.TotalCost -= accommodation.Price;
+
             await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Trip", new { id = steps.First().Trip.TripId});
         }
 
         protected override void Dispose(bool disposing)
@@ -191,6 +216,28 @@ namespace TrekStories.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public static void AssignAccommodationToStep(Accommodation acc, Trip trip, bool insert)
+        {
+            //for any existing step within dates, check no accommodation exists
+            var dates = acc.GetDatesBetweenInAndOut();
+            foreach (var date in dates)
+            {
+                Step step = trip.Steps.FirstOrDefault(s => s.Date == date);
+                if (step == null)
+                {
+                    throw new ArgumentException("There is no existing step for date" + date.ToShortDateString() + ".");   
+                }
+                else if (insert && step.AccommodationId != null) //or ==accID for updates?
+                {
+                    throw new ArgumentException("An accommodation already exists for Step " + step.SequenceNo);
+                }
+                else
+                {
+                    step.AccommodationId = acc.AccommodationId;
+                }
+            }
         }
     }
 }

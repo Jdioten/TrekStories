@@ -5,6 +5,8 @@
 @{
     ViewBag.Title = "Details";
     string selectClass;
+    //var hideIfEmpty = Model.Accommodation == null ? "hidden" : "";
+    //var hideIfExisting = Model.Accommodation != null ? "hidden" : "";
 }
 
 <div class="mycontainer">
@@ -176,6 +178,18 @@
                 </dl>
             </div>
         </div>
+        <p>
+            @if (Model.Accommodation == null)
+            {
+                @Html.ActionLink("Create", "Create", "Accommodation", new { id = Model.TripId }, null)
+            }
+            else
+            {
+                @Html.ActionLink("Edit", "Edit", "Accommodation", new { id = Model.Accommodation.AccommodationId }, null)
+                <span> | </span>
+                @Html.ActionLink("Delete", "Delete", "Accommodation", new { id = Model.Accommodation.AccommodationId }, null)
+            }
+        </p>
     </section>
     <hr class="thick-hr" />
     <section>
