@@ -277,7 +277,7 @@ namespace TrekStories.Controllers
 
 
 
-
+        [NonAction]
         public List<ActivityThreadViewModel> CreateActivityThread(Step step)
         {
             List<ActivityThreadViewModel> activityThread = new List<ActivityThreadViewModel>();
@@ -332,7 +332,7 @@ namespace TrekStories.Controllers
                     }
                     );
                 }
-                //REVIEW THIS IF CHANGING DB SCHEMA
+
                 if (step.Accommodation.CheckOut.Day == step.Date.Day)
                 {
                     activityThread.Add(new ActivityThreadViewModel

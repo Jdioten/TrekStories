@@ -22,11 +22,6 @@ namespace TrekStories.DAL
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
 
-        public void MarkAsModified(object item)
-        {
-            Entry(item).State = EntityState.Modified;
-        }
-
         public void MarkAsDeleted(object item)
         {
             Entry(item).State = EntityState.Deleted;

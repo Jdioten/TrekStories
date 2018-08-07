@@ -15,7 +15,7 @@
                     <small>(@string.Format("{0:C}", item.Price))</small> <br />
                     @if (item.ArrivalTime.HasValue)
                     {
-                        <span>Arrival: @item.ArrivalTime.Value.ToShortTimeString()</span>
+                        <span><em>Arriving at @item.ArrivalTime.Value.ToShortTimeString()</em></span>
                     }
                 </div>
             }

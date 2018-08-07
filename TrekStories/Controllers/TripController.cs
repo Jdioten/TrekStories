@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -108,8 +109,6 @@ namespace TrekStories.Controllers
         }
 
         // POST: Trip/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditPost(int? id)
@@ -119,12 +118,52 @@ namespace TrekStories.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var tripToUpdate = db.Trips.Find(id);
+            DateTime oldDate = tripToUpdate.StartDate;
+
             if (TryUpdateModel(tripToUpdate, "",
                new string[] { "Title", "Country", "TripCategory", "StartDate", "Notes" }))
             {
                 try
                 {
-                    await db.SaveChangesAsync();
+                    //if Start Date was modified, reassign all trip accommodations to steps
+                    DateTime newDate = tripToUpdate.StartDate;
+                    if (oldDate != newDate)
+                    {
+                        //use materialised view?
+                        //get all acc on the trip
+                        var tripAccommodations = from s in tripToUpdate.Steps
+                                                 join a in db.Accommodations
+                                                 on s.AccommodationId equals a.AccommodationId
+                                                 select a;
+
+                        //for each accommodation call assign to step method
+                        foreach (Accommodation acc in tripAccommodations)
+                        {
+                            try
+                            {
+                                AccommodationController.AssignAccommodationToStep(acc, tripToUpdate, false);
+
+                                //remove accommodation from previously assigned steps now out of range
+                                List<Step> oldSteps = await db.Steps.Where(s => s.AccommodationId == acc.AccommodationId).Include(s => s.Trip).ToListAsync();
+                                foreach (var oldStep in oldSteps)
+                                {
+                                    if (oldStep.Date.Day < acc.CheckIn.Day || oldStep.Date.Day >= acc.CheckOut.Day)
+                                    {
+                                        oldStep.AccommodationId = null;
+                                    }
+                                }
+                            }
+                            catch (ArgumentException)
+                            {
+                                ViewBag.ErrorMessage = "The trip cannot be updated because an accommodation is outside the trip dates range.";
+                                ViewBag.CountryList = Trip.GetCountries();
+                                return View(tripToUpdate);
+                            }
+                        }
+
+
+                        await db.SaveChangesAsync();
+                    }
                     return RedirectToAction("Index");
                 }
                 catch (DataException /* dex */)
@@ -133,6 +172,7 @@ namespace TrekStories.Controllers
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
                 }
             }
+            ViewBag.CountryList = Trip.GetCountries();
             return View(tripToUpdate);
         }
 
