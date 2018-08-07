@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TrekStories.Models;
 using TrekStories.Tests;
+using TrekStories.Tests.UnitTestHelpers;
 
 namespace TrekStories.Controllers.Tests
 {
@@ -250,7 +251,7 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod]
-        public async Task Cannot_Edit_Nonexistent_Trip()
+        public async Task CannotEditNonexistentTrip()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             var expectedTrip = new Trip
@@ -270,5 +271,75 @@ namespace TrekStories.Controllers.Tests
             // Assert
             Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
         }
+
+        [TestMethod]
+        public async Task CanEditTrip()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            var trip = new Trip
+            {
+                TripId = 1,
+                Title = "Test Trip",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123",
+            };
+            tc.Trips.Add(trip);
+
+            var controller = new TripController(tc).WithIncomingValues(new FormCollection {
+                { "Title", "Another Title" }, { "TripId", "1" }, { "Country", "Ireland" }
+            });
+
+            // Act
+            var result = await controller.EditPost(1);
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult));
+        }
+
+        //[TestMethod]
+        //public async Task CannotEditTripIfOutsideExistingAccomodationDates()
+        //{
+        //    TestTrekStoriesContext tc = new TestTrekStoriesContext();
+        //    var trip = new Trip
+        //    {
+        //        TripId = 1,
+        //        Title = "Test Trip",
+        //        Country = "Ireland",
+        //        TripCategory = TripCategory.forest,
+        //        StartDate = new DateTime(2015, 4, 12),
+        //        TripOwner = "ABC123",
+        //    };
+        //    tc.Trips.Add(trip);
+        //    Accommodation acc = new Accommodation
+        //    {
+        //        AccommodationId = 8,
+        //        Name = "Test Hotel",
+        //        CheckIn = new DateTime(2015, 4, 12, 15, 0, 0),
+        //        CheckOut = new DateTime(2015, 4, 13, 15, 0, 0)
+        //    };
+        //    tc.Accommodations.Add(acc);
+        //    Step step = new Step
+        //    {
+        //        StepId = 11,
+        //        From = "A",
+        //        SequenceNo = 1,
+        //        AccommodationId = 8,
+        //        Accommodation = acc,
+        //        Trip = trip
+        //    };
+        //    tc.Steps.Add(step);
+        //    //trip.Steps.Add(step);
+        //    var controller = new TripController(tc).WithIncomingValues(new FormCollection {
+        //        { "TripId", "1" }, { "StartDate", new DateTime(2012,9,3).ToString() }, { "Country", "Ireland" },
+        //        { "Title", "Test Trip" }, { "TripId", "Ireland" }, { "TotalCost", "1200" }
+        //    }); ;
+
+        //    // Act
+        //    var badResult = await controller.EditPost(1) as ViewResult;
+        //    // Assert
+        //    Assert.IsInstanceOfType(badResult, typeof(ViewResult));
+        //    Assert.AreEqual("The trip cannot be updated because an accommodation is outside the trip dates range.", badResult.ViewBag.ErrorMessage);
+        //}
     }
 }

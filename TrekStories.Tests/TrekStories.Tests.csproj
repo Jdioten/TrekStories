@@ -108,6 +108,7 @@
     <Compile Include="TestTDbSet.cs" />
     <Compile Include="TestTrekStoriesContext.cs" />
     <Compile Include="AccommodationTests.cs" />
+    <Compile Include="UnitTestHelpers\UnitTestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

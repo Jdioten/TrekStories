@@ -164,7 +164,7 @@ namespace TrekStories.Controllers
 
                         await db.SaveChangesAsync();
                     }
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", new { id = tripToUpdate.TripId });
                 }
                 catch (DataException /* dex */)
                 {
