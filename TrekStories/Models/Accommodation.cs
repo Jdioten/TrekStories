@@ -39,8 +39,8 @@ namespace TrekStories.Models
         public string ConfirmationFileUrl { get; set; }
 
         [DataType(DataType.Currency)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Please enter a positive price.")]
+        [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:c}")]
+        [Range(0, double.MaxValue, ErrorMessage = "Please enter a positive price.")]
         //or
         //[DataType(DataType=Currency)]
         //[Column(TypeName="money")]
