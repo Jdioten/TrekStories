@@ -26,13 +26,13 @@ namespace TrekStories.Models
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Please enter your estimated check-in time.")]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm tt}", ApplyFormatInEditMode = true)]
         [Display(Name = "Check-In")]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime CheckIn { get; set; }
 
         [Required(ErrorMessage = "Please enter your check-out date and time.")]
         [Display(Name = "Check-Out")]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm tt}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime CheckOut { get; set; }
 
         [Display(Name = "Booking Confirmation Document")]

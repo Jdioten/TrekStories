@@ -67,7 +67,7 @@ namespace TrekStories.Controllers
         }
 
         // GET: Accommodation/Create
-        public ActionResult Create(int? id) //tripId
+        public ActionResult Create(int? id, DateTime? cIn, DateTime? cOut) //tripId
         {
             if (id == null)
             {
@@ -75,16 +75,21 @@ namespace TrekStories.Controllers
             }
 
             ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+            ViewBag.TripId = id;
             
-            //pass in steps dates as default..
-
+            //pass in steps dates as default
+            if (cIn != null && cOut != null)
+            {
+                ViewBag.CheckIn = cIn;
+                ViewBag.CheckOut = cOut;
+            }
             return View();
         }
 
         // POST: Accommodation/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Name,Address,PhoneNumber,CheckIn,CheckOut,ConfirmationFileUrl,Price")] Accommodation accommodation)
+        public async Task<ActionResult> Create([Bind(Include = "Name,Street,City,PhoneNumber,CheckIn,CheckOut,ConfirmationFileUrl,Price")] Accommodation accommodation)
         {
             try
             {
@@ -96,7 +101,14 @@ namespace TrekStories.Controllers
                 else if (ModelState.IsValid)
                 {
                     //if before trip start date -> error
-                    Trip trip = new Trip(); //replace this!!!
+                    int tripId = Int32.Parse(accommodation.ConfirmationFileUrl); //temporarily storing tripid in confirmationurl
+                    Trip trip = await db.Trips.FindAsync(tripId);
+                    if (accommodation.CheckIn < trip.StartDate)
+                    {
+                        ModelState.AddModelError("", "The check-in date is before the trip start date (" + trip.StartDate.ToShortDateString() + "). Please correct.");
+                        return View(accommodation);
+                    }
+                    accommodation.ConfirmationFileUrl = null;
 
                     try
                     {
@@ -112,11 +124,11 @@ namespace TrekStories.Controllers
                     db.Accommodations.Add(accommodation);
 
                     //increase trip budget
-
+                    trip.TotalCost += accommodation.Price;
 
                     await db.SaveChangesAsync();
                     //return update view in case user wants to attach confirmation file
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Edit", new { id = accommodation.AccommodationId});
                 }
             }
             catch (DataException)
@@ -142,28 +154,76 @@ namespace TrekStories.Controllers
         }
 
         // POST: Accommodation/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Name,Address,PhoneNumber,CheckIn,CheckOut,ConfirmationFileUrl,Price")] Accommodation accommodation)
+        public async Task<ActionResult> EditPost(int? id)
         {
-            //check valid check-in and check-out
-            if (!accommodation.IsCheckInBeforeCheckOut())
+            if (id == null)
             {
-                ModelState.AddModelError("", "Please check the check-in and check-out dates. Check-out cannot be before check-in.");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if (ModelState.IsValid)
+            var accommodationToUpdate = await db.Accommodations.FindAsync(id);
+            DateTime oldCheckIn = accommodationToUpdate.CheckIn;
+            DateTime oldCheckOut = accommodationToUpdate.CheckOut;
+            double oldPrice = accommodationToUpdate.Price;
+
+            if (TryUpdateModel(accommodationToUpdate, "",
+               new string[] { "Name", "Street", "City", "PhoneNumber", "CheckIn", "CheckOut", "ConfirmationFileUrl", "Price" }))
             {
-                db.MarkAsModified(accommodation);
+                try
+                {
+                    //check valid check-in and check-out
+                    if (!accommodationToUpdate.IsCheckInBeforeCheckOut())
+                    {
+                        ModelState.AddModelError("", "Please check the check-in and check-out dates. Check-out cannot be before check-in.");
+                        return View(accommodationToUpdate);
+                    }
 
-                //update trip budget
-                
+                    //if before trip start date -> error
+                    Step step = await db.Steps.FirstAsync(s => s.AccommodationId == accommodationToUpdate.AccommodationId);
+                    Trip trip = step.Trip;
+                    if (accommodationToUpdate.CheckIn < trip.StartDate)
+                    {
+                        ModelState.AddModelError("", "The check-in date is before the trip start date (" + trip.StartDate.ToShortDateString() + "). Please correct.");
+                        return View(accommodationToUpdate);
+                    }
 
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                    //check if dates have changed
+                    if (oldCheckIn != accommodationToUpdate.CheckIn || oldCheckOut != accommodationToUpdate.CheckOut)
+                    {
+                        try
+                        {
+                            //remove accommodation from previously assigned steps now out of range
+                            List<Step> oldSteps = await db.Steps.Where(s => s.AccommodationId == accommodationToUpdate.AccommodationId).Include(s => s.Trip).ToListAsync();
+                            foreach (var oldStep in oldSteps)
+                            {
+                                if (oldStep.Date.Day < accommodationToUpdate.CheckIn.Day || oldStep.Date.Day >= accommodationToUpdate.CheckOut.Day)
+                                {
+                                    oldStep.AccommodationId = null;
+                                }
+                            }
+
+                            AssignAccommodationToStep(accommodationToUpdate, trip, true);
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            //give feedback to user about which step to check
+                            ViewBag.ErrorMessage = ex.Message;
+                            return View(accommodationToUpdate);
+                        }
+                    }
+                    //update trip budget
+                    trip.TotalCost = trip.TotalCost - oldPrice + accommodationToUpdate.Price;
+
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Details", "Trip", new { id = trip.TripId });
+                }
+                catch (DataException)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
+                }
             }
-            return View(accommodation);
+            return View(accommodationToUpdate);
         }
 
         // GET: Accommodation/Delete/5
@@ -218,18 +278,20 @@ namespace TrekStories.Controllers
             base.Dispose(disposing);
         }
 
+        [NonAction]
         public static void AssignAccommodationToStep(Accommodation acc, Trip trip, bool insert)
         {
             //for any existing step within dates, check no accommodation exists
-            var dates = acc.GetDatesBetweenInAndOut();
+            List<DateTime> dates = acc.GetDatesBetweenInAndOut();
             foreach (var date in dates)
             {
-                Step step = trip.Steps.FirstOrDefault(s => s.Date == date);
+                Step step = trip.Steps.FirstOrDefault(s => s.Date.Day == date.Day);
                 if (step == null)
                 {
-                    throw new ArgumentException("There is no existing step for date" + date.ToShortDateString() + ".");   
+                    throw new ArgumentException("There is no existing step for date " + date.ToShortDateString() + ".");   
                 }
-                else if (insert && step.AccommodationId != null) //or ==accID for updates?
+                //if new accommodation, check that there is no accommodation already on step
+                else if (insert && step.AccommodationId != null && step.AccommodationId != acc.AccommodationId) //to allow for updates
                 {
                     throw new ArgumentException("An accommodation already exists for Step " + step.SequenceNo);
                 }
