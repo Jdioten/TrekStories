@@ -20,9 +20,17 @@
                         <div id="notescontent" class="collapse">
                             @Model.Notes
                         </div>
-                        <a href="@Url.Action("Edit", new { id = Model.TripId })" class="btn btn-default pull-right">
-                            <span class="glyphicon glyphicon-edit mytooltip">
+                    </p>
+                    <p class="text-right">
+                        <a href="@Url.Action("Edit", new { id = Model.TripId })" class="btn btn-sm btn-trekstories">
+                            <span class="glyphicon glyphicon-pencil mytooltip">
                                 <span class="mytooltiptext">Edit Trip Details</span>
+                            </span>
+                        </a>
+                        &emsp;
+                        <a href="@Url.Action("GenerateSummaryReport", new { id = Model.TripId })" class="btn btn-sm btn-info">
+                            <span class="fas fa-file-download mytooltip">
+                                <span class="mytooltiptext">Get Summary Report</span>
                             </span>
                         </a>
                     </p>
