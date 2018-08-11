@@ -19,6 +19,7 @@ namespace TrekStories.Tests.UnitTestHelpers
             return controller;
         }
 
+        //inspired from https://forums.asp.net/t/2028867.aspx?UnitTest+How+to+Mock+User+Identity+GetUserId+
         public static T WithAuthenticatedUser<T>(this T controller, string userId)
             where T : Controller
         {

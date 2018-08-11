@@ -83,8 +83,8 @@ namespace TrekStories.Controllers
             //pass in steps dates as default
             if (cIn != null && cOut != null)
             {
-                ViewBag.CheckIn = cIn;
-                ViewBag.CheckOut = cOut;
+                ViewBag.CheckIn = String.Format("{0:dd-MM-yyyy hh:mm tt}", cIn);
+                ViewBag.CheckOut = String.Format("{0:dd-MM-yyyy hh:mm tt}", cOut);
             }
             return View();
         }
@@ -109,35 +109,40 @@ namespace TrekStories.Controllers
                     if (accommodation.CheckIn < trip.StartDate)
                     {
                         ModelState.AddModelError("", "The check-in date is before the trip start date (" + trip.StartDate.ToShortDateString() + "). Please correct.");
-                        return View(accommodation);
                     }
-                    accommodation.ConfirmationFileUrl = null;
-
-                    try
+                    else
                     {
-                        AssignAccommodationToStep(accommodation, trip, true);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        //give feedback to user about which step to check
-                        ViewBag.ErrorMessage = ex.Message;
-                        return View(accommodation);
-                    }
+                        accommodation.ConfirmationFileUrl = null;
 
-                    db.Accommodations.Add(accommodation);
+                        try
+                        {
+                            AssignAccommodationToStep(accommodation, trip, true);
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            //give feedback to user about which step to check
+                            ViewBag.ErrorMessage = ex.Message;
+                            return View(accommodation);
+                        }
 
-                    //increase trip budget
-                    trip.TotalCost += accommodation.Price;
+                        db.Accommodations.Add(accommodation);
 
-                    await db.SaveChangesAsync();
-                    //return update view in case user wants to attach confirmation file
-                    return RedirectToAction("Edit", new { id = accommodation.AccommodationId});
+                        //increase trip budget
+                        trip.TotalCost += accommodation.Price;
+
+                        await db.SaveChangesAsync();
+                        //return update view in case user wants to attach confirmation file
+                        return RedirectToAction("Edit", new { id = accommodation.AccommodationId });
+                    }          
                 }
             }
             catch (DataException)
             {
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
             }
+            ViewBag.TripId = accommodation.ConfirmationFileUrl;
+            ViewBag.CheckIn = String.Format("{0:dd-MM-yyyy hh:mm tt}", accommodation.CheckIn);
+            ViewBag.CheckOut = String.Format("{0:dd-MM-yyyy hh:mm tt}", accommodation.CheckOut);
             return View(accommodation);
         }
 
