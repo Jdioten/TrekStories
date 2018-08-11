@@ -4,9 +4,8 @@
 
 @{
     ViewBag.Title = "Details";
+    DateTime cOut = Model.Date.AddDays(1);
     string selectClass;
-    //var hideIfEmpty = Model.Accommodation == null ? "hidden" : "";
-    //var hideIfExisting = Model.Accommodation != null ? "hidden" : "";
 }
 
 <div class="mycontainer">
@@ -103,7 +102,7 @@
                 <strong><em>Accommodation</em></strong>
             </div>
             <div class="col-md-4">
-                <address class="text-right">
+                <address class="text-center">
                     @Html.DisplayFor(model => model.Accommodation.Name) <br/>
                     @Html.DisplayFor(model => model.Accommodation.Street) <br/> 
                     @Html.DisplayFor(model => model.Accommodation.City)<br />
@@ -149,7 +148,7 @@
                     </dt>
 
                     <dd>
-                        not needed if in activity thread @Html.DisplayFor(model => model.Accommodation.CheckIn)
+                        @Html.DisplayFor(model => model.Accommodation.CheckIn)
                     </dd>
 
                     <dt>
@@ -181,7 +180,7 @@
         <p>
             @if (Model.Accommodation == null)
             {
-                @Html.ActionLink("Create", "Create", "Accommodation", new { id = Model.TripId }, null)
+                @Html.ActionLink("Create", "Create", "Accommodation", new { id = Model.TripId, cIn = Model.Date, cOut = cOut }, null)
             }
             else
             {
@@ -196,10 +195,10 @@
         <strong><em>Activities</em></strong>
         <div class="pull-right" id="activity-menu">
             <div class="btn-group btn-group-sm" role="group">
-                <a class="btn btn-default" href="@Url.Action("CreateTransport", "Activities", new { stepId = Model.StepId})">Add Transport</a>
-                <a class="btn btn-default" href="@Url.Action("CreateLeisure", "Activities", new { stepId = Model.StepId})">Add Leisure Activity</a>
+                <a class="btn btn-trekstories" href="@Url.Action("CreateTransport", "Activities", new { stepId = Model.StepId})">Add Transport</a>
+                <a class="btn btn-trekstories" href="@Url.Action("CreateLeisure", "Activities", new { stepId = Model.StepId})">Add Leisure Activity</a>
             </div>
-            <a class="rotating-button btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
+            @*<a class="rotating-button btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>*@
         </div>
         @Html.Partial("_ActivityThread", (List<ActivityThreadViewModel>)ViewBag.ActivityThread)
         @*<div class="activity-thread">

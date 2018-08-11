@@ -13,6 +13,7 @@ using TrekStories.Models;
 
 namespace TrekStories.Controllers
 {
+    [Authorize]
     public class StepController : Controller
     {
         private ITrekStoriesContext db = new TrekStoriesContext();
@@ -32,6 +33,7 @@ namespace TrekStories.Controllers
         //}
 
         // GET: Step/Details/5
+        [AllowAnonymous]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -101,18 +103,24 @@ namespace TrekStories.Controllers
                         Notes = stepViewModel.Notes,
                         TripId = stepViewModel.TripId
                     };
-                    
 
                     //retrieve all subsequent steps and update seq no
-                    foreach (Step item in db.Steps.Where(s => s.TripId == newStep.TripId))
+                    foreach (Step item in db.Steps.Where(s => s.TripId == newStep.TripId && s.SequenceNo >= newStep.SequenceNo))
                     {
-                        if (item.SequenceNo >= newStep.SequenceNo)
-                        {
-                            item.SequenceNo++;
-                        }
+                        item.SequenceNo++;
                     }
 
                     db.Steps.Add(newStep);
+                    await db.SaveChangesAsync();
+
+                    //retrive all steps where seq no >= to new step.seq no in an array including new step and assign accommodation of previous step for that seq no 
+                    Step[] subsequentSteps = await db.Steps.Where(s => s.TripId == newStep.TripId && s.SequenceNo >= newStep.SequenceNo).OrderBy(s => s.SequenceNo).ToArrayAsync();
+                    for (int i = 0; i <subsequentSteps.Length-1; i++)
+                    {
+                        subsequentSteps[i].AccommodationId = subsequentSteps[i + 1].AccommodationId;
+                    }
+                    //set last one to null
+                    subsequentSteps[subsequentSteps.Length - 1].AccommodationId = null;
 
                     await db.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = newStep.StepId });
@@ -313,11 +321,9 @@ namespace TrekStories.Controllers
             );
             }
 
-            //Add check-in and check-out as activities if happening on step date
-
+            //Add check-in if happening on step date
             if (step.Accommodation != null)
             {
-                //REVIEW THIS IF CHANGING DB SCHEMA
                 //needs to search in accommodations for matching check-in --separate method?
                 if (step.Accommodation.CheckIn.Day == step.Date.Day)
                 {
@@ -332,21 +338,28 @@ namespace TrekStories.Controllers
                     }
                     );
                 }
+            }
 
-                if (step.Accommodation.CheckOut.Day == step.Date.Day)
+            //Add check-out if happening on step date
+            var tripAccommodation = (from s in step.Trip.Steps
+                                    join a in db.Accommodations
+                                    on s.AccommodationId equals a.AccommodationId
+                                    where a.CheckOut.Day == step.Date.Day
+                                    select a).SingleOrDefault();
+            if (tripAccommodation != null)
                 {
                     activityThread.Add(new ActivityThreadViewModel
                     {
-                        ID = step.Accommodation.AccommodationId,
-                        StartTime = step.Accommodation.CheckOut,
-                        Name = "Check-Out at " + step.Accommodation.Name,
-                        Price = step.Accommodation.Price,
+                        ID = tripAccommodation.AccommodationId,
+                        StartTime = tripAccommodation.CheckOut,
+                        Name = "Check-Out at " + tripAccommodation.Name,
+                        Price = tripAccommodation.Price,
                         Icon = "fas fa-bed",
                         Controller = "Accommodation"
                     }
                     );
                 }
-            }
+            
             return activityThread;
         }
 

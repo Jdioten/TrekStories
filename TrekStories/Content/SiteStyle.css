@@ -131,6 +131,10 @@ input, select, textarea {
     border-color: #cccccc; /*#f0eceb;*/
 }
 
+#activity-menu btn-trekstories {
+    background-color: #9ebaae;
+}
+
     .btn-trekstories:hover,
     .btn-trekstories:focus,
     .btn-trekstories:active,
@@ -362,6 +366,7 @@ table.tripdetailstable > tbody > tr > td {
     margin-right:auto;
     margin-left:auto;
     max-width:650px;
+    display:block;
 }
 
     .activity-thread .col-xs-10{

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -24,6 +25,7 @@ namespace TrekStories.Controllers.Tests
                 WalkingDistance = 0,
                 WalkingTime = 3.5
             };
+            step.Trip = new Trip { TripId = 1, Steps = new List<Step>() { step } };
             tc.Steps.Add(step);
 
             ViewResult result = await controller.Details(123) as ViewResult;
