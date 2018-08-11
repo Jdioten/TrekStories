@@ -13,6 +13,7 @@ using TrekStories.Models;
 
 namespace TrekStories.Controllers
 {
+    [Authorize]
     public class AccommodationController : Controller
     {
         private ITrekStoriesContext db = new TrekStoriesContext();
@@ -25,6 +26,7 @@ namespace TrekStories.Controllers
         }
 
         // GET: Accommodation
+        [AllowAnonymous]
         public async Task<ActionResult> Index(int? tripId)
         {
             if (tripId == null)
@@ -52,6 +54,7 @@ namespace TrekStories.Controllers
         }
 
         // GET: Accommodation/Details/5
+        [AllowAnonymous]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)

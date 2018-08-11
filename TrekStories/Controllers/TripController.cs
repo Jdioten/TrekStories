@@ -13,6 +13,7 @@ using TrekStories.Models;
 
 namespace TrekStories.Controllers
 {
+    [Authorize]
     public class TripController : Controller
     {
         private ITrekStoriesContext db = new TrekStoriesContext();
@@ -27,8 +28,10 @@ namespace TrekStories.Controllers
         // GET: Trip
         public async Task<ActionResult> Index(string searchString)
         {
+            string user_id = User.Identity.GetUserId();
             var trips = from t in db.Trips
-                        select t;  //add where userid =vlogged in user
+                        where String.Equals(t.TripOwner, user_id)
+                        select t;
             if (!String.IsNullOrEmpty(searchString))
             {
                 trips = trips.Where(t => t.Title.Contains(searchString));
@@ -37,6 +40,7 @@ namespace TrekStories.Controllers
         }
 
         // GET: Trip/Details/5
+        [AllowAnonymous]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -68,10 +72,10 @@ namespace TrekStories.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    trip.TripOwner = "User1";   //User.Identity.GetUserId();  NB: should this be set in class??
+                    trip.TripOwner = User.Identity.GetUserId();
 
                     //check if user already has a trip with that name
-                    if (db.Trips.Any(t => t.TripOwner == trip.TripOwner && t.Title.ToLower() == trip.Title.ToLower())) //should be anyasync if can fix unit test
+                    if (await db.Trips.AnyAsync(t => t.TripOwner == trip.TripOwner && t.Title.ToLower() == trip.Title.ToLower()))
                     {
                         ModelState.AddModelError("", "You have already created a trip with that title. Please give this trip a different title.");
                     }
@@ -104,6 +108,12 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
+            if (trip.TripOwner != User.Identity.GetUserId())
+            {
+                return View("NotAuthorizedError", new HandleErrorInfo(
+                    new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot view it."), 
+                    "Trip", "Index"));
+            }
             ViewBag.CountryList = Trip.GetCountries();
             return View(trip);
         }
@@ -118,6 +128,14 @@ namespace TrekStories.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var tripToUpdate = db.Trips.Find(id);
+
+            if (tripToUpdate.TripOwner != User.Identity.GetUserId())
+            {
+                return View("NotAuthorizedError", new HandleErrorInfo(
+                    new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot edit it."),
+                    "Trip", "Index"));
+            }
+
             DateTime oldDate = tripToUpdate.StartDate;
 
             if (TryUpdateModel(tripToUpdate, "",
@@ -160,10 +178,8 @@ namespace TrekStories.Controllers
                                 return View(tripToUpdate);
                             }
                         }
-
-
-                        await db.SaveChangesAsync();
                     }
+                    await db.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = tripToUpdate.TripId });
                 }
                 catch (DataException /* dex */)

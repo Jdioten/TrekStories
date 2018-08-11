@@ -11,13 +11,6 @@ namespace TrekStories.Controllers.Tests
     [TestClass()]
     public class ActivitiesControllerTests
     {
-
-        [TestMethod()]
-        public void IndexTest()
-        {
-            throw new NotImplementedException();
-        }
-
         [TestMethod()]
         public async Task DetailsReturnsCorrectView()
         {

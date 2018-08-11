@@ -159,14 +159,16 @@ namespace TrekStories.Controllers.Tests
                 Title = "Test Trip",
                 Country = "Ireland",
                 TripCategory = TripCategory.forest,
-                StartDate = new DateTime(2015, 4, 12),
-                TripOwner = "ABC123"
+                StartDate = new DateTime(2015, 4, 12)
             };
 
-            var controller = new TripController(tc);
+            var controller = new TripController(tc).WithAuthenticatedUser("ABC123");
+
             var result = await controller.Create(newTrip) as RedirectToRouteResult;
+            string owner = tc.Trips.Find(newTrip.TripId).TripOwner;
 
             Assert.AreEqual("Details", result.RouteValues["action"]);
+            Assert.AreEqual("ABC123", owner);
         }
 
         [TestMethod()]
@@ -192,7 +194,7 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public async Task CannotCreateTripWithSameTitleForSameUser() //mind username assigned by controller when getting userid from current user!
+        public async Task CannotCreateTripWithSameTitleForSameUser()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             Trip trip = new Trip
@@ -213,7 +215,9 @@ namespace TrekStories.Controllers.Tests
                 TripOwner = "User1"
             };
 
-            var controller = new TripController(tc);
+            var controller = new TripController(tc).WithAuthenticatedUser("User1");
+
+
             var result = await controller.Create(newTrip) as ViewResult;
 
             Assert.AreEqual(false, result.ViewData.ModelState.IsValid);
@@ -238,7 +242,8 @@ namespace TrekStories.Controllers.Tests
             };
 
             tc.Trips.Add(expectedTrip);
-            var controller = new TripController(tc);
+
+            TripController controller = new TripController(tc).WithAuthenticatedUser("ABC123");
 
             // act
             var result = await controller.Edit(1) as ViewResult;
@@ -287,17 +292,19 @@ namespace TrekStories.Controllers.Tests
             };
             tc.Trips.Add(trip);
 
-            var controller = new TripController(tc).WithIncomingValues(new FormCollection {
+            TripController controller = new TripController(tc).WithIncomingValues(new FormCollection {
                 { "Title", "Another Title" }, { "TripId", "1" }, { "Country", "Ireland" }
-            });
+            }).WithAuthenticatedUser("ABC123");
 
             // Act
             var result = await controller.EditPost(1);
+            string newTitle = tc.Trips.Find(1).Title;
             // Assert
             Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult));
+            Assert.AreEqual("Another Title", newTitle);
         }
 
-        //[TestMethod]
+        //[TestMethod] //issue with join query
         //public async Task CannotEditTripIfOutsideExistingAccomodationDates()
         //{
         //    TestTrekStoriesContext tc = new TestTrekStoriesContext();

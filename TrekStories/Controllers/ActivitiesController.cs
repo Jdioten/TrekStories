@@ -14,6 +14,7 @@ using System.Globalization;
 
 namespace TrekStories.Controllers
 {
+    [Authorize]
     public class ActivitiesController : Controller
     {
         private ITrekStoriesContext db = new TrekStoriesContext();
