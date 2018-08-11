@@ -124,26 +124,49 @@ namespace TrekStories.Controllers.Tests
                  "Please check the check-in and check-out dates. Check-out cannot be before check-in.");
         }
 
-        //to be completed!!!
-        //[TestMethod()]
-        //public async Task CannotCreateAccommodationForStepsWhereAccommodationExists()
-        //{
-        //    TestTrekStoriesContext tc = new TestTrekStoriesContext();
+        [TestMethod()]
+        public async Task CannotCreateAccommodationForStepsWhereAccommodationExists()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
 
-        //    //add step with accommodation
+            //add step with accommodation
+            Step step = new Step
+            {
+                StepId = 11,
+                TripId = 1,
+                SequenceNo = 1,
+                Trip = new Trip
+                {
+                    TripId = 1,
+                    Title = "Test Trip",
+                    Country = "Ireland",
+                    TripCategory = TripCategory.forest,
+                    StartDate = new DateTime(2018, 11, 28),
+                    TotalCost = 80,
+                    TripOwner = "ABC123"
+                },
+                AccommodationId = 12,
+                Accommodation = new Accommodation { AccommodationId = 12, CheckIn = new DateTime(2018, 11, 28, 16, 0, 0) }
+            };
+            tc.Trips.Add(new Trip
+            {
+                TripId = 1,
+                StartDate = new DateTime(2018, 11, 28),
+                TotalCost = 80,
+                Steps = new List<Step>() { step }
+            });
+            tc.Steps.Add(step);
 
-        //    AccommodationController controller = new AccommodationController();
+            AccommodationController controller = new AccommodationController(tc);
 
-        //    //try to add accommodation for that step with existing acommodation..
-        //    Accommodation newAccommodation = new Accommodation() { CheckIn = new DateTime(2018, 11, 29), CheckOut = new DateTime(2018, 11, 28, 10, 0, 0) };
+            //try to add accommodation for that step with existing acommodation..
+            Accommodation newAccommodation = new Accommodation() { CheckIn = new DateTime(2018, 11, 28, 14, 0, 0), CheckOut = new DateTime(2018, 11, 29, 10, 0, 0), Price = 80, ConfirmationFileUrl = "1" };
 
-        //    var result = await controller.Create(newAccommodation) as ViewResult;
+            var result = await controller.Create(newAccommodation);
 
-        //    Assert.IsTrue(!controller.ModelState.IsValid);
-        //    //change text model error
-        //    Assert.IsTrue(controller.ViewData.ModelState.Count == 1,
-        //         "Please check the check-in and check-out dates. Check-out cannot be before check-in.");
-        //}
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            Assert.AreEqual("An accommodation already exists for Step 1", controller.ViewBag.ErrorMessage);
+        }
 
         [TestMethod]
         public async Task CanEditAccommodation()
