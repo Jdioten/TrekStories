@@ -113,7 +113,7 @@ namespace TrekStories.Controllers
                     db.Steps.Add(newStep);
                     await db.SaveChangesAsync();
 
-                    //retrive all steps where seq no >= to new step.seq no in an array including new step and assign accommodation of previous step for that seq no 
+                    //retrieve all steps where seq no >= to new step.seq no in an array including new step and assign accommodation of previous step for that seq no 
                     Step[] subsequentSteps = await db.Steps.Where(s => s.TripId == newStep.TripId && s.SequenceNo >= newStep.SequenceNo).OrderBy(s => s.SequenceNo).ToArrayAsync();
                     for (int i = 0; i <subsequentSteps.Length-1; i++)
                     {
