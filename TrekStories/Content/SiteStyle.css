@@ -402,3 +402,8 @@ table.tripdetailstable > tbody > tr > td {
 .site-colour {
     color: #729f98;
 }
+
+.description {
+    font-size: 90%;
+    color: slategray;
+}
