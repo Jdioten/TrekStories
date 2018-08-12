@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
+using System.Data.Entity.Infrastructure;
 
 namespace TrekStories.Controllers
 {
@@ -136,7 +137,7 @@ namespace TrekStories.Controllers
                     }          
                 }
             }
-            catch (DataException)
+            catch (RetryLimitExceededException)
             {
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
             }
@@ -226,7 +227,7 @@ namespace TrekStories.Controllers
                     await db.SaveChangesAsync();
                     return RedirectToAction("Details", "Trip", new { id = trip.TripId });
                 }
-                catch (DataException)
+                catch (RetryLimitExceededException)
                 {
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
                 }

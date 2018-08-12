@@ -11,6 +11,7 @@ using TrekStories.DAL;
 using TrekStories.Models;
 using TrekStories.Abstract;
 using System.Globalization;
+using System.Data.Entity.Infrastructure;
 
 namespace TrekStories.Controllers
 {
@@ -157,7 +158,7 @@ namespace TrekStories.Controllers
                     await db.SaveChangesAsync();
                     return RedirectToAction("Details", "Step", new { id = leisureActivity.StepId });
                 }
-                catch (DataException /* dex */)
+                catch (RetryLimitExceededException /* dex */)
                 {
                     //Log the error (uncomment dex variable name and add a line here to write a log.
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
@@ -204,7 +205,7 @@ namespace TrekStories.Controllers
                     await db.SaveChangesAsync();
                     return RedirectToAction("Details", "Step", new { id = transport.StepId });
                 }
-                catch (DataException /* dex */)
+                catch (RetryLimitExceededException /* dex */)
                 {
                     //Log the error (uncomment dex variable name and add a line here to write a log.
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");

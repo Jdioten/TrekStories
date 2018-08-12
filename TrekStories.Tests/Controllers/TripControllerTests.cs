@@ -304,50 +304,5 @@ namespace TrekStories.Controllers.Tests
             Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult));
             Assert.AreEqual("Another Title", newTitle);
         }
-
-        //[TestMethod] //issue with join query
-        //public async Task CannotEditTripIfOutsideExistingAccomodationDates()
-        //{
-        //    TestTrekStoriesContext tc = new TestTrekStoriesContext();
-        //    var trip = new Trip
-        //    {
-        //        TripId = 1,
-        //        Title = "Test Trip",
-        //        Country = "Ireland",
-        //        TripCategory = TripCategory.forest,
-        //        StartDate = new DateTime(2015, 4, 12),
-        //        TripOwner = "ABC123",
-        //    };
-        //    tc.Trips.Add(trip);
-        //    Accommodation acc = new Accommodation
-        //    {
-        //        AccommodationId = 8,
-        //        Name = "Test Hotel",
-        //        CheckIn = new DateTime(2015, 4, 12, 15, 0, 0),
-        //        CheckOut = new DateTime(2015, 4, 13, 15, 0, 0)
-        //    };
-        //    tc.Accommodations.Add(acc);
-        //    Step step = new Step
-        //    {
-        //        StepId = 11,
-        //        From = "A",
-        //        SequenceNo = 1,
-        //        AccommodationId = 8,
-        //        Accommodation = acc,
-        //        Trip = trip
-        //    };
-        //    tc.Steps.Add(step);
-        //    //trip.Steps.Add(step);
-        //    var controller = new TripController(tc).WithIncomingValues(new FormCollection {
-        //        { "TripId", "1" }, { "StartDate", new DateTime(2012,9,3).ToString() }, { "Country", "Ireland" },
-        //        { "Title", "Test Trip" }, { "TripId", "Ireland" }, { "TotalCost", "1200" }
-        //    }); ;
-
-        //    // Act
-        //    var badResult = await controller.EditPost(1) as ViewResult;
-        //    // Assert
-        //    Assert.IsInstanceOfType(badResult, typeof(ViewResult));
-        //    Assert.AreEqual("The trip cannot be updated because an accommodation is outside the trip dates range.", badResult.ViewBag.ErrorMessage);
-        //}
     }
 }
