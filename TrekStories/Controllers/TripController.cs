@@ -248,14 +248,38 @@ namespace TrekStories.Controllers
         public void GenerateSummaryReport()
         {
 
-        }
+        }*/
 
-        public ActionResult DisplaySummarisedTripDetails()
+        public async Task<ActionResult> Summary(int id)
         {
+            Trip trip = await db.Trips.Include(t => t.Steps).SingleOrDefaultAsync(t => t.TripId == id);
+            if (trip == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.TripTitle = trip.Title;
 
+            var tripSteps = trip.Steps.OrderBy(s => s.SequenceNo).ToArray();
+            List<ActivityThreadViewModel>[] activities = new List<ActivityThreadViewModel>[tripSteps.Length];
+
+            var stepcontroller = new StepController();
+            for (int i = 0; i < tripSteps.Length; i++)
+            {
+                activities[i] = stepcontroller.CreateActivityThread(tripSteps[i]); //.OrderBy(a => a.StartTime.TimeOfDay)
+                //activities.Add(stepcontroller.CreateActivityThread(step).OrderBy(a => a.StartTime.TimeOfDay).ToArray());
+            }
+            ViewBag.ActivityThread = activities;
+            ViewBag.TripSteps = tripSteps;
+
+            var tripAccommodations = from s in trip.Steps
+                                         join a in db.Accommodations
+                                         on s.AccommodationId equals a.AccommodationId
+                                         select a;
+            ViewBag.TripAccommodations = tripAccommodations.OrderBy(a => a.Name);
+            return View(tripSteps);
         }
 
-        public void GenerateSouvenirReport()
+        /*public void GenerateSouvenirReport()
         {
 
         }*/
