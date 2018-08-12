@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TrekStories.Models;
 using TrekStories.Tests;
+using TrekStories.Tests.UnitTestHelpers;
 
 namespace TrekStories.Controllers.Tests
 {
@@ -206,94 +207,89 @@ namespace TrekStories.Controllers.Tests
             Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
         }
 
-        //[TestMethod]  //find out why failing!!
-        //public async Task CanSaveValidAccommodationChanges()
-        //{
-        //    // Arrange - create mock repository
-        //    TestTrekStoriesContext tc = new TestTrekStoriesContext();
+        [TestMethod]
+        public async Task CanSaveValidAccommodationChangesAndUpdateTripBudget()
+        {
+            // Arrange - create mock repository
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
 
-        //    // Arrange - create an accommodation and a step linked to it
-        //    Accommodation acc = new Accommodation { AccommodationId = 1, Name = "Hotel A" };
-        //    tc.Accommodations.Add(acc);
-        //    Trip trip = new Trip { TripId = 11, StartDate = new DateTime(2018,8,10)};
-        //    Step step = new Step { StepId = 123, Trip = trip, AccommodationId = 1, SequenceNo = 1 };
-        //    tc.Steps.Add(step);
+            // Arrange - create an accommodation and a step linked to it
+            Accommodation acc = new Accommodation { AccommodationId = 1, Name = "Hotel A", CheckIn = new DateTime(2018,8,10,10,0,0), CheckOut = new DateTime(2018,8,11,10,0,0), Price = 50 };
+            tc.Accommodations.Add(acc);
+            Trip trip = new Trip { TripId = 11, StartDate = new DateTime(2018, 8, 10), TotalCost = 100 };
+            Step step = new Step { StepId = 123, Trip = trip, AccommodationId = 1, SequenceNo = 1 };
+            tc.Trips.Add(trip);
+            tc.Steps.Add(step);
 
-        //    // Arrange - create the controller with update accommodation data
-        //    var controller = new AccommodationController(tc).WithIncomingValues(new FormCollection {
-        //        { "AccommodationId", "1" }, { "Name", "Name Changed" }, { "CheckIn", "2018-08-10" }, { "CheckOut", "2018-08-11" }
-        //    });
+            // Arrange - create the controller with update accommodation data dd-MM-yyyy hh:mm tt
+            var controller = new AccommodationController(tc).WithIncomingValues(new FormCollection {
+                { "AccommodationId", "1" }, { "Name", "Name Changed" }, { "CheckIn", "10-08-2018 10:00 AM" }, { "CheckOut", "11-08-2018 10:00 AM" }, {"Price", "60"}
+            });
 
-        //    // Act - try to save the activity
-        //    ActionResult result = await controller.Edit(1);
+            // Act - try to save the activity
+            var result = await controller.EditPost(1) as RedirectToRouteResult;
+            Trip updatedTrip = tc.Trips.Find(11);
 
-        //    // Assert - check the method result type
-        //    Assert.IsNotInstanceOfType(result, typeof(ViewResult));
-        //}
+            // Assert - check the method result type
+            Assert.AreEqual("Details", result.RouteValues["action"]);
+            Assert.AreEqual("Trip", result.RouteValues["controller"]);
+            Assert.AreEqual(110, updatedTrip.TotalCost);
+        }
 
-        //[TestMethod]
-        //public async Task EditAccommodationUpdatesBudget()
-        //{
-        //    // Arrange - create mock repository
-        //    TestTrekStoriesContext tc = new TestTrekStoriesContext();
-        //    // Arrange - create the controller
-        //    ActivitiesController controller = new ActivitiesController(tc);
-        //    // Arrange - create a transport
-        //    Trip trip = new Trip { TripId = 321, TotalCost = 100 };
-        //    Transport transport = new Transport() { ID = 1, Name = "Bus Transportation", Price = 60 };
-        //    transport.Step = new Step { StepId = 123, Trip = trip };
-        //    tc.Trips.Add(trip);
-        //    tc.Activities.Add(transport);
-        //    Transport updatedTransport = new Transport()
-        //    {
-        //        ID = 1,
-        //        Name = "Name Change",
-        //        Destination = "Roma",
-        //        Duration = 20,
-        //        StartTime = new DateTime(2018, 8, 1, 9, 30, 0),
-        //        Price = 50
-        //    };
-        //    // Act - try to save the activity
-        //    ActionResult result = await controller.EditTransport(updatedTransport);
+        [TestMethod]
+        public async Task CannotEditAccommodationIfBeforeTripStartDate()
+        {
+            // Arrange - create mock repository
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
 
-        //    // Assert - check the method result type
-        //    Assert.AreEqual(90, trip.TotalCost);
-        //}
+            // Arrange - create an accommodation and a step linked to it
+            Accommodation acc = new Accommodation { AccommodationId = 1, Name = "Hotel A", CheckIn = new DateTime(2018, 8, 10, 10, 0, 0), CheckOut = new DateTime(2018, 8, 11, 10, 0, 0) };
+            tc.Accommodations.Add(acc);
+            Trip trip = new Trip { TripId = 11, StartDate = new DateTime(2018, 8, 10) };
+            Step step = new Step { StepId = 123, Trip = trip, AccommodationId = 1, SequenceNo = 1 };
+            tc.Steps.Add(step);
 
-        //[TestMethod]
-        //public async Task CannotEditAccommodationIfBeforeTripStartDate()
-        //{
-        //    // Arrange - create mock repository
-        //    TestTrekStoriesContext tc = new TestTrekStoriesContext();
-        //    // Arrange - create the controller
-        //    ActivitiesController controller = new ActivitiesController(tc);
-        //    // Arrange - create a leisure activity
-        //    LeisureActivity leisure = new LeisureActivity() { ID = 1, Name = "Boat Trip" };
-        //    // Arrange - add an error to the model state
-        //    controller.ModelState.AddModelError("error", "error");
-        //    // Act - try to save the activity
-        //    ActionResult result = await controller.EditLeisure(leisure);
+            // Arrange - create the controller with update accommodation data
+            var controller = new AccommodationController(tc).WithIncomingValues(new FormCollection {
+                { "AccommodationId", "1" }, { "Name", "Name Changed" }, { "CheckIn", "09-08-2018 10:00 AM" }, { "CheckOut", "11-08-2018 10:00 AM" }
+            });
 
-        //    // Assert - check the method result type
-        //    Assert.IsInstanceOfType(result, typeof(ViewResult));
-        //}
+            // Act - try to save the activity
+            var result = await controller.EditPost(1) as ViewResult;
 
-        //[TestMethod]
+            // Assert - check the method result type
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+        }
+
+        //[TestMethod]  //in method trip has no step assigned..I am however attaching steps specifically below
         //public async Task CannotEditAccommodationIfOneAlreadyExistsForThoseDates()
         //{
         //    // Arrange - create mock repository
         //    TestTrekStoriesContext tc = new TestTrekStoriesContext();
-        //    // Arrange - create the controller
-        //    ActivitiesController controller = new ActivitiesController(tc);
-        //    // Arrange - create a leisure activity
-        //    LeisureActivity leisure = new LeisureActivity() { ID = 1, Name = "Boat Trip" };
-        //    // Arrange - add an error to the model state
-        //    controller.ModelState.AddModelError("error", "error");
+
+        //    // Arrange - create two accommodations linked to 2 different steps
+        //    Accommodation acc1 = new Accommodation { AccommodationId = 1, Name = "Hotel A", CheckIn = new DateTime(2018, 8, 10, 10, 0, 0), CheckOut = new DateTime(2018, 8, 11, 10, 0, 0), Price = 0 };
+        //    Accommodation acc2 = new Accommodation { AccommodationId = 2, Name = "Hotel B", CheckIn = new DateTime(2018, 8, 11, 10, 0, 0), CheckOut = new DateTime(2018, 8, 12, 10, 0, 0), Price = 0 };
+        //    tc.Accommodations.Add(acc1);
+        //    tc.Accommodations.Add(acc2);
+        //    Step step1 = new Step { StepId = 123, TripId = 11, Trip = new Trip { TripId = 11, StartDate = new DateTime(2018, 8, 10) }, AccommodationId = 1, SequenceNo = 1 };
+        //    Step step2 = new Step { StepId = 123, TripId = 11, Trip = new Trip { TripId = 11, StartDate = new DateTime(2018, 8, 10) }, AccommodationId = 2, SequenceNo = 2 };
+        //    tc.Steps.Add(step1);
+        //    tc.Steps.Add(step2);
+        //    Trip trip = new Trip { TripId = 11, StartDate = new DateTime(2018, 8, 10), Steps = new List<Step>() { step1, step2} };
+        //    tc.Trips.Add(trip);
+
+        //    // Arrange - create the controller with update accommodation data
+        //    var controller = new AccommodationController(tc).WithIncomingValues(new FormCollection {
+        //        { "AccommodationId", "1" }, { "Name", "Name Changed" }, { "CheckIn", "11-08-2018 10:00 AM" }, { "CheckOut", "12-08-2018 10:00 AM" }, {"Price", "0"}
+        //    });
+
         //    // Act - try to save the activity
-        //    ActionResult result = await controller.EditLeisure(leisure);
+        //    var result = await controller.EditPost(1) as ViewResult;
 
         //    // Assert - check the method result type
         //    Assert.IsInstanceOfType(result, typeof(ViewResult));
+        //    Assert.AreEqual("An accommodation already exists for Step 2", controller.ViewBag.ErrorMessage);
         //}
 
         [TestMethod()]

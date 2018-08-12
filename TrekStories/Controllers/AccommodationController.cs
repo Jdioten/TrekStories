@@ -188,7 +188,7 @@ namespace TrekStories.Controllers
                     }
 
                     //if before trip start date -> error
-                    Step step = await db.Steps.FirstAsync(s => s.AccommodationId == accommodationToUpdate.AccommodationId);
+                    Step step = await db.Steps.Include(s => s.Trip).FirstAsync(s => s.AccommodationId == accommodationToUpdate.AccommodationId);
                     Trip trip = step.Trip;
                     if (accommodationToUpdate.CheckIn < trip.StartDate)
                     {
@@ -205,7 +205,7 @@ namespace TrekStories.Controllers
                             List<Step> oldSteps = await db.Steps.Where(s => s.AccommodationId == accommodationToUpdate.AccommodationId).Include(s => s.Trip).ToListAsync();
                             foreach (var oldStep in oldSteps)
                             {
-                                if (oldStep.Date.Day < accommodationToUpdate.CheckIn.Day || oldStep.Date.Day >= accommodationToUpdate.CheckOut.Day)
+                                if (oldStep.Date.Date < accommodationToUpdate.CheckIn.Date || oldStep.Date.Date >= accommodationToUpdate.CheckOut.Date)
                                 {
                                     oldStep.AccommodationId = null;
                                 }
@@ -293,7 +293,7 @@ namespace TrekStories.Controllers
             List<DateTime> dates = acc.GetDatesBetweenInAndOut();
             foreach (var date in dates)
             {
-                Step step = trip.Steps.FirstOrDefault(s => s.Date.Day == date.Day);
+                Step step = trip.Steps.FirstOrDefault(s => s.Date.Date == date.Date);
                 if (step == null)
                 {
                     throw new ArgumentException("There is no existing step for date " + date.ToShortDateString() + ".");   

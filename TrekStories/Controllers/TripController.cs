@@ -165,7 +165,7 @@ namespace TrekStories.Controllers
                                 List<Step> oldSteps = await db.Steps.Where(s => s.AccommodationId == acc.AccommodationId).Include(s => s.Trip).ToListAsync();
                                 foreach (var oldStep in oldSteps)
                                 {
-                                    if (oldStep.Date.Day < acc.CheckIn.Day || oldStep.Date.Day >= acc.CheckOut.Day)
+                                    if (oldStep.Date.Date < acc.CheckIn.Date || oldStep.Date.Date >= acc.CheckOut.Date)
                                     {
                                         oldStep.AccommodationId = null;
                                     }

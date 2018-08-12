@@ -325,7 +325,7 @@ namespace TrekStories.Controllers
             if (step.Accommodation != null)
             {
                 //needs to search in accommodations for matching check-in --separate method?
-                if (step.Accommodation.CheckIn.Day == step.Date.Day)
+                if (step.Accommodation.CheckIn.Date == step.Date.Date)
                 {
                     activityThread.Add(new ActivityThreadViewModel
                     {
@@ -344,7 +344,7 @@ namespace TrekStories.Controllers
             var tripAccommodation = (from s in step.Trip.Steps
                                     join a in db.Accommodations
                                     on s.AccommodationId equals a.AccommodationId
-                                    where a.CheckOut.Day == step.Date.Day
+                                    where a.CheckOut.Date == step.Date.Date
                                     select a).SingleOrDefault();
             if (tripAccommodation != null)
                 {
