@@ -304,5 +304,30 @@ namespace TrekStories.Controllers.Tests
             Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult));
             Assert.AreEqual("Another Title", newTitle);
         }
+
+        [TestMethod]
+        public async Task CannotEditSomebodyElseTrip()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            var trip = new Trip
+            {
+                TripId = 1,
+                Title = "Test Trip",
+                Country = "Ireland",
+                TripCategory = TripCategory.forest,
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123",
+            };
+            tc.Trips.Add(trip);
+
+            TripController controller = new TripController(tc).WithIncomingValues(new FormCollection {
+                { "Title", "Another Title" }, { "TripId", "1" }, { "Country", "Ireland" }
+            }).WithAuthenticatedUser("AnotherUser");
+
+            // Act
+            var result = await controller.EditPost(1) as ViewResult;
+            // Assert
+            Assert.AreEqual("NotAuthorizedError", result.ViewName);
+        }
     }
 }
