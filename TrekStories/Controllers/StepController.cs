@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -68,7 +69,12 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
-
+            if (trip.TripOwner != User.Identity.GetUserId())
+            {
+                return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add a step to it."),
+                                "Trip", "Index"));
+            }
             //ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name");
             //ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes");
             ViewBag.TripId = tripId;
@@ -87,7 +93,12 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
-
+            if (trip.TripOwner != User.Identity.GetUserId())
+            {
+                return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add a step to it."),
+                                "Trip", "Index"));
+            }
             try
             {
                 if (ModelState.IsValid)
@@ -134,13 +145,9 @@ namespace TrekStories.Controllers
             }
             //ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name", step.AccommodationId);
             //ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes", step.StepId);
-            //ViewBag.TripId = new SelectList(db.Trips, "TripId", "Title", step.TripId);
             ViewBag.TripId = stepViewModel.TripId;
             ViewBag.SeqNo = stepViewModel.SequenceNo;
             ViewBag.TripTitle = trip.Title;
-            //ViewBag.TripTitle = await (from t in db.Trips
-            //                           where t.TripId == stepViewModel.TripId
-            //                           select t.Title).ToListAsync();
             return View(stepViewModel);
         }
 
@@ -156,7 +163,12 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
-
+            if (step.Trip.TripOwner != User.Identity.GetUserId())
+            {
+                return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot edit it."),
+                                "Trip", "Index"));
+            }
             StepViewModel stepToEdit = new StepViewModel()
             {
                 StepId = step.StepId,
@@ -191,7 +203,12 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
-
+            if (stepToUpdate.Trip.TripOwner != User.Identity.GetUserId())
+            {
+                return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot edit it."),
+                                "Trip", "Index"));
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -234,6 +251,12 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
+            if (step.Trip.TripOwner != User.Identity.GetUserId())
+            {
+                return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot delete it."),
+                                "Trip", "Index"));
+            }
             if (step.Accommodation != null)
             {
                 TempData["message"] = string.Format("Step" + step.SequenceNo + "cannot be deleted because it is linked to an accommodation." +
@@ -255,7 +278,12 @@ namespace TrekStories.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-
+                if (stepToDelete.Trip.TripOwner != User.Identity.GetUserId())
+                {
+                    return View("NotAuthorizedError", new HandleErrorInfo(
+                                    new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot edit it."),
+                                    "Trip", "Index"));
+                }
                 //retrieve all subsequent steps and update seq no
                 foreach (Step step in db.Steps.Where(s => s.TripId == stepToDelete.TripId))
                 {
