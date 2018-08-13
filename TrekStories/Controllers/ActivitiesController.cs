@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Data.Entity.Infrastructure;
+using System.Globalization;
 using System.Net;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
-using TrekStories.Abstract;
-using System.Globalization;
-using System.Data.Entity.Infrastructure;
 
 namespace TrekStories.Controllers
 {
@@ -105,6 +102,7 @@ namespace TrekStories.Controllers
             {
                 return HttpNotFound();
             }
+            
             ViewBag.StepId = activity.StepId;
             ViewBag.From = activity.Step.From;
             ViewBag.To = activity.Step.To;
@@ -137,11 +135,23 @@ namespace TrekStories.Controllers
                         //REFACTOR THIS METHOD?
                         //update trip budget
                         Step step = await db.Steps.Include(s => s.Trip).FirstOrDefaultAsync(s => s.StepId == leisureActivity.StepId);
+                        if (step.Trip.TripOwner != User.Identity.GetUserId())
+                        {
+                            return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot add an activity to it."),
+                                "Trip", "Index"));
+                        }
                         step.Trip.TotalCost += leisureActivity.Price;
                     }
                     else
                     {
                         LeisureActivity dbEntry = (LeisureActivity)db.Activities.FindAsync(leisureActivity.ID).Result;
+                        if (dbEntry.Step.Trip.TripOwner != User.Identity.GetUserId())
+                        {
+                            return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this activity doesn't seem to be yours, you cannot edit it."),
+                                "Trip", "Index"));
+                        }
                         //update trip budget
                         dbEntry.Step.Trip.TotalCost = dbEntry.Step.Trip.TotalCost - dbEntry.Price + leisureActivity.Price;
                         if (dbEntry != null)
@@ -239,6 +249,12 @@ namespace TrekStories.Controllers
         public async Task<ActionResult> Delete(int actId)
         {
             Activity activityToDelete = await db.Activities.FindAsync(actId);
+            if (activityToDelete.Step.Trip.TripOwner != User.Identity.GetUserId())
+            {
+                return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this activity doesn't seem to be yours, you cannot delete it."),
+                                "Trip", "Index"));
+            }
             if (activityToDelete != null)
             {
                 db.Activities.Remove(activityToDelete);

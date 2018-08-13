@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TrekStories.Models;
 using TrekStories.Tests;
+using TrekStories.Tests.UnitTestHelpers;
 
 namespace TrekStories.Controllers.Tests
 {
@@ -75,11 +76,10 @@ namespace TrekStories.Controllers.Tests
         {
             //Arrange
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
-            ActivitiesController controller = new ActivitiesController(tc);
-            Step step = new Step { StepId = 2, Trip = new Trip { TripId = 321, TotalCost = 100} };
+            Step step = new Step { StepId = 2, Trip = new Trip { TripId = 321, TotalCost = 100, TripOwner = "ABC123"} };
             tc.Steps.Add(step);
             LeisureActivity leisureToCreate = new LeisureActivity() { Name = "Boat Trip", StartTime = new DateTime(2018, 7, 16, 9, 30, 0), LeisureCategory = LeisureCategory.aquatic, Price = 20, StepId = 2 };
-
+            ActivitiesController controller = new ActivitiesController(tc).WithAuthenticatedUser("ABC123");
             // Act
             var result = await controller.EditLeisure(leisureToCreate) as RedirectToRouteResult;
 
@@ -184,10 +184,10 @@ namespace TrekStories.Controllers.Tests
             // Arrange - create mock repository
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             // Arrange - create the controller
-            ActivitiesController controller = new ActivitiesController(tc);
+            ActivitiesController controller = new ActivitiesController(tc).WithAuthenticatedUser("ABC123");
             // Arrange - create a leisure activity
             LeisureActivity leisure = new LeisureActivity() { ID = 1, Name = "Boat Trip" };
-            leisure.Step = new Step { StepId = 123, Trip = new Trip { TripId = 321, TotalCost = 100 } };
+            leisure.Step = new Step { StepId = 123, Trip = new Trip { TripId = 321, TotalCost = 100, TripOwner = "ABC123" } };
             tc.Activities.Add(leisure);
             LeisureActivity updatedLeisure = new LeisureActivity()
             {
@@ -254,14 +254,15 @@ namespace TrekStories.Controllers.Tests
         {
             // Arrange - create the mock repository
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
-            Trip trip = new Trip { TripId = 1, Title = "Trip Name", TotalCost = 20 };
+            Trip trip = new Trip { TripId = 1, Title = "Trip Name", TotalCost = 20, TripOwner = "ABC123" };
             tc.Trips.Add(trip);
-            tc.Steps.Add(new Step { StepId = 123, Trip = trip});
+            Step step = new Step { StepId = 123, Trip = trip };
+            tc.Steps.Add(step);
             tc.Activities.Add(new LeisureActivity() { ID = 1, Name = "Aquapark" });
-            LeisureActivity l2 = new LeisureActivity() { ID = 2, Name = "Test", StepId = 123, Price = 15 };
+            LeisureActivity l2 = new LeisureActivity() { ID = 2, Name = "Test", StepId = 123, Price = 15, Step = step };
             tc.Activities.Add(l2);
             // Arrange - create the controller
-            ActivitiesController controller = new ActivitiesController(tc);
+            ActivitiesController controller = new ActivitiesController(tc).WithAuthenticatedUser("ABC123");
             // Act - delete an activity
             var result = await controller.Delete(2);
             // Assert - ensure that the activity is deleted from repository

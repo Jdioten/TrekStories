@@ -25,6 +25,7 @@ namespace TrekStories.Controllers.Tests
             Trip trip = new Trip
             {
                 TripId = 123,
+                TripOwner = "ABC123",
                 Steps = new List<Step>()
                 {
                     new Step {StepId = 11, AccommodationId = 1},
@@ -34,7 +35,7 @@ namespace TrekStories.Controllers.Tests
             };
             tc.Trips.Add(trip);
             // Arrange - create a controller
-            AccommodationController controller = new AccommodationController(tc);
+            AccommodationController controller = new AccommodationController(tc).WithAuthenticatedUser("ABC123");
             // Action
             var viewResult = await controller.Index(123) as ViewResult;
             Accommodation[] result = ((IEnumerable<Accommodation>)viewResult.ViewData.Model).ToArray();
@@ -80,6 +81,7 @@ namespace TrekStories.Controllers.Tests
             tc.Trips.Add(new Trip
             {
                 TripId = 1,
+                TripOwner = "ABC123",
                 StartDate = new DateTime(2018, 11, 28),
                 TotalCost = 80,
                 Steps = new List<Step>() { step }
@@ -87,7 +89,7 @@ namespace TrekStories.Controllers.Tests
             tc.Steps.Add(step);
             Accommodation newAccommodation = new Accommodation() { CheckIn = new DateTime(2018, 11, 28, 14, 0, 0), CheckOut = new DateTime(2018, 11, 29, 10, 0, 0), Price = 80, ConfirmationFileUrl = "1" };
 
-            AccommodationController controller = new AccommodationController(tc);
+            AccommodationController controller = new AccommodationController(tc).WithAuthenticatedUser("ABC123");
             // Act
             var result = await controller.Create(newAccommodation) as RedirectToRouteResult;
             Trip trip = tc.Trips.Find(1);
@@ -152,13 +154,14 @@ namespace TrekStories.Controllers.Tests
             tc.Trips.Add(new Trip
             {
                 TripId = 1,
+                TripOwner = "ABC123",
                 StartDate = new DateTime(2018, 11, 28),
                 TotalCost = 80,
                 Steps = new List<Step>() { step }
             });
             tc.Steps.Add(step);
 
-            AccommodationController controller = new AccommodationController(tc);
+            AccommodationController controller = new AccommodationController(tc).WithAuthenticatedUser("ABC123");
 
             //try to add accommodation for that step with existing acommodation..
             Accommodation newAccommodation = new Accommodation() { CheckIn = new DateTime(2018, 11, 28, 14, 0, 0), CheckOut = new DateTime(2018, 11, 29, 10, 0, 0), Price = 80, ConfirmationFileUrl = "1" };
@@ -216,7 +219,7 @@ namespace TrekStories.Controllers.Tests
             // Arrange - create an accommodation and a step linked to it
             Accommodation acc = new Accommodation { AccommodationId = 1, Name = "Hotel A", CheckIn = new DateTime(2018,8,10,10,0,0), CheckOut = new DateTime(2018,8,11,10,0,0), Price = 50 };
             tc.Accommodations.Add(acc);
-            Trip trip = new Trip { TripId = 11, StartDate = new DateTime(2018, 8, 10), TotalCost = 100 };
+            Trip trip = new Trip { TripId = 11, StartDate = new DateTime(2018, 8, 10), TotalCost = 100, TripOwner = "ABC123" };
             Step step = new Step { StepId = 123, Trip = trip, AccommodationId = 1, SequenceNo = 1 };
             tc.Trips.Add(trip);
             tc.Steps.Add(step);
@@ -224,7 +227,7 @@ namespace TrekStories.Controllers.Tests
             // Arrange - create the controller with update accommodation data dd-MM-yyyy hh:mm tt
             var controller = new AccommodationController(tc).WithIncomingValues(new FormCollection {
                 { "AccommodationId", "1" }, { "Name", "Name Changed" }, { "CheckIn", "10-08-2018 10:00 AM" }, { "CheckOut", "11-08-2018 10:00 AM" }, {"Price", "60"}
-            });
+            }).WithAuthenticatedUser("ABC123");
 
             // Act - try to save the activity
             var result = await controller.EditPost(1) as RedirectToRouteResult;
@@ -245,14 +248,14 @@ namespace TrekStories.Controllers.Tests
             // Arrange - create an accommodation and a step linked to it
             Accommodation acc = new Accommodation { AccommodationId = 1, Name = "Hotel A", CheckIn = new DateTime(2018, 8, 10, 10, 0, 0), CheckOut = new DateTime(2018, 8, 11, 10, 0, 0) };
             tc.Accommodations.Add(acc);
-            Trip trip = new Trip { TripId = 11, StartDate = new DateTime(2018, 8, 10) };
+            Trip trip = new Trip { TripId = 11, StartDate = new DateTime(2018, 8, 10), TripOwner = "ABC123" };
             Step step = new Step { StepId = 123, Trip = trip, AccommodationId = 1, SequenceNo = 1 };
             tc.Steps.Add(step);
 
             // Arrange - create the controller with update accommodation data
             var controller = new AccommodationController(tc).WithIncomingValues(new FormCollection {
                 { "AccommodationId", "1" }, { "Name", "Name Changed" }, { "CheckIn", "09-08-2018 10:00 AM" }, { "CheckOut", "11-08-2018 10:00 AM" }
-            });
+            }).WithAuthenticatedUser("ABC123");
 
             // Act - try to save the activity
             var result = await controller.EditPost(1) as ViewResult;
@@ -313,13 +316,13 @@ namespace TrekStories.Controllers.Tests
         {
             // Arrange - create the mock repository
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
-            Trip trip = new Trip { TripId = 1, Title = "Trip Name", TotalCost = 120 };
+            Trip trip = new Trip { TripId = 1, Title = "Trip Name", TotalCost = 120, TripOwner = "ABC123" };
             tc.Trips.Add(trip);
             tc.Steps.Add(new Step { StepId = 123, Trip = trip, AccommodationId = 2 });
             Accommodation a2 = new Accommodation() { AccommodationId = 2, Name = "Test", Price = 70 };
             tc.Accommodations.Add(a2);
             // Arrange - create the controller
-            AccommodationController controller = new AccommodationController(tc);
+            AccommodationController controller = new AccommodationController(tc).WithAuthenticatedUser("ABC123");
             // Act - delete an accommodation
             var result = await controller.DeleteConfirmed(2);
             // Assert - ensure that the accommodation is deleted from repository

@@ -11,6 +11,7 @@ using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
 using System.Data.Entity.Infrastructure;
+using Microsoft.AspNet.Identity;
 
 namespace TrekStories.Controllers
 {
@@ -38,6 +39,12 @@ namespace TrekStories.Controllers
             if (trip == null)
             {
                 return HttpNotFound();
+            }
+            if (trip.TripOwner != User.Identity.GetUserId())
+            {
+                return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot see its accommodations."),
+                                "Trip", "Index"));
             }
             ViewBag.TripId = tripId;
             ViewBag.TripTitle = trip.Title;
@@ -80,7 +87,7 @@ namespace TrekStories.Controllers
 
             ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
             ViewBag.TripId = id;
-            
+
             //pass in steps dates as default
             if (cIn != null && cOut != null)
             {
@@ -107,6 +114,12 @@ namespace TrekStories.Controllers
                     //if before trip start date -> error
                     int tripId = Int32.Parse(accommodation.ConfirmationFileUrl); //temporarily storing tripid in confirmationurl
                     Trip trip = await db.Trips.FindAsync(tripId);
+                    if (trip.TripOwner != User.Identity.GetUserId())
+                    {
+                        return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add an accommodation to it."),
+                                "Trip", "Index"));
+                    }
                     if (accommodation.CheckIn < trip.StartDate)
                     {
                         ModelState.AddModelError("", "The check-in date is before the trip start date (" + trip.StartDate.ToShortDateString() + "). Please correct.");
@@ -134,7 +147,7 @@ namespace TrekStories.Controllers
                         await db.SaveChangesAsync();
                         //return update view in case user wants to attach confirmation file
                         return RedirectToAction("Edit", new { id = accommodation.AccommodationId });
-                    }          
+                    }
                 }
             }
             catch (RetryLimitExceededException)
@@ -191,6 +204,12 @@ namespace TrekStories.Controllers
                     //if before trip start date -> error
                     Step step = await db.Steps.Include(s => s.Trip).FirstAsync(s => s.AccommodationId == accommodationToUpdate.AccommodationId);
                     Trip trip = step.Trip;
+                    if (trip.TripOwner != User.Identity.GetUserId())
+                    {
+                        return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you edit its accommodations."),
+                                "Trip", "Index"));
+                    }
                     if (accommodationToUpdate.CheckIn < trip.StartDate)
                     {
                         ModelState.AddModelError("", "The check-in date is before the trip start date (" + trip.StartDate.ToShortDateString() + "). Please correct.");
@@ -260,22 +279,28 @@ namespace TrekStories.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Accommodation accommodation = await db.Accommodations.FindAsync(id);
-        
+
             //set accommodation id to null
             List<Step> steps = await db.Steps.Include(s => s.Trip).Where(s => s.AccommodationId == accommodation.AccommodationId).ToListAsync();
+            if (steps.First().Trip.TripOwner != User.Identity.GetUserId())
             {
-                foreach (Step s in steps)
-                {
-                    s.AccommodationId = null;
-                }
+                return View("NotAuthorizedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you delete its accommodations."),
+                                "Trip", "Index"));
             }
+
+            foreach (Step s in steps)
+            {
+                s.AccommodationId = null;
+            }
+
             db.Accommodations.Remove(accommodation);
 
             //update trip budget
             steps.First().Trip.TotalCost -= accommodation.Price;
 
             await db.SaveChangesAsync();
-            return RedirectToAction("Details", "Trip", new { id = steps.First().Trip.TripId});
+            return RedirectToAction("Details", "Trip", new { id = steps.First().Trip.TripId });
         }
 
         protected override void Dispose(bool disposing)
@@ -297,7 +322,7 @@ namespace TrekStories.Controllers
                 Step step = trip.Steps.FirstOrDefault(s => s.Date.Date == date.Date);
                 if (step == null)
                 {
-                    throw new ArgumentException("There is no existing step for date " + date.ToShortDateString() + ".");   
+                    throw new ArgumentException("There is no existing step for date " + date.ToShortDateString() + ".");
                 }
                 //if new accommodation, check that there is no accommodation already on step
                 else if (insert && step.AccommodationId != null && step.AccommodationId != acc.AccommodationId) //to allow for updates
