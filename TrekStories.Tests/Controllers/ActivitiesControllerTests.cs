@@ -62,10 +62,8 @@ namespace TrekStories.Controllers.Tests
             ActivitiesController controller = new ActivitiesController(tc);
             Step step = new Step() { StepId = 2 };
             tc.Steps.Add(step);
-
             // Act
             var result = await controller.CreateLeisure(2) as ViewResult;
-
             // Assert
             Assert.AreEqual("EditLeisure", result.ViewName);
             Assert.AreEqual(2, result.ViewBag.StepId);
@@ -82,7 +80,6 @@ namespace TrekStories.Controllers.Tests
             ActivitiesController controller = new ActivitiesController(tc).WithAuthenticatedUser("ABC123");
             // Act
             var result = await controller.EditLeisure(leisureToCreate) as RedirectToRouteResult;
-
             // Assert
             Assert.AreEqual("Details", result.RouteValues["action"]);
             Assert.AreEqual("Step", result.RouteValues["controller"]);
@@ -100,10 +97,8 @@ namespace TrekStories.Controllers.Tests
             tc.Trips.Add(trip);
             tc.Steps.Add(step);
             Transport transportToCreate = new Transport() { Name = "Train to Paris", StartTime = new DateTime(2018, 7, 16, 9, 30, 0), Duration = 120, Price = 23, StepId = 2, Step = step };
-
             // Act
             var result = await controller.EditTransport(transportToCreate) as RedirectToRouteResult;
-
             // Assert
             Assert.AreEqual("Details", result.RouteValues["action"]);
             Assert.AreEqual("Step", result.RouteValues["controller"]);

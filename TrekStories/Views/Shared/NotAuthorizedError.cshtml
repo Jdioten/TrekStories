@@ -1,6 +1,8 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
-<h2 class="text-danger">Error.</h2>
+<div class="mycontainer">
+    <h2 class="text-danger">Error.</h2>
 
-<h4>@Model.Exception.Message</h4>
+    <h4>@Model.Exception.Message</h4>
 
-@Html.ActionLink("Back", @Model.ActionName, @Model.ControllerName)
+    @Html.ActionLink("Back", @Model.ActionName, @Model.ControllerName)
+</div>

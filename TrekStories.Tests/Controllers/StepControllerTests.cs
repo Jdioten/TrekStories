@@ -39,7 +39,7 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public async Task CreateViewTest()
+        public async Task CanCreateStepForTrip()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             var trip = new Trip
@@ -87,11 +87,9 @@ namespace TrekStories.Controllers.Tests
             
             var controller = new StepController(tc).WithAuthenticatedUser("ABC123");
             var result = await controller.Create(stepViewModel) as RedirectToRouteResult;
-
             Step created = tc.Steps.First();
 
             Assert.AreEqual("Details", result.RouteValues["action"]);
-
             Assert.AreEqual("A", created.From);
             Assert.AreEqual(2.5, created.WalkingTime);
             Assert.AreEqual(12, created.WalkingDistance);
@@ -250,7 +248,6 @@ namespace TrekStories.Controllers.Tests
         [TestMethod()]
         public async Task EditStepReturnsCorrectStepVm()
         {
-            // Arrange - create the mock repository
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             Step step = new Step
             {
@@ -263,13 +260,12 @@ namespace TrekStories.Controllers.Tests
                 Trip = new Trip { TripOwner = "ABC123"}
             };
             tc.Steps.Add(step);
-            // Arrange - create the controller
+
             var controller = new StepController(tc).WithAuthenticatedUser("ABC123");
-            // Act
+
             var result = await controller.Edit(123) as ViewResult;
             var resultStep = (StepViewModel)result.ViewData.Model;
 
-            // Assert
             Assert.AreEqual(123, resultStep.StepId);
             Assert.AreEqual(3, resultStep.WalkingTimeHours);
             Assert.AreEqual(30, resultStep.WalkingTimeMinutes);
@@ -299,9 +295,9 @@ namespace TrekStories.Controllers.Tests
                 WalkingTimeMinutes = 30,
                 TripId = 111
             };
-            // Arrange - create the controller
+
             var controller = new StepController(tc).WithAuthenticatedUser("ABC123");
-            // Act
+
             var result = await controller.Edit(stepVm) as RedirectToRouteResult;
 
             Assert.AreEqual("Details", result.RouteValues["action"]);
@@ -318,10 +314,10 @@ namespace TrekStories.Controllers.Tests
         };
             tc.Steps.Add(step);
             StepViewModel stepVm = new StepViewModel { StepId = 123, TripId = 111 };
-            // Arrange - create the controller
+
             var controller = new StepController(tc).WithAuthenticatedUser("ABC123");
             controller.ModelState.AddModelError("", "Error");
-            // Act
+
             var result = await controller.Edit(stepVm) as ViewResult;
 
             Assert.AreEqual("", result.ViewName);
@@ -336,11 +332,10 @@ namespace TrekStories.Controllers.Tests
             Step step = new Step { StepId = 10, SequenceNo = 3, Trip = new Trip { TripOwner = "ABC123"} };
             tc.Steps.Add(step);
             var controller = new StepController(tc).WithAuthenticatedUser("ABC123");
-            // Act - delete the product
+
             var result = await controller.Delete(10) as ViewResult;
             var resultStep = (Step)result.ViewData.Model;
 
-            // Assert
             Assert.AreEqual(10, resultStep.StepId);
             Assert.AreEqual(3, resultStep.SequenceNo);
         }
@@ -406,6 +401,9 @@ namespace TrekStories.Controllers.Tests
 
             Assert.AreEqual("Details", result.RouteValues["action"]);
             Assert.AreEqual("Step", result.RouteValues["controller"]);
+            Assert.AreEqual(
+                "Step 1 cannot be deleted because it is linked to an accommodation. Please first edit or delete the accommodation for the step.",
+                controller.TempData["message"]);
         }
     }
 }

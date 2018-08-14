@@ -221,6 +221,8 @@ namespace TrekStories.Controllers
                     {
                         try
                         {
+                            AssignAccommodationToStep(accommodationToUpdate, trip, true);
+
                             //remove accommodation from previously assigned steps now out of range
                             List<Step> oldSteps = await db.Steps.Where(s => s.AccommodationId == accommodationToUpdate.AccommodationId).Include(s => s.Trip).ToListAsync();
                             foreach (var oldStep in oldSteps)
@@ -231,7 +233,6 @@ namespace TrekStories.Controllers
                                 }
                             }
 
-                            AssignAccommodationToStep(accommodationToUpdate, trip, true);
                         }
                         catch (ArgumentException ex)
                         {

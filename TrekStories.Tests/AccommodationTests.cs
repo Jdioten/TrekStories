@@ -16,7 +16,7 @@ namespace TrekStories.Tests
                 CheckOut = new DateTime(2018, 2, 4, 9, 0, 0)
             };
 
-            Assert.AreEqual(acc.IsCheckInBeforeCheckOut(), true);
+            Assert.AreEqual(true, acc.IsCheckInBeforeCheckOut());
         }
 
         [TestMethod]
@@ -34,8 +34,8 @@ namespace TrekStories.Tests
                 CheckOut = new DateTime(2018, 2, 3, 9, 0, 0)
             };
 
-            Assert.AreEqual(acc1.IsCheckInBeforeCheckOut(), false);
-            Assert.AreEqual(acc2.IsCheckInBeforeCheckOut(), false);
+            Assert.AreEqual(false, acc1.IsCheckInBeforeCheckOut());
+            Assert.AreEqual(false, acc2.IsCheckInBeforeCheckOut());
         }
 
         [TestMethod]
