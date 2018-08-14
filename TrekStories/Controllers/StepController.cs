@@ -374,7 +374,7 @@ namespace TrekStories.Controllers
                                     join a in db.Accommodations
                                     on s.AccommodationId equals a.AccommodationId
                                     where a.CheckOut.Date == step.Date.Date
-                                    select a).SingleOrDefault();
+                                    select a).Distinct().SingleOrDefault();
             if (tripAccommodation != null)
                 {
                     activityThread.Add(new ActivityThreadViewModel
