@@ -222,7 +222,7 @@ namespace TrekStories.Controllers.Tests
             // Act - try to save the activity
             ActionResult result = await controller.EditTransport(updatedTransport);
 
-            // Assert - check the method result type
+            // Assert - check the trip budget updated
             Assert.AreEqual(90, trip.TotalCost);
         }
 

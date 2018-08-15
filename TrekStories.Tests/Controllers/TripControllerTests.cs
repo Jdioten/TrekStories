@@ -89,7 +89,7 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public async Task DetailsForNoIdReturnsBadRequest()
+        public async Task DetailsForNullIdReturnsBadRequest()
         {
             var controller = new TripController(new TestTrekStoriesContext());
             var expected = (int)System.Net.HttpStatusCode.BadRequest;
