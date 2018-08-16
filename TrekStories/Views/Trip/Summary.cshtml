@@ -2,83 +2,96 @@
 @model IEnumerable<TrekStories.Models.Step>
 
 @{
+    Layout = null;
     ViewBag.Title = "Summary";
 }
 
-<div class="mycontainer">
-    <h2 class="text-center">@ViewBag.TripTitle</h2>
-    <br />
-    <table class="table table-responsive table-bordered">
-        <tr bgcolor="#e2ebea">
-            <th>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Trek Stories</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
 
-            </th>
-            <th>
-                Date
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.From)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.To)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.WalkingTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.WalkingDistance)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ascent)
-            </th>
-            <th>
-                Night Accommodation
-            </th>
-        </tr>
+</head>
+<body>
+    <div class="mycontainer">
+        <h2 class="text-center">@ViewBag.TripTitle</h2>
+        <br />
+        <table class="table table-responsive table-bordered">
+            <tr bgcolor="#e2ebea">
+                <th>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.SequenceNo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.From)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.To)
-                </td>
-                <td>
-                    @item.GetWalkingTime()
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.WalkingDistance) Km
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ascent) m
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Accommodation.Name)
-                </td>
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.From)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.To)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.WalkingTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.WalkingDistance)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Ascent)
+                </th>
+                <th>
+                    Night Accommodation
+                </th>
             </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.SequenceNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.From)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.To)
+                    </td>
+                    <td>
+                        @item.GetWalkingTime()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WalkingDistance) Km
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Ascent) m
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Accommodation.Name)
+                    </td>
+                </tr>
+            }
+        </table>
+        <hr />
+        <h4><u>Activities Day by Day</u></h4>
+        <br />
+        @for (int i = 0; i < ViewBag.TripSteps.Length; i++)
+        {
+            <p><strong>@ViewBag.TripSteps[i].Date.ToLongDateString()</strong> / From @ViewBag.TripSteps[i].From to @ViewBag.TripSteps[i].To</p>
+            <p class="description">@ViewBag.TripSteps[i].Description</p>
+            @Html.Partial("_ActivityThread", (List<ActivityThreadViewModel>)ViewBag.ActivityThread[i])
+            <br />
         }
-    </table>
-    <hr/>
-    <h4><u>Activities Day by Day</u></h4>
-    <br />
-    @for (int i = 0; i < ViewBag.TripSteps.Length; i++)
-    {
-        <p><strong>@ViewBag.TripSteps[i].Date.ToLongDateString()</strong> / From @ViewBag.TripSteps[i].From to @ViewBag.TripSteps[i].To</p>
-        <p class="description">@ViewBag.TripSteps[i].Description</p>
-        @Html.Partial("_ActivityThread", (List<ActivityThreadViewModel>)ViewBag.ActivityThread[i])
-        <br/>
-    }
-    <hr />
-    <h4><u>Accommodations Register</u></h4>
-    <br />
+        <hr />
+        <h4><u>Accommodations Register</u></h4>
+        <br />
         @foreach (var item in ViewBag.TripAccommodations)
         {
             <div class="row">
@@ -99,5 +112,7 @@
                     </p>
                 </div>
             </div>
-        }   
-</div>
+        }
+    </div>
+</body>
+</html>

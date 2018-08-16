@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
+using Rotativa;
 
 namespace TrekStories.Controllers
 {
@@ -244,13 +245,25 @@ namespace TrekStories.Controllers
         /*public ActionResult DisplayFullTripDetails()
         {
 
-        }
-
-        public void GenerateSummaryReport()
-        {
-
         }*/
 
+        public ActionResult GetSummaryReport(int id)
+        {
+            return new ActionAsPdf("Summary", new { id = id }) { FileName = "TripSummary.pdf" };
+        }
+        //public ActionResult PrintIndex()
+        //{
+        //    return new ActionAsPdf("Index", new { name = "Giorgio" }) { FileName = "Test.pdf" };
+        //}
+
+        //public ActionResult Index(string name)
+        //{
+        //    ViewBag.Message = string.Format("Hello {0} to ASP.NET MVC!", name);
+
+        //    return View();
+        //}
+
+        [AllowAnonymous]
         public async Task<ActionResult> Summary(int id)
         {
             Trip trip = await db.Trips.Include(t => t.Steps).SingleOrDefaultAsync(t => t.TripId == id);
@@ -276,7 +289,7 @@ namespace TrekStories.Controllers
                                          join a in db.Accommodations
                                          on s.AccommodationId equals a.AccommodationId
                                          select a;
-            ViewBag.TripAccommodations = tripAccommodations.OrderBy(a => a.Name);
+            ViewBag.TripAccommodations = tripAccommodations.Distinct().OrderBy(a => a.Name);
             return View(tripSteps);
         }
 
