@@ -29,12 +29,14 @@ namespace TrekStories.Controllers
 
         // GET: Accommodation
         [AllowAnonymous]
-        public async Task<ActionResult> Index(int? tripId)
+        public async Task<ActionResult> Index(int? tripId, string sortOrder)
         {
             if (tripId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.CheckInSortParm = sortOrder == "CheckIn" ? "checkin_desc" : "CheckIn";
             Trip trip = await db.Trips.Include(t => t.Steps).SingleOrDefaultAsync(t => t.TripId == tripId);
             if (trip == null)
             {
@@ -51,16 +53,30 @@ namespace TrekStories.Controllers
             ViewBag.TripId = tripId;
             ViewBag.TripTitle = trip.Title;
 
-            //SHOULD THIS BE WRITTEN ASYNC?
             //return accommodations just for trip...
             var tripAccommodations = from s in trip.Steps
                                      join a in db.Accommodations
                                      on s.AccommodationId equals a.AccommodationId
                                      select a;
 
-            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    tripAccommodations = tripAccommodations.OrderByDescending(a => a.Name);
+                    break;
+                case "CheckIn":
+                    tripAccommodations = tripAccommodations.OrderBy(a => a.CheckIn);
+                    break;
+                case "checkin_desc":
+                    tripAccommodations = tripAccommodations.OrderByDescending(a => a.CheckIn);
+                    break;
+                default:
+                    tripAccommodations = tripAccommodations.OrderBy(a => a.Name);
+                    break;
+            }
 
-            return View(tripAccommodations);
+            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+            return View(tripAccommodations.ToList());
         }
 
         // GET: Accommodation/Details/5

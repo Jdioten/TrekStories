@@ -15,10 +15,10 @@
     <table class="table table-responsive">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.ActionLink("Name", "Index", new { tripId = ViewBag.TripId, sortOrder = ViewBag.NameSortParm }, new { style="color:#eb6864;" })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CheckIn)
+                @Html.ActionLink("Check-In", "Index", new { tripId = ViewBag.TripId, sortOrder = ViewBag.CheckInSortParm }, new { style = "color:#eb6864;" })
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CheckOut)
@@ -71,7 +71,7 @@
             <td></td>
             <td>@ViewBag.TotalNights Nights</td>
             <td></td>
-            <td>@ViewBag.TotalPrice @ViewBag.Currency</td>
+            <td>@string.Format("{0:C}", ViewBag.TotalPrice)</td>
         </tr>
     </table>
 </div>
