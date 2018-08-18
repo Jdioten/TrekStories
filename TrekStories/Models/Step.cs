@@ -27,14 +27,7 @@ namespace TrekStories.Models
         {
             get
             {
-                //if (Trip != null)
-                //{
-                    return Trip.StartDate.AddDays(SequenceNo - 1.0);
-                //}
-                //else //for deleting when no need to retrieve trip
-                //{
-                //    return DateTime.Now;
-                //}
+                 return Trip.StartDate.AddDays(SequenceNo - 1.0);
             }
         }
 
@@ -67,7 +60,8 @@ namespace TrekStories.Models
         public string GetWalkingTime()
         {
             var ts = TimeSpan.FromHours(WalkingTime);
-            return $"{ts.Hours + (ts.Days * 24)}hr  {ts.Minutes:00}min";
+            string minutes = ts.Minutes > 0 ? $"{ts.Minutes:00}min" : "";
+            return $"{ts.Hours + (ts.Days * 24)}hr  {minutes}";
         }
     }
 }
