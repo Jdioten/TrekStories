@@ -4,40 +4,42 @@
     ViewBag.Title = "Index";
 }
 
-    <div class="jumbotron">
-        <blockquote class="blockquote text-center hidden-xs">
-            <p class="mb-0">The gladdest moment in human life, me thinks, is a departure into unknown lands.</p>
-            <small class="blockquote-footer">Sir Richard Burton</small>
-        </blockquote>
-        <p class="text-center"><a href="@Url.Action("Create")" class="btn btn-primary btn">Prepare the Next Adventure &raquo;</a></p>
+<div class="jumbotron">
+    <blockquote class="blockquote text-center hidden-xs">
+        <p class="mb-0">The gladdest moment in human life, me thinks, is a departure into unknown lands.</p>
+        <small class="blockquote-footer">Sir Richard Burton</small>
+    </blockquote>
+    <p class="text-center"><a href="@Url.Action("Create")" class="btn btn-primary btn">Prepare the Next Adventure &raquo;</a></p>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        <h3 style="margin-top:0;">My Trips</h3>
     </div>
+    <div class="col-xs-10">
+        <form class="form-inline search-box" role="form" method="get">
+            <div class="form-group">
+                <label class="sr-only" for="search-text">Trip Name</label>
+                @Html.TextBox("SearchString", "", new { @class = "form-control", @placeholder = "Search Trip Name" })
+            </div>
+            <button type="submit" class="btn btn-success" id="search-btn">Search</button>
+        </form>
+    </div>
+</div>
+<div class="row display-flex">
+    @foreach (var item in Model)
+    {
 
-    <h3>
-    My Trips
-</h3>
-    <form class="form-inline search-box" role="form" method="get">
-        <div class="form-group">
-            <label class="sr-only" for="search-text">Meeting Room Name</label>
-            @Html.TextBox("SearchString", "", new { @class = "form-control", @placeholder = "Search Trip Name" })
-        </div>
-        <button type="submit" class="btn btn-success" id="search-btn">Search</button>
-    </form>
-
-    <div class="row display-flex">
-        @foreach (var item in Model)
-        {
-
-            <div class="col-xs-6 col-sm-4 col-md-3">
-                <div class="thumbnail">
-                    <img src="~/Images/@(item.TripCategory).jpg" alt="trip category picture" class="img-responsive">
-                    <div class="caption">
-                        <h3>@item.Title</h3>
-                        <p>@item.Duration days in @item.Country&emsp;-&emsp;<em>@item.TotalWalkingDistance Km</em></p>
-                        @*<p>@item.TotalWalkingDistance Km - From @item.Steps.Aggregate((i1, i2) => i1.SequenceNo < i2.SequenceNo ? i1 : i2).From to @item.Steps.Aggregate((i1, i2) => i1.SequenceNo > i2.SequenceNo ? i1 : i2).To</p>*@
-                        <p><a href="@Url.Action("Details", new { id = item.TripId })" class="btn btn-primary" role="button" style="width:100%;">MORE</a></p>
-                    </div>
+        <div class="col-xs-6 col-sm-4 col-md-3">
+            <div class="thumbnail">
+                <img src="~/Images/@(item.TripCategory).jpg" alt="trip category picture" class="img-responsive">
+                <div class="caption">
+                    <h3>@item.Title</h3>
+                    <p>@item.Duration days in @item.Country&emsp;-&emsp;<em>@item.TotalWalkingDistance Km</em></p>
+                    @*<p>@item.TotalWalkingDistance Km - From @item.Steps.Aggregate((i1, i2) => i1.SequenceNo < i2.SequenceNo ? i1 : i2).From to @item.Steps.Aggregate((i1, i2) => i1.SequenceNo > i2.SequenceNo ? i1 : i2).To</p>*@
+                    <p><a href="@Url.Action("Details", new { id = item.TripId })" class="btn btn-primary" role="button" style="width:100%;">MORE</a></p>
                 </div>
             </div>
-        }
-    </div>
+        </div>
+    }
+</div>
 <br />
