@@ -136,6 +136,9 @@ namespace TrekStories.Controllers
                         {
                             //give feedback to user about which step to check
                             ViewBag.ErrorMessage = ex.Message;
+                            ViewBag.TripId = accommodation.ConfirmationFileUrl;
+                            ViewBag.CheckIn = String.Format("{0:dd-MM-yyyy hh:mm tt}", accommodation.CheckIn);
+                            ViewBag.CheckOut = String.Format("{0:dd-MM-yyyy hh:mm tt}", accommodation.CheckOut);
                             return View(accommodation);
                         }
 

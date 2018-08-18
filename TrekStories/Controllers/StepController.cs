@@ -271,7 +271,7 @@ namespace TrekStories.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Step stepToDelete = await db.Steps.Include(s => s.Trip).SingleOrDefaultAsync(s => s.StepId == id);
+            Step stepToDelete = await db.Steps.Include(s => s.Trip).Include(s => s.Activities).SingleOrDefaultAsync(s => s.StepId == id);
             try
             {
                 if (stepToDelete == null)
@@ -284,6 +284,12 @@ namespace TrekStories.Controllers
                                     new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot edit it."),
                                     "Trip", "Index"));
                 }
+                if (stepToDelete.Accommodation != null)
+                {
+                    TempData["message"] = string.Format("Step " + stepToDelete.SequenceNo + " cannot be deleted because it is linked to an accommodation. " +
+                        "Please first edit or delete the accommodation for the step.");
+                    return RedirectToAction("Details", "Step", new { id = stepToDelete.StepId });
+                }
                 //retrieve all subsequent steps and update seq no
                 foreach (Step step in db.Steps.Where(s => s.TripId == stepToDelete.TripId))
                 {
@@ -291,6 +297,11 @@ namespace TrekStories.Controllers
                     {
                         step.SequenceNo--;
                     }
+                }
+
+                foreach (var item in stepToDelete.Activities)
+                {
+                    stepToDelete.Trip.TotalCost -= item.Price;
                 }
 
                 db.Steps.Remove(stepToDelete);
@@ -345,6 +356,26 @@ namespace TrekStories.Controllers
                     Price = activity.Price,
                     Icon = GetIcon(activity.TransportType.ToString()),
                     ArrivalTime = activity.GetArrivalTime(),
+                    Controller = "Activities"
+                }
+            );
+            }
+
+            var transportsArrivingOnDay = from s in step.Trip.Steps
+                                          join a in db.Activities.OfType<Transport>()
+                                          on s.StepId equals a.StepId
+                                          where a.GetArrivalTime().Date == step.Date.Date && a.StartTime.Date != s.Date.Date
+                                          select a;
+            foreach (Transport activity in transportsArrivingOnDay.ToList())
+            {
+                activityThread.Add(new ActivityThreadViewModel
+                {
+                    ID = activity.ID,
+                    StartTime = activity.GetArrivalTime(),
+                    Name = "Arrival " + activity.Name,
+                    Price = activity.Price,
+                    Icon = GetIcon(activity.TransportType.ToString()),
+                    ArrivalTime = null,
                     Controller = "Activities"
                 }
             );
@@ -418,11 +449,6 @@ namespace TrekStories.Controllers
 
                 default: return "";
             }
-        }
-
-        public async Task<ActionResult> ReorderSteps()
-        {
-            throw new NotImplementedException();
         }
     }
 }

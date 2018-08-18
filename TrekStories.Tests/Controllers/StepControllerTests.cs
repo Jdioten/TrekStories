@@ -341,7 +341,7 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod]
-        public async Task CanDeleteValidSteps()
+        public async Task CanDeleteValidStepsAndUpdateTripBudget()
         {
             // Arrange - create a trip wit steps
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
@@ -353,10 +353,26 @@ namespace TrekStories.Controllers.Tests
                 TripCategory = TripCategory.forest,
                 StartDate = new DateTime(2015, 4, 12),
                 TripOwner = "ABC123",
+                TotalCost = 100
             };
             tc.Trips.Add(trip);
-            Step stepA = new Step { StepId = 11, SequenceNo = 1, TripId = 1, Trip = trip };
-            Step stepB = new Step { StepId = 12, SequenceNo = 2, TripId = 1, Trip = trip };
+            Step stepA = new Step
+            {
+                StepId = 11,
+                SequenceNo = 1,
+                TripId = 1,
+                Trip = trip,
+                Activities = new List<Activity> { new LeisureActivity { ID = 1, Name = "Aquapark", Price = 30 } }
+            };
+            Step stepB = new Step
+            {
+                StepId = 12,
+                SequenceNo = 2,
+                TripId = 1,
+                Trip = trip,
+                Activities = new List<Activity> { new LeisureActivity { ID = 2, Name = "Boat Excursion", Price = 20 },
+                                                  new Transport { ID = 3, Name = "Train", Price = 50 } }
+            };
             Step stepC = new Step { StepId = 10, SequenceNo = 3, TripId = 1, Trip = trip };
             tc.Steps.Add(stepA);
             tc.Steps.Add(stepB);
@@ -370,6 +386,7 @@ namespace TrekStories.Controllers.Tests
             Assert.AreEqual(1, stepA.SequenceNo);
             Assert.AreEqual(2, stepC.SequenceNo);
             Assert.IsNull(tc.Steps.FirstOrDefault(s => s.StepId == stepB.StepId));
+            Assert.AreEqual(30, trip.TotalCost);
         }
 
         [TestMethod()]
