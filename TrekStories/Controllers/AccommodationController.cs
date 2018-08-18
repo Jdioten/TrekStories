@@ -38,11 +38,13 @@ namespace TrekStories.Controllers
             Trip trip = await db.Trips.Include(t => t.Steps).SingleOrDefaultAsync(t => t.TripId == tripId);
             if (trip == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the accommodation you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             if (trip.TripOwner != User.Identity.GetUserId())
             {
-                return View("NotAuthorizedError", new HandleErrorInfo(
+                return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot see its accommodations."),
                                 "Trip", "Index"));
             }
@@ -72,7 +74,9 @@ namespace TrekStories.Controllers
             Accommodation accommodation = await db.Accommodations.FindAsync(id);
             if (accommodation == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the accommodation you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             return View(accommodation);
         }
@@ -116,7 +120,7 @@ namespace TrekStories.Controllers
                     Trip trip = await db.Trips.FindAsync(tripId);
                     if (trip.TripOwner != User.Identity.GetUserId())
                     {
-                        return View("NotAuthorizedError", new HandleErrorInfo(
+                        return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add an accommodation to it."),
                                 "Trip", "Index"));
                     }
@@ -173,7 +177,9 @@ namespace TrekStories.Controllers
             Accommodation accommodation = await db.Accommodations.FindAsync(id);
             if (accommodation == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the accommodation you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             return View(accommodation);
         }
@@ -209,7 +215,7 @@ namespace TrekStories.Controllers
                     Trip trip = step.Trip;
                     if (trip.TripOwner != User.Identity.GetUserId())
                     {
-                        return View("NotAuthorizedError", new HandleErrorInfo(
+                        return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you edit its accommodations."),
                                 "Trip", "Index"));
                     }
@@ -272,7 +278,9 @@ namespace TrekStories.Controllers
             Accommodation accommodation = await db.Accommodations.FindAsync(id);
             if (accommodation == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the accommodation you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             return View(accommodation);
         }
@@ -288,7 +296,7 @@ namespace TrekStories.Controllers
             List<Step> steps = await db.Steps.Include(s => s.Trip).Where(s => s.AccommodationId == accommodation.AccommodationId).ToListAsync();
             if (steps.First().Trip.TripOwner != User.Identity.GetUserId())
             {
-                return View("NotAuthorizedError", new HandleErrorInfo(
+                return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you delete its accommodations."),
                                 "Trip", "Index"));
             }

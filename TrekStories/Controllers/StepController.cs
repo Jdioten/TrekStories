@@ -46,7 +46,9 @@ namespace TrekStories.Controllers
             Step step = await db.Steps.Include(s => s.Accommodation).FirstOrDefaultAsync(s => s.StepId == id);
             if (step == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             //create array for pagination in view
             ViewBag.Steps = await db.Steps.Where(s => s.TripId == step.TripId).OrderBy(s =>s.SequenceNo).Select(s => s.StepId).ToArrayAsync();
@@ -67,11 +69,13 @@ namespace TrekStories.Controllers
             Trip trip = await db.Trips.FindAsync(tripId);
             if (trip == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             if (trip.TripOwner != User.Identity.GetUserId())
             {
-                return View("NotAuthorizedError", new HandleErrorInfo(
+                return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add a step to it."),
                                 "Trip", "Index"));
             }
@@ -91,11 +95,13 @@ namespace TrekStories.Controllers
             Trip trip = await db.Trips.FindAsync(stepViewModel.TripId);
             if (trip == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the page you are trying to access does not exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             if (trip.TripOwner != User.Identity.GetUserId())
             {
-                return View("NotAuthorizedError", new HandleErrorInfo(
+                return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add a step to it."),
                                 "Trip", "Index"));
             }
@@ -161,11 +167,13 @@ namespace TrekStories.Controllers
             Step step = await db.Steps.FindAsync(id);
             if (step == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             if (step.Trip.TripOwner != User.Identity.GetUserId())
             {
-                return View("NotAuthorizedError", new HandleErrorInfo(
+                return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot edit it."),
                                 "Trip", "Index"));
             }
@@ -201,11 +209,13 @@ namespace TrekStories.Controllers
             Step stepToUpdate = await db.Steps.Include(t => t.Trip).FirstOrDefaultAsync(x => x.StepId == vm.StepId.Value);
             if (stepToUpdate == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             if (stepToUpdate.Trip.TripOwner != User.Identity.GetUserId())
             {
-                return View("NotAuthorizedError", new HandleErrorInfo(
+                return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot edit it."),
                                 "Trip", "Index"));
             }
@@ -249,11 +259,13 @@ namespace TrekStories.Controllers
             Step step = await db.Steps.FindAsync(id);
             if (step == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the step you are trying to delete doesn't exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             if (step.Trip.TripOwner != User.Identity.GetUserId())
             {
-                return View("NotAuthorizedError", new HandleErrorInfo(
+                return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot delete it."),
                                 "Trip", "Index"));
             }
@@ -280,7 +292,7 @@ namespace TrekStories.Controllers
                 }
                 if (stepToDelete.Trip.TripOwner != User.Identity.GetUserId())
                 {
-                    return View("NotAuthorizedError", new HandleErrorInfo(
+                    return View("CustomisedError", new HandleErrorInfo(
                                     new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot edit it."),
                                     "Trip", "Index"));
                 }

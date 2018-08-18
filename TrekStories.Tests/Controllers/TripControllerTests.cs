@@ -104,9 +104,9 @@ namespace TrekStories.Controllers.Tests
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             var controller = new TripController(tc);
 
-            var badResult = await controller.Details(1);
+            var badResult = await controller.Details(1) as ViewResult;
 
-            Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
+            Assert.AreEqual("CustomisedError", badResult.ViewName);
         }
 
         [TestMethod()]
@@ -273,9 +273,9 @@ namespace TrekStories.Controllers.Tests
             var controller = new TripController(tc);
 
             // Act
-            var badResult = await controller.Edit(2);
+            var badResult = await controller.Edit(2) as ViewResult;
             // Assert
-            Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
+            Assert.AreEqual("CustomisedError", badResult.ViewName);
         }
 
         [TestMethod]
@@ -327,7 +327,7 @@ namespace TrekStories.Controllers.Tests
             // Act
             var result = await controller.EditPost(1) as ViewResult;
             // Assert
-            Assert.AreEqual("NotAuthorizedError", result.ViewName);
+            Assert.AreEqual("CustomisedError", result.ViewName);
         }
     }
 }

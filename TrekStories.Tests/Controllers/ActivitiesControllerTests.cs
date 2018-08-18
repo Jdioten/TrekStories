@@ -168,9 +168,9 @@ namespace TrekStories.Controllers.Tests
             // Arrange - create the controller
             ActivitiesController controller = new ActivitiesController(tc);
             // Act
-            var badResult = await controller.Edit(4);
+            var badResult = await controller.Edit(4) as ViewResult;
             // Assert
-            Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
+            Assert.AreEqual("CustomisedError", badResult.ViewName);
         }
 
         [TestMethod]

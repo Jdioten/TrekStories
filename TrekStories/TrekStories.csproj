@@ -347,7 +347,7 @@
     <Content Include="Views\Accommodation\Index.cshtml" />
     <Content Include="Views\Shared\_ActivityThread.cshtml" />
     <Content Include="Views\Activities\DetailsTransport.cshtml" />
-    <Content Include="Views\Shared\NotAuthorizedError.cshtml" />
+    <Content Include="Views\Shared\CustomisedError.cshtml" />
     <Content Include="Views\Trip\Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>

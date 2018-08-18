@@ -41,7 +41,9 @@ namespace TrekStories.Controllers
             var activity = await db.Activities.FindAsync(id);
             if (activity == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the activity you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             if (activity is LeisureActivity)
             {
@@ -63,7 +65,9 @@ namespace TrekStories.Controllers
             Step step = await db.Steps.FindAsync(stepId);
             if (step == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the activity you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             ViewBag.StepId = stepId;
             ViewBag.From = step.From;
@@ -81,7 +85,9 @@ namespace TrekStories.Controllers
             Step step = await db.Steps.FindAsync(stepId);
             if (step == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the activity you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             ViewBag.StepId = stepId;
             ViewBag.From = step.From;
@@ -100,7 +106,9 @@ namespace TrekStories.Controllers
             var activity = await db.Activities.FindAsync(id);
             if (activity == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the activity you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             
             ViewBag.StepId = activity.StepId;
@@ -137,7 +145,7 @@ namespace TrekStories.Controllers
                         Step step = await db.Steps.Include(s => s.Trip).FirstOrDefaultAsync(s => s.StepId == leisureActivity.StepId);
                         if (step.Trip.TripOwner != User.Identity.GetUserId())
                         {
-                            return View("NotAuthorizedError", new HandleErrorInfo(
+                            return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot add an activity to it."),
                                 "Trip", "Index"));
                         }
@@ -148,7 +156,7 @@ namespace TrekStories.Controllers
                         LeisureActivity dbEntry = (LeisureActivity)db.Activities.FindAsync(leisureActivity.ID).Result;
                         if (dbEntry.Step.Trip.TripOwner != User.Identity.GetUserId())
                         {
-                            return View("NotAuthorizedError", new HandleErrorInfo(
+                            return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this activity doesn't seem to be yours, you cannot edit it."),
                                 "Trip", "Index"));
                         }
@@ -251,7 +259,7 @@ namespace TrekStories.Controllers
             Activity activityToDelete = await db.Activities.FindAsync(actId);
             if (activityToDelete.Step.Trip.TripOwner != User.Identity.GetUserId())
             {
-                return View("NotAuthorizedError", new HandleErrorInfo(
+                return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this activity doesn't seem to be yours, you cannot delete it."),
                                 "Trip", "Index"));
             }

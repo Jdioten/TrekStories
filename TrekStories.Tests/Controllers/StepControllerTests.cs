@@ -202,9 +202,9 @@ namespace TrekStories.Controllers.Tests
 
             var controller = new StepController(tc);
 
-            var badResult = await controller.Create(stepViewModel);
+            var badResult = await controller.Create(stepViewModel) as ViewResult;
 
-            Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
+            Assert.AreEqual("CustomisedError", badResult.ViewName);
         }
 
 
@@ -395,9 +395,9 @@ namespace TrekStories.Controllers.Tests
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             var controller = new StepController(tc);
 
-            var badResult = await controller.Delete(12);
+            var badResult = await controller.Delete(12) as ViewResult;
 
-            Assert.IsInstanceOfType(badResult, typeof(HttpNotFoundResult));
+            Assert.AreEqual("CustomisedError", badResult.ViewName);
         }
 
         [TestMethod()]

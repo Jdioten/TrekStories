@@ -52,7 +52,9 @@ namespace TrekStories.Controllers
             Trip trip = await db.Trips.FindAsync(id);
             if (trip == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             return View(trip);
         }
@@ -108,11 +110,13 @@ namespace TrekStories.Controllers
             Trip trip = await db.Trips.FindAsync(id);
             if (trip == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             if (trip.TripOwner != User.Identity.GetUserId())
             {
-                return View("NotAuthorizedError", new HandleErrorInfo(
+                return View("CustomisedError", new HandleErrorInfo(
                     new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot view it."), 
                     "Trip", "Index"));
             }
@@ -133,7 +137,7 @@ namespace TrekStories.Controllers
 
             if (tripToUpdate.TripOwner != User.Identity.GetUserId())
             {
-                return View("NotAuthorizedError", new HandleErrorInfo(
+                return View("CustomisedError", new HandleErrorInfo(
                     new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot edit it."),
                     "Trip", "Index"));
             }
@@ -269,7 +273,9 @@ namespace TrekStories.Controllers
             Trip trip = await db.Trips.Include(t => t.Steps).SingleOrDefaultAsync(t => t.TripId == id);
             if (trip == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
             ViewBag.TripTitle = trip.Title;
 
