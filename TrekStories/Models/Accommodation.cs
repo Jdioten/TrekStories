@@ -9,7 +9,7 @@ namespace TrekStories.Models
         [Key]
         public int AccommodationId { get; set; }
         [Required(ErrorMessage = "Please enter the name of your accommodation.")]
-        [StringLength(40, ErrorMessage = "Accommodation Name cannot be longer than 40 characters.")]
+        [StringLength(40, ErrorMessage = "The accommodation name cannot be longer than 40 characters.")]
         public string Name { get; set; }
 
         [StringLength(100)]
@@ -20,7 +20,6 @@ namespace TrekStories.Models
         [Display(Name = "City")]
         public string City { get; set; }
 
-        //[RegularExpression(@"1\d{10}$", ErrorMessage="Number must be 10 digits long."] what if country prefix?
         [Phone]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
@@ -41,10 +40,6 @@ namespace TrekStories.Models
         [DataType(DataType.Currency)]
         [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:c}")]
         [Range(0, double.MaxValue, ErrorMessage = "Please enter a positive price.")]
-        //or
-        //[DataType(DataType=Currency)]
-        //[Column(TypeName="money")]
-        //and add in web config <globalization culture = "auto" uiCulture="auto" />
         public double Price { get; set; }
 
 
@@ -64,7 +59,7 @@ namespace TrekStories.Models
         {
             var dates = new List<DateTime>();
 
-            for (var dt = CheckIn.Date; dt < CheckOut.Date; dt = dt.AddDays(1))  //<= if I need check-out date
+            for (var dt = CheckIn.Date; dt < CheckOut.Date; dt = dt.AddDays(1))
             {
                 dates.Add(dt);
             }

@@ -2,8 +2,8 @@
 
 @{
     ViewBag.Title = "Index";
-    ViewBag.TotalNights = 0;
-    ViewBag.TotalPrice = 0;
+    int totalNights = 0;
+    double totalPrice = 0;
 }
 
 <div class="mycontainer">
@@ -37,8 +37,8 @@
 
         @foreach (var item in Model)
         {
-            ViewBag.TotalNights += item.GetDatesBetweenInAndOut().Count;
-            ViewBag.TotalPrice += item.Price;
+            totalNights += item.GetDatesBetweenInAndOut().Count;
+            totalPrice += item.Price;
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
@@ -69,9 +69,9 @@
             <td>Total:</td>
             <td></td>
             <td></td>
-            <td>@ViewBag.TotalNights Nights</td>
+            <td>@totalNights Nights</td>
             <td></td>
-            <td>@string.Format("{0:C}", ViewBag.TotalPrice)</td>
+            <td>@string.Format("{0:C}", totalPrice)</td>
         </tr>
     </table>
 </div>

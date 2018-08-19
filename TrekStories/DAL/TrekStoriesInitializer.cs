@@ -25,13 +25,6 @@ namespace TrekStories.DAL
 
             trips.ForEach(t => context.Trips.Add(t));
             context.SaveChanges();
-
-            /*var steps = new List<Step>
-            {
-            new Step{},
-            };
-            steps.ForEach(s => context.Steps.Add(s));
-            context.SaveChanges();*/
         }
     }
 }

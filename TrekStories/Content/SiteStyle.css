@@ -118,6 +118,7 @@ input, select, textarea {
     border-right: 0;
 }
 
+/* --- Search Box Styling --- */
 .search-box{
     text-align:right;
     margin-bottom:10px;

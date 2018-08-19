@@ -62,7 +62,6 @@ namespace TrekStories.Controllers
         // GET: Trip/Create
         public ActionResult Create()
         {
-            //ViewBag.Title = "Create";
             ViewBag.CountryList = Trip.GetCountries();
             return View();
         }
@@ -91,9 +90,8 @@ namespace TrekStories.Controllers
                     }
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
             }
             ViewBag.CountryList = Trip.GetCountries();
@@ -153,14 +151,13 @@ namespace TrekStories.Controllers
                     DateTime newDate = tripToUpdate.StartDate;
                     if (oldDate != newDate)
                     {
-                        //use materialised view?
                         //get all acc on the trip
                         var tripAccommodations = from s in tripToUpdate.Steps
                                                  join a in db.Accommodations
                                                  on s.AccommodationId equals a.AccommodationId
                                                  select a;
 
-                        //for each accommodation call assign to step method
+                        //for each accommodation, call 'assign to step' method
                         foreach (Accommodation acc in tripAccommodations)
                         {
                             try
@@ -188,9 +185,8 @@ namespace TrekStories.Controllers
                     await db.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = tripToUpdate.TripId });
                 }
-                catch (RetryLimitExceededException /* dex */)
+                catch (RetryLimitExceededException)
                 {
-                    //Log the error (uncomment dex variable name and add a line here to write a log.
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
                 }
             }
@@ -285,8 +281,7 @@ namespace TrekStories.Controllers
             var stepcontroller = new StepController();
             for (int i = 0; i < tripSteps.Length; i++)
             {
-                activities[i] = stepcontroller.CreateActivityThread(tripSteps[i]); //.OrderBy(a => a.StartTime.TimeOfDay)
-                //activities.Add(stepcontroller.CreateActivityThread(step).OrderBy(a => a.StartTime.TimeOfDay).ToArray());
+                activities[i] = stepcontroller.CreateActivityThread(tripSteps[i]);
             }
             ViewBag.ActivityThread = activities;
             ViewBag.TripSteps = tripSteps;

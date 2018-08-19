@@ -7,7 +7,7 @@ namespace TrekStories.DAL
     {
         public TrekStoriesConfiguration()
         {
-            SetExecutionStrategy("System.Data.SqlClient", () => new SqlAzureExecutionStrategy());
+            SetExecutionStrategy("System.Data.SqlClient", () => new SqlAzureExecutionStrategy());  //for connection resiliency
         }
     }
 }

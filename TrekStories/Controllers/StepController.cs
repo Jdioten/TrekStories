@@ -54,7 +54,7 @@ namespace TrekStories.Controllers
             ViewBag.Steps = await db.Steps.Where(s => s.TripId == step.TripId).OrderBy(s =>s.SequenceNo).Select(s => s.StepId).ToArrayAsync();
 
             //create activity thread
-            ViewBag.ActivityThread = CreateActivityThread(step).OrderBy(a => a.StartTime.TimeOfDay).ToList();
+            ViewBag.ActivityThread = CreateActivityThread(step);
 
             return View(step);
         }
@@ -432,7 +432,7 @@ namespace TrekStories.Controllers
                     );
                 }
             
-            return activityThread;
+            return activityThread.OrderBy(a => a.StartTime.TimeOfDay).ToList();
         }
 
         public string GetIcon(string type)

@@ -87,7 +87,7 @@
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Create" class="btn btn-trekstories" />
                     &emsp;
-                    @Html.ActionLink("Cancel", null, null, null, new { href = Request.UrlReferrer, @class = "btn btn-default" })
+                    @Html.ActionLink("Cancel", "Details", "Trip", new { id = ViewBag.TripId }, new { @class = "btn btn-default" })
                 </div>
             </div>
         </div>

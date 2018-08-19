@@ -29,7 +29,6 @@ namespace TrekStories.Models
         public TripCategory TripCategory { get; set; }
 
         [Required(ErrorMessage = "Please indicate the trip start date.")]
-        //[DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
