@@ -115,7 +115,7 @@ namespace TrekStories.Controllers
             if (trip.TripOwner != User.Identity.GetUserId())
             {
                 return View("CustomisedError", new HandleErrorInfo(
-                    new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot view it."), 
+                    new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot edit it."), 
                     "Trip", "Index"));
             }
             ViewBag.CountryList = Trip.GetCountries();

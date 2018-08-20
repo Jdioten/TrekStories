@@ -358,7 +358,8 @@ namespace TrekStories.Controllers
             }
 
             //add to list the transports
-            foreach (Transport activity in db.Activities.OfType<Transport>().Where(a => a.StepId == step.StepId).ToList())
+            var stepActivities = db.Activities.OfType<Transport>().Where(a => a.StepId == step.StepId).ToList();
+            foreach (Transport activity in stepActivities)
             {
                 activityThread.Add(new ActivityThreadViewModel
                 {
@@ -373,11 +374,11 @@ namespace TrekStories.Controllers
             );
             }
 
-            var transportsArrivingOnDay = from s in step.Trip.Steps
+            var transportsArrivingOnDay = (from s in step.Trip.Steps
                                           join a in db.Activities.OfType<Transport>()
                                           on s.StepId equals a.StepId
-                                          where a.GetArrivalTime().Date == step.Date.Date && a.StartTime.Date != s.Date.Date
-                                          select a;
+                                          where a.GetArrivalTime().Date == step.Date.Date
+                                          select a).Except(stepActivities);
             foreach (Transport activity in transportsArrivingOnDay.ToList())
             {
                 activityThread.Add(new ActivityThreadViewModel

@@ -232,7 +232,7 @@ namespace TrekStories.Controllers
                     if (trip.TripOwner != User.Identity.GetUserId())
                     {
                         return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you edit its accommodations."),
+                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot edit its accommodations."),
                                 "Trip", "Index"));
                     }
                     if (accommodationToUpdate.CheckIn < trip.StartDate)
@@ -313,7 +313,7 @@ namespace TrekStories.Controllers
             if (steps.First().Trip.TripOwner != User.Identity.GetUserId())
             {
                 return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you delete its accommodations."),
+                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot delete its accommodations."),
                                 "Trip", "Index"));
             }
 
@@ -350,7 +350,7 @@ namespace TrekStories.Controllers
                 Step step = trip.Steps.FirstOrDefault(s => s.Date.Date == date.Date);
                 if (step == null)
                 {
-                    throw new ArgumentException("There is no existing step for date " + date.ToShortDateString() + ".");
+                    throw new ArgumentException("There is no existing step for date " + date.ToShortDateString() + ". Please first create the step.");
                 }
                 //if new accommodation, check that there is no accommodation already on step
                 else if (insert && step.AccommodationId != null && step.AccommodationId != acc.AccommodationId) //to allow for updates
