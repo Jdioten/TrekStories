@@ -14,12 +14,12 @@ namespace TrekStories.Controllers.Tests
     public class AccommodationControllerTests
     {
         [TestMethod]
-        public async Task IndexContainsAllAccommodationsForTrip()
+        public async Task IndexContainsAllAccommodationsForTripInCorrectOrder()
         {
             // Arrange - create the mock repository
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
-            Accommodation acc1 = new Accommodation { AccommodationId = 1 };
-            Accommodation acc2 = new Accommodation { AccommodationId = 2 };
+            Accommodation acc1 = new Accommodation { AccommodationId = 1, Name = "Hotel Z" };
+            Accommodation acc2 = new Accommodation { AccommodationId = 2, Name = "Hotel A" };
             tc.Accommodations.Add(acc1);
             tc.Accommodations.Add(acc2);
             Trip trip = new Trip
@@ -37,12 +37,12 @@ namespace TrekStories.Controllers.Tests
             // Arrange - create a controller
             AccommodationController controller = new AccommodationController(tc).WithAuthenticatedUser("ABC123");
             // Action
-            var viewResult = await controller.Index(123) as ViewResult;
+            var viewResult = await controller.Index(123, null) as ViewResult;
             Accommodation[] result = ((IEnumerable<Accommodation>)viewResult.ViewData.Model).ToArray();
             // Assert
             Assert.AreEqual(result.Length, 2);
-            Assert.AreEqual(1, result[0].AccommodationId);
-            Assert.AreEqual(2, result[1].AccommodationId);
+            Assert.AreEqual(2, result[0].AccommodationId);
+            Assert.AreEqual(1, result[1].AccommodationId);
         }
 
         [TestMethod()]
