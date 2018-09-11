@@ -199,6 +199,7 @@
     <Compile Include="Controllers\ActivitiesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="Controllers\StepController.cs" />
     <Compile Include="Controllers\TripController.cs" />
     <Compile Include="DAL\TrekStoriesConfiguration.cs" />
@@ -351,6 +352,11 @@
     <Content Include="Views\Activities\DetailsTransport.cshtml" />
     <Content Include="Views\Shared\CustomisedError.cshtml" />
     <Content Include="Views\Trip\Summary.cshtml" />
+    <Content Include="Views\Review\Create.cshtml" />
+    <Content Include="Views\Review\Delete.cshtml" />
+    <Content Include="Views\Review\Details.cshtml" />
+    <Content Include="Views\Review\Edit.cshtml" />
+    <Content Include="Views\Review\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
