@@ -146,8 +146,6 @@ namespace TrekStories.Controllers
                     }
                     else
                     {
-                        accommodation.ConfirmationFileUrl = null;
-
                         try
                         {
                             AssignAccommodationToStep(accommodation, trip, true);
@@ -161,7 +159,7 @@ namespace TrekStories.Controllers
                             ViewBag.CheckOut = String.Format("{0:dd-MM-yyyy hh:mm tt}", accommodation.CheckOut);
                             return View(accommodation);
                         }
-
+                        accommodation.ConfirmationFileUrl = null;
                         db.Accommodations.Add(accommodation);
 
                         //increase trip budget
