@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 TrekStories/Properties/PublishProfiles/TrekStories - Web Deploy.pubxml
+TrekStories/Web.config
