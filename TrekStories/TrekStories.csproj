@@ -261,6 +261,7 @@
     <Compile Include="Models\Trip.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities\BlobUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -289,6 +290,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Browsers\qt.browser" />
+    <Content Include="Connected Services\trekstoriesblobstorageAzureStorage\ConnectedService.json" />
     <None Include="Properties\PublishProfiles\TrekStories - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-1.12.4-vsdoc.js" />
@@ -408,6 +410,9 @@
     <EmbeddedResource Include="Migrations\201807262022036_AddressIntoStreetAndCity.resx">
       <DependentUpon>201807262022036_AddressIntoStreetAndCity.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
