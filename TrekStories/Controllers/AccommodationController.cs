@@ -81,12 +81,8 @@ namespace TrekStories.Controllers
 
         // GET: Accommodation/Details/5
         [AllowAnonymous]
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int id = 1)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Accommodation accommodation = await db.Accommodations.FindAsync(id);
             if (accommodation == null)
             {

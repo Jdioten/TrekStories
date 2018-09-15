@@ -36,13 +36,8 @@ namespace TrekStories.Controllers
 
         // GET: Step/Details/5
         [AllowAnonymous]
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int id = 1)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
             Step step = await db.Steps.Include(s => s.Accommodation).FirstOrDefaultAsync(s => s.StepId == id);
             if (step == null)
             {

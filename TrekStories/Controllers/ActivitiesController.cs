@@ -32,12 +32,8 @@ namespace TrekStories.Controllers
         //}
 
         // GET: Activities/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int id = 1)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             var activity = await db.Activities.FindAsync(id);
             if (activity == null)
             {
