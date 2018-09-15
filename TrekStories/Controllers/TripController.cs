@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+//using Rotativa;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +12,6 @@ using System.Web.Mvc;
 using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
-using Rotativa;
 
 namespace TrekStories.Controllers
 {
@@ -43,12 +43,8 @@ namespace TrekStories.Controllers
 
         // GET: Trip/Details/5
         [AllowAnonymous]
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int id = 1)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Trip trip = await db.Trips.FindAsync(id);
             if (trip == null)
             {
@@ -247,20 +243,9 @@ namespace TrekStories.Controllers
 
         }*/
 
-        public ActionResult GetSummaryReport(int id)
-        {
-            return new ActionAsPdf("Summary", new { id = id }) { FileName = "TripSummary.pdf" };
-        }
-        //public ActionResult PrintIndex()
+        //public ActionResult GetSummaryReport(int id)
         //{
-        //    return new ActionAsPdf("Index", new { name = "Giorgio" }) { FileName = "Test.pdf" };
-        //}
-
-        //public ActionResult Index(string name)
-        //{
-        //    ViewBag.Message = string.Format("Hello {0} to ASP.NET MVC!", name);
-
-        //    return View();
+        //    return new ActionAsPdf("Summary", new { id = id }) { FileName = "TripSummary.pdf" };
         //}
 
         [AllowAnonymous]
@@ -291,7 +276,7 @@ namespace TrekStories.Controllers
                                          on s.AccommodationId equals a.AccommodationId
                                          select a;
             ViewBag.TripAccommodations = tripAccommodations.Distinct().OrderBy(a => a.Name);
-            return View(tripSteps);
+            return new RotativaHQ.MVC5.ViewAsPdf(tripSteps) { FileName = "TripSummary.pdf" };
         }
 
         /*public void GenerateSouvenirReport()
