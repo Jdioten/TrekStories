@@ -173,4 +173,24 @@
         </div>
         @Html.Partial("_ActivityThread", (List<ActivityThreadViewModel>)ViewBag.ActivityThread)
     </section>
+    <hr class="thick-hr" />
+    <section>
+         <strong><em>Review</em></strong>
+            @if (Model.Review != null)
+            {
+                <p>Add Review Details here...</p>
+            }
+        <p>
+            @if (Model.Review == null)
+            {
+                @Html.ActionLink("Add", "Create", "Review", new { id = Model.StepId }, null)
+            }
+            else
+            {
+                @Html.ActionLink("Edit", "Edit", "Review", new { id = Model.StepId }, null)
+                <span> | </span>
+                @Html.ActionLink("Delete", "Delete", "Review", new { id = Model.StepId }, null)
+            }
+        </p>
+    </section>
 </div>

@@ -19,7 +19,7 @@ namespace TrekStories.Models
         [StringLength(2000, ErrorMessage = "Notes are limited to 2000 characters maximum.")]
         public string PrivateNotes { get; set; }
 
-        [Display(Name = "Public Notes")]
+        [Display(Name = "Public Review")]
         [DataType(DataType.MultilineText)]
         [StringLength(2000, ErrorMessage = "Notes are limited to 2000 characters maximum.")]
         public string PublicNotes { get; set; }
