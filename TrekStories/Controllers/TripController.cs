@@ -249,7 +249,7 @@ namespace TrekStories.Controllers
         //}
 
         [AllowAnonymous]
-        public async Task<ActionResult> Summary(int id)
+        public async Task<ActionResult> GetSummaryReport(int id)
         {
             Trip trip = await db.Trips.Include(t => t.Steps).SingleOrDefaultAsync(t => t.TripId == id);
             if (trip == null)
@@ -276,7 +276,7 @@ namespace TrekStories.Controllers
                                          on s.AccommodationId equals a.AccommodationId
                                          select a;
             ViewBag.TripAccommodations = tripAccommodations.Distinct().OrderBy(a => a.Name);
-            return new RotativaHQ.MVC5.ViewAsPdf(tripSteps) { FileName = "TripSummary.pdf" };
+            return new RotativaHQ.MVC5.ViewAsPdf("Summary", tripSteps) { FileName = "TripSummary.pdf" };
         }
 
         /*public void GenerateSouvenirReport()
