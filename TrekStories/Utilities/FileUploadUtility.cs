@@ -6,13 +6,13 @@ using System.Web;
 
 namespace TrekStories.Utilities
 {
-    public class FileUploadUtility
+    public static class FileUploadUtility
     {
         private const int MAX_FILESIZE = 7000 * 1024;  //7MB converted in bytes
 
-        private string[] supportedFileExtensions = new[] { ".png", ".jpg", ".gif", ".pdf", ".msg", ".txt" };
+        private static string[] supportedFileExtensions = new[] { ".png", ".jpg", ".gif", ".pdf", ".msg", ".txt" };
 
-        public bool ValidFileExtension(HttpPostedFileBase file)
+        public static bool ValidFileExtension(HttpPostedFileBase file)
         {
             string extension = Path.GetExtension(file.FileName);
             if (supportedFileExtensions.Contains(extension))
@@ -25,7 +25,7 @@ namespace TrekStories.Utilities
             }
         }
 
-        public bool ValidFileSize(HttpPostedFileBase file)
+        public static bool ValidFileSize(HttpPostedFileBase file)
         {
             int size = file.ContentLength;
             if (size > MAX_FILESIZE)

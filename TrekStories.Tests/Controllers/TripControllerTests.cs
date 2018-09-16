@@ -89,16 +89,6 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public async Task DetailsForNullIdReturnsBadRequest()
-        {
-            var controller = new TripController(new TestTrekStoriesContext());
-            var expected = (int)System.Net.HttpStatusCode.BadRequest;
-
-            var badResult = await controller.Details(null) as HttpStatusCodeResult;
-            Assert.AreEqual(expected, badResult.StatusCode);
-        }
-
-        [TestMethod()]
         public async Task DetailsForNonExistingTripReturnsNotFound()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
@@ -328,6 +318,17 @@ namespace TrekStories.Controllers.Tests
             var result = await controller.EditPost(1) as ViewResult;
             // Assert
             Assert.AreEqual("CustomisedError", result.ViewName);
+        }
+
+
+        [TestMethod()]
+        public async Task EditForNullIdReturnsBadRequest()
+        {
+            var controller = new TripController(new TestTrekStoriesContext());
+            var expected = (int)System.Net.HttpStatusCode.BadRequest;
+
+            var badResult = await controller.Edit(null) as HttpStatusCodeResult;
+            Assert.AreEqual(expected, badResult.StatusCode);
         }
     }
 }
