@@ -18,5 +18,6 @@ namespace TrekStories.Abstract
         int SaveChanges();
         Task<int> SaveChangesAsync();
         void MarkAsDeleted(Object item);
+        void MarkAsModified(Object item);
     }
 }

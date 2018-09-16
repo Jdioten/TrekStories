@@ -10,6 +10,9 @@ using System.Web.Mvc;
 using TrekStories.DAL;
 using TrekStories.Models;
 using TrekStories.Abstract;
+using System.IO;
+using TrekStories.Utilities;
+using Microsoft.AspNet.Identity;
 
 namespace TrekStories.Controllers
 {
@@ -17,16 +20,21 @@ namespace TrekStories.Controllers
     public class ReviewController : Controller
     {
         private ITrekStoriesContext db = new TrekStoriesContext();
+        private BlobUtility utility;
 
-        public ReviewController() { }
+        public ReviewController()
+        {
+            utility = new BlobUtility();
+        }
 
         public ReviewController(ITrekStoriesContext context)
         {
             db = context;
+            utility = new BlobUtility();
         }
 
         // GET: Review
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index()  //passing trip id??
         {
             var reviews = db.Reviews.Include(r => r.Step);
             return View(await reviews.ToListAsync());
@@ -48,28 +56,39 @@ namespace TrekStories.Controllers
         }
 
         // GET: Review/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create(int? id)  //stepId
         {
-            ViewBag.ReviewId = new SelectList(db.Steps, "StepId", "From");
-            return View();
-        }
-
-        // POST: Review/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        //will most probably need a view model!
-        public async Task<ActionResult> Create([Bind(Include = "Rating,PrivateNotes,PublicNotes")] Review review)
-        {
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                db.Reviews.Add(review);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
-            ViewBag.ReviewId = new SelectList(db.Steps, "StepId", "From", review.ReviewId);
-            return View(review);
+            Step step = await db.Steps.FindAsync(id);
+            if (step == null)
+            {
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
+            }
+            ViewBag.StepId = id;
+            return View("Edit", new Review());
         }
+
+        //// POST: Review/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        ////will most probably need a view model!
+        //public async Task<ActionResult> Create([Bind(Include = "Rating,PrivateNotes,PublicNotes")] Review review)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Reviews.Add(review);
+        //        await db.SaveChangesAsync();
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    ViewBag.ReviewId = new SelectList(db.Steps, "StepId", "From", review.ReviewId);
+        //    return View(review);
+        //}
 
         // GET: Review/Edit/5
         public async Task<ActionResult> Edit(int? id)
@@ -88,21 +107,66 @@ namespace TrekStories.Controllers
         }
 
         // POST: Review/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "ReviewId,Rating,PrivateNotes,PublicNotes,StepId")] Review review)
         {
             if (ModelState.IsValid)
             {
-                //Use View Model!!
-                //db.Entry(review).State = EntityState.Modified;
+                if (review.ReviewId == 0)
+                {
+                    db.Reviews.Add(review);
+                }
+                else
+                {
+                    db.MarkAsModified(review);
+                }
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.ReviewId = new SelectList(db.Steps, "StepId", "From", review.ReviewId);
-            return View(review);
+            else
+            {
+                ViewBag.StepId = review.StepId;
+                return View(review);
+            }    
+        }
+
+        [HttpPost]
+        public ActionResult UploadImage(HttpPostedFileBase file)
+        {
+            if (file != null)
+            {
+                string containerName = "trekstories-reviewimages-blobcontainer"; //hardcoded container name for review images 
+                file = file ?? Request.Files["file"];
+
+                //check file size and extension
+                //... using methods from fileuploadutility
+
+                string fileName = Path.GetFileName(file.FileName);
+                Stream imageStream = file.InputStream;
+                var result = utility.UploadBlob(fileName, containerName, imageStream);
+                if (result != null)
+                {
+                    //change below to just add image url to list of url string?
+                    
+                    //string loggedInUserId = User.Identity.GetUserId();
+                    //UserImage userimage = new UserImage();
+                    //userimage.Id = new Random().Next().ToString();
+                    //userimage.UserId = loggedInUserId;
+                    //userimage.ImageUrl = result.Uri.ToString();
+                    //db.UserImages.Add(userimage);
+                    //db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: Review/Delete/5

@@ -38,7 +38,7 @@ namespace TrekStories.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Details(int id = 1)
         {
-            Step step = await db.Steps.Include(s => s.Accommodation).FirstOrDefaultAsync(s => s.StepId == id);
+            Step step = await db.Steps.Include(s => s.Accommodation).Include(s => s.Review).FirstOrDefaultAsync(s => s.StepId == id);
             if (step == null)
             {
                 return View("CustomisedError", new HandleErrorInfo(
