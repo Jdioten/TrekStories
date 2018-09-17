@@ -1,7 +1,44 @@
 ﻿@{
     ViewBag.Title = "About";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<p>Use this area to provide additional information.</p>
+<style>
+    body {
+        background-image: url(../../Images/adventure-backpack-black-and-white-792668.jpg);
+    }
+</style>
+<div id="form-container">
+    <h2>Welcome to TREK STORiES</h2>
+    <h4>@ViewBag.Message</h4>
+    <p>
+        Trek Stories is a trek planner web application specifically intended for hikers
+        to help them in the organisation of trips on long distance walking trails.
+    </p>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <h4 class="site-colour">Write Your Story</h4>
+            <p>Plan your trek by defining hiking steps, add accommodation, transport and leisure activities and export a summary of your trip.</p>
+        </div>
+        <div class="col-sm-4">
+            <h4 class="site-colour"><strong>Tell Your Story</strong></h4>
+            <p>Review your trip's steps by adding comments and pictures, export a souvenir report for yourself and share the best moments of your adventure with other users.</p>
+        </div>
+        <div class="col-sm-4">
+            <h4 class="site-colour"><strong>Seek Inspiration</strong></h4>
+            <p>Explore fellow travellers' trips to find ideas for your own hiking experience.</p>
+        </div>
+    </div>
+
+    <h3>Implementation Technologies used by TREK STORiES</h3>
+    <p>The present web application has been developed in C# using ASP.NET MVC 5 technology. 
+    It also uses Entity Framework 6 (Code First Approach) for the creation of a database and interaction with it. 
+    The project is deployed as a Microsoft Azure Web App with an Azure SQL Database and also leverages Microsoft Azure Blob Storage. 
+    Additional free third-party packages include RotativaHQ to produce PDFs from MVC views and SendGrid to send emails. 
+    The source code for the project has been held on GitHub: <a href="https://github.com/Rolca/TrekStories" target="_blank">https://github.com/Rolca/TrekStories</a>.
+    </p>
+    <p>
+        The TREKSTORiES web application has been developed as part of a Software Project 
+        in order to obtain a Higher Diploma in Science in Computing at the Institute of Technology Tallaght.
+    </p>
+</div>
