@@ -3,11 +3,11 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <link href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />
     @Styles.Render("~/Content/css")
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
     <script src="~/Scripts/jquery.timepicker.min.js"></script>
     <script type='text/javascript'>
     $(function(){
@@ -15,7 +15,7 @@
             { dateFormat: 'dd/mm/yy'}
         );
         @if (ViewBag.Title == "EditTrip")
-        { 
+        {
         <text>$(".date-picker").datepicker("setDate", '@Model.StartDate');</text>
         }
         $('.time-picker').timepicker(
@@ -24,6 +24,10 @@
                 scrollDefault: 'now'
             }
         );
+        @*@if (ViewBag.Title == "EditLeisure" || ViewBag.Title == "EditTransport")
+        {
+        <text>$(".time-picker").timepicker("setTime", '@Model.StartTime');</text>
+        }*@
         $('input[type="time"]').attr('type', 'text');  //to prevent default timepicker on Edge and Chrome
     })
     </script>

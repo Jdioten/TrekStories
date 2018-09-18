@@ -16,6 +16,7 @@ using Microsoft.AspNet.Identity;
 
 namespace TrekStories.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class ReviewController : Controller
     {

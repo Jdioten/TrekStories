@@ -15,6 +15,7 @@ using TrekStories.Models;
 
 namespace TrekStories.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class StepController : Controller
     {
