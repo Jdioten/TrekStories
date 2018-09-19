@@ -71,6 +71,8 @@ namespace TrekStories.Controllers
                                 "Trip", "Index"));
             }
             ViewBag.StepId = id;
+            ViewBag.From = step.From;
+            ViewBag.To = step.To;
             return View("Edit", new Review());
         }
 
@@ -128,6 +130,8 @@ namespace TrekStories.Controllers
             else
             {
                 ViewBag.StepId = review.StepId;
+                ViewBag.From = review.Step.From;
+                ViewBag.To = review.Step.To;
                 return View(review);
             }    
         }

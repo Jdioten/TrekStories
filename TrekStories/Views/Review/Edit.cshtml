@@ -4,63 +4,92 @@
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
+<style>
+    body {
+        background-image: url(../../Images/antique-blank-camera-269923.jpg);
+    }
+    input, select, textarea {
+        max-width: 100%;
+    }
+</style>
+<div id="form-container">
+    <h3>Review Step @ViewBag.From to @ViewBag.To</h3>
+    <hr />
 
+    @using (Html.BeginForm("Edit","Review"))
+    {
+        @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.ReviewId)
+            @Html.HiddenFor(model => model.StepId, new { id = "stepid", Value = ViewBag.StepId })
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Review</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ReviewId)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Rating, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Rating, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Rating, htmlAttributes: new { @class = "control-label" })
+                <input type="hidden" name="Rating" id="Rating" value="0" />
                 @Html.ValidationMessageFor(model => model.Rating, "", new { @class = "text-danger" })
+                    <div onmouseout="CRateSelected()">
+                        <span class="far fa-star" id="Rate1" onclick="CRate(1)" onmouseover="CRateOver(1)" onmouseout="CRateOut(1)"></span>
+                        <span class="far fa-star" id="Rate2" onclick="CRate(2)" onmouseover="CRateOver(2)" onmouseout="CRateOut(2)"></span>
+                        <span class="far fa-star" id="Rate3" onclick="CRate(3)" onmouseover="CRateOver(3)" onmouseout="CRateOut(3)"></span>
+                        <span class="far fa-star" id="Rate4" onclick="CRate(4)" onmouseover="CRateOver(4)" onmouseout="CRateOut(4)"></span>
+                        <span class="far fa-star" id="Rate5" onclick="CRate(5)" onmouseover="CRateOver(5)" onmouseout="CRateOut(5)"></span>
+                    </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.PrivateNotes, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PrivateNotes, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PrivateNotes, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PublicNotes, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PublicNotes, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="form-group">
+                @Html.LabelFor(model => model.PublicNotes, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.PublicNotes, new { htmlAttributes = new { @class = "form-control", rows = 3, placeholder = "How was that day? Share the details of your experience with other users." } })
                 @Html.ValidationMessageFor(model => model.PublicNotes, "", new { @class = "text-danger" })
+                <small id="publicHelp" class="form-text text-muted">Your public step review will be visible to other users to help them organise their own trips.</small>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.StepId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.StepId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StepId, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.PrivateNotes, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.PrivateNotes, new { htmlAttributes = new { @class = "form-control", rows = 3, placeholder = "Enter a personal summary of the day that can be printed on the souvenir report." } })
+                @Html.ValidationMessageFor(model => model.PrivateNotes, "", new { @class = "text-danger" })
+                <small id="privateHelp" class="form-text text-muted">Private notes will not be shared with other users.</small>
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+            <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-trekstories" />
+                    &emsp;
+                    @Html.ActionLink("Cancel", "Details", "Step", new { id = ViewBag.StepId }, new { @class = "btn btn-default" })
             </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    }
 </div>
+<script>
+    //code copied from http://www.dotnetfunda.com/articles/show/3438/star-rating-system-in-aspnet-mvc
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    function CRate(r) {
+        $("#Rating").val(r);
+        for (var i = 1; i <= r; i++) {
+            $("#Rate" + i).attr('class', 'fas fa-star');
+        }
+        // unselect remaining
+        for (var i = r + 1; i <= 5; i++) {
+            $("#Rate" + i).attr('class', 'far fa-star');
+        }
+    }
+
+    function CRateOver(r) {
+        for (var i = 1; i <= r; i++) {
+            $("#Rate" + i).attr('class', 'fas fa-star');
+        }
+    }
+
+    function CRateOut(r) {
+        for (var i = 1; i <= r; i++) {
+            $("#Rate" + i).attr('class', 'far fa-star');
+        }
+    }
+
+    function CRateSelected() {
+        var setRating = $("#Rating").val();
+        for (var i = 1; i <= setRating; i++) {
+            $("#Rate" + i).attr('class', 'fas fa-star');
+        }
+    }
+</script>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
