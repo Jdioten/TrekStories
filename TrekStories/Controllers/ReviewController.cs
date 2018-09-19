@@ -70,10 +70,10 @@ namespace TrekStories.Controllers
                                 new UnauthorizedAccessException("Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again."),
                                 "Trip", "Index"));
             }
-            ViewBag.StepId = id;
+            ViewBag.StepId = id.Value;
             ViewBag.From = step.From;
             ViewBag.To = step.To;
-            return View("Edit", new Review());
+            return View("Edit", new Review() { StepId = id.Value});
         }
 
         //// POST: Review/Create
@@ -116,6 +116,9 @@ namespace TrekStories.Controllers
         {
             if (ModelState.IsValid)
             {
+                //check if the step belongs to authenticated user!
+
+
                 if (review.ReviewId == 0)
                 {
                     db.Reviews.Add(review);
