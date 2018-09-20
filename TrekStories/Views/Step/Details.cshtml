@@ -173,8 +173,8 @@
         </div>
         @Html.Partial("_ActivityThread", (List<ActivityThreadViewModel>)ViewBag.ActivityThread)
     </section>
-    <hr class="thick-hr" />
-    <section>
+    <hr class="thick-hr @ViewBag.HideReview" />
+    <section class="@ViewBag.HideReview">
          <strong><em>Review</em></strong>
             @if (Model.Review != null)
             {

@@ -34,27 +34,27 @@ namespace TrekStories.Controllers
             utility = new BlobUtility();
         }
 
-        // GET: Review
-        public async Task<ActionResult> Index()  //passing trip id??
-        {
-            var reviews = db.Reviews.Include(r => r.Step);
-            return View(await reviews.ToListAsync());
-        }
+        //// GET: Review
+        //public async Task<ActionResult> Index()  //passing trip id??
+        //{
+        //    var reviews = db.Reviews.Include(r => r.Step);
+        //    return View(await reviews.ToListAsync());
+        //}
 
-        // GET: Review/Details/5
-        public async Task<ActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Review review = await db.Reviews.FindAsync(id);
-            if (review == null)
-            {
-                return HttpNotFound();
-            }
-            return View(review);
-        }
+        //// GET: Review/Details/5
+        //public async Task<ActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Review review = await db.Reviews.FindAsync(id);
+        //    if (review == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(review);
+        //}
 
         // GET: Review/Create
         public async Task<ActionResult> Create(int? id)  //stepId
@@ -117,10 +117,11 @@ namespace TrekStories.Controllers
             if (ModelState.IsValid)
             {
                 //check if the step belongs to authenticated user!
-
+                //Step step = await db.Steps.FindAsync(review.StepId);
 
                 if (review.ReviewId == 0)
                 {
+                    review.ReviewId = review.StepId;
                     db.Reviews.Add(review);
                 }
                 else
@@ -128,7 +129,7 @@ namespace TrekStories.Controllers
                     db.MarkAsModified(review);
                 }
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Step", new { id = review.StepId });
             }
             else
             {

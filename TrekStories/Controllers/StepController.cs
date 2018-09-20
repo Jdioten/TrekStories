@@ -51,6 +51,7 @@ namespace TrekStories.Controllers
 
             //create activity thread
             ViewBag.ActivityThread = CreateActivityThread(step);
+            ViewBag.HideReview = step.Date > DateTime.Today ? "hidden" : "";
 
             return View(step);
         }
