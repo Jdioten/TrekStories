@@ -175,11 +175,24 @@
     </section>
     <hr class="thick-hr @ViewBag.HideReview" />
     <section class="@ViewBag.HideReview">
-         <strong><em>Review</em></strong>
-            @if (Model.Review != null)
-            {
-                <p>Add Review Details here...</p>
-            }
+        <div class="row">
+            <div class="col-md-2">
+                <strong><em>Review</em></strong>
+            </div>
+            <div class="col-md-10">
+                @if (Model.Review != null)
+                {
+                    <p>
+                        @for (int i = 0; i < Model.Review.Rating; i++)
+                        {
+                        <span class="fas fa-star"></span>
+                        }
+                    </p>
+                    <p><em>@Model.Review.PrivateNotes</em></p>
+                    <p>@Model.Review.PublicNotes</p>
+                }
+            </div>
+        </div>
         <p>
             @if (Model.Review == null)
             {
@@ -189,8 +202,9 @@
             {
                 @Html.ActionLink("Edit", "Edit", "Review", new { id = Model.StepId }, null)
                 <span> | </span>
-                @Html.ActionLink("Delete", "Delete", "Review", new { id = Model.StepId }, null)
+                        @Html.ActionLink("Delete", "Delete", "Review", new { id = Model.StepId }, null)
             }
         </p>
     </section>
+
 </div>
