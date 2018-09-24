@@ -55,9 +55,11 @@
                         <td>
                             <h5>Day @item.SequenceNo</h5>
                             <p>@item.Date.ToShortDateString()</p>
-                            <a class="btn btn-success btn-xs add-step-btn" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = (item.SequenceNo + 1) })"
-                               title="Insert a Step Here">
+                            <a class="btn btn-success btn-xs add-step-btn" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = (item.SequenceNo + 1) })">
                                 <em class="glyphicon glyphicon-plus"></em>
+                                @*<span class="fas fa-plus mytooltip">
+                                    <span class="mytooltiptext">Insert a Step Here</span>
+                                </span>*@
                             </a>
                         </td>
                         <td onclick="location.href='@Url.Action("Details", "Step", new { id = item.StepId })'" class="hand-cursor">

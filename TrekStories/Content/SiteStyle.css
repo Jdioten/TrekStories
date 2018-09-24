@@ -200,17 +200,17 @@ blockquote small {
     display: inline-block;
 }
 
-.mytooltip .mytooltiptext {
+    .mytooltip .mytooltiptext {
         visibility: hidden;
         width: 140px;
-        background-color: black;
+        background-color: #242b15;
         color: #fff;
         text-align: center;
         padding: 5px 0;
         border-radius: 6px;
         position: absolute;
         z-index: 1;
-        bottom: 100%;
+        bottom: 180%;
         left: 50%;
         margin-left: -70px;
     }
@@ -348,23 +348,7 @@ table.tripdetailstable > tbody > tr > td {
     border-top: 3px solid #f0eceb;
 }
 
-.rotating-button {
-    border-radius: 50%;
-    transition: transform 0.5s ease;
-}
-
-#activity-menu .rotating-button:hover {
-    -ms-transform: rotate(-45deg); /* IE 9 */
-    -webkit-transform: rotate(-45deg); /* Safari 3-8 */
-    transform: rotate(-45deg);
-}
-
-/*#activity-menu btn-group{
-    display: none;
-}
-#activity-menu .rotating-button:hover btn-group{
-    display: inline-table;
-}*/
+/* --- Activity Thread Styling --- */
 
 .activity-thread{
     margin-top:20px;
