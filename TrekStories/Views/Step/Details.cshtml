@@ -169,7 +169,6 @@
                 <a class="btn btn-trekstories" href="@Url.Action("CreateTransport", "Activities", new { stepId = Model.StepId})">Add Transport</a>
                 <a class="btn btn-trekstories" href="@Url.Action("CreateLeisure", "Activities", new { stepId = Model.StepId})">Add Leisure Activity</a>
             </div>
-            @*<a class="rotating-button btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>*@
         </div>
         @Html.Partial("_ActivityThread", (List<ActivityThreadViewModel>)ViewBag.ActivityThread)
     </section>
@@ -188,8 +187,8 @@
                         <span class="fas fa-star"></span>
                         }
                     </p>
-                    <p><em>@Model.Review.PrivateNotes</em></p>
                     <p>@Model.Review.PublicNotes</p>
+                    <p><em>@Model.Review.PrivateNotes</em></p>
                 }
             </div>
         </div>

@@ -67,12 +67,20 @@ namespace TrekStories.Controllers
             if (step == null)
             {
                 return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again."),
+                                new UnauthorizedAccessException("Oops, the step you are trying to review doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
+            }
+            Review review = await db.Reviews.FindAsync(id);
+            if (review != null)
+            {
+                return View("CustomisedError", new HandleErrorInfo(
+                                new ArgumentException("Oops, this step has already been reviewed, please edit the existing comment instead."),
                                 "Trip", "Index"));
             }
             ViewBag.StepId = id.Value;
             ViewBag.From = step.From;
             ViewBag.To = step.To;
+            ViewBag.Rating = 0;
             return View("Edit", new Review() { StepId = id.Value});
         }
 
@@ -100,25 +108,37 @@ namespace TrekStories.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Review review = await db.Reviews.FindAsync(id);
-            if (review == null)
+            Step step = await db.Steps.FindAsync(id);
+            if (step == null)
             {
-                return HttpNotFound();
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the step you are trying to review doesn't seem to exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
             }
-            ViewBag.ReviewId = new SelectList(db.Steps, "StepId", "From", review.ReviewId);
+            Review review = await db.Reviews.FindAsync(id);
+            ViewBag.Rating = review.Rating;
+            ViewBag.StepId = id.Value;
+            ViewBag.From = step.From;
+            ViewBag.To = step.To;
             return View(review);
         }
 
         // POST: Review/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ReviewId,Rating,PrivateNotes,PublicNotes,StepId")] Review review)
+        public async Task<ActionResult> Edit(Review review)
         {
+            //check if the step belongs to authenticated user!
+            Step step = await db.Steps.FindAsync(review.StepId);
+            if (step.Trip.TripOwner != User.Identity.GetUserId())
+            {
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this review doesn't seem to be yours, you cannot add nor edit it."),
+                                "Trip", "Index"));
+            }
+
             if (ModelState.IsValid)
             {
-                //check if the step belongs to authenticated user!
-                //Step step = await db.Steps.FindAsync(review.StepId);
-
                 if (review.ReviewId == 0)
                 {
                     review.ReviewId = review.StepId;
@@ -134,8 +154,8 @@ namespace TrekStories.Controllers
             else
             {
                 ViewBag.StepId = review.StepId;
-                ViewBag.From = review.Step.From;
-                ViewBag.To = review.Step.To;
+                ViewBag.From = step.From;
+                ViewBag.To = step.To;
                 return View(review);
             }    
         }

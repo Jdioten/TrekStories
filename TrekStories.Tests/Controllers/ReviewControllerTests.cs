@@ -108,15 +108,129 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void EditTest()
+        public async Task EditReviewReturnsCorrectDetails()
         {
-            throw new NotImplementedException();
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+
+            var expectedReview = new Review
+            {
+                ReviewId = 1,
+                PrivateNotes = "Test Private",
+                StepId = 1,
+                Rating = 3,
+                PicturesUrl = new List<string> { "picture1", "picture2" }
+            };
+            tc.Reviews.Add(expectedReview);
+            tc.Steps.Add(new Step { StepId = 1 });
+
+            ReviewController controller = new ReviewController(tc);
+
+            // act
+            var result = await controller.Edit(1) as ViewResult;
+            var resultData = (Review)result.ViewData.Model;
+
+            // assert
+            Assert.AreEqual(expectedReview.Rating, resultData.Rating);
+            Assert.AreEqual(expectedReview.PrivateNotes, resultData.PrivateNotes);
+            Assert.AreEqual(expectedReview.PicturesUrl.Count, resultData.PicturesUrl.Count);
+        }
+
+        [TestMethod]
+        public async Task CannotEditNonexistentReview()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            var review = new Review
+            {
+                ReviewId = 1,
+                PrivateNotes = "Test Private",
+                StepId = 1,
+                Rating = 3,
+                PicturesUrl = new List<string> { "picture1", "picture2" }
+            };
+            tc.Reviews.Add(review);
+            var controller = new ReviewController(tc);
+
+            // Act
+            var badResult = await controller.Edit(2) as ViewResult;
+            // Assert
+            Assert.AreEqual("CustomisedError", badResult.ViewName);
         }
 
         [TestMethod()]
-        public void EditTest1()
+        public async Task EditForNullIdReturnsBadRequest()
         {
-            throw new NotImplementedException();
+            var controller = new ReviewController(new TestTrekStoriesContext());
+            var expected = (int)System.Net.HttpStatusCode.BadRequest;
+
+            int? test = null;
+            var badResult = await controller.Edit(test) as HttpStatusCodeResult;
+            Assert.AreEqual(expected, badResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task CanEditReview()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            var review = new Review
+            {
+                ReviewId = 1,
+                PrivateNotes = "Test Private",
+                StepId = 1,
+                Rating = 3,
+                PicturesUrl = new List<string> { "picture1", "picture2" }
+            };
+            tc.Reviews.Add(review);
+            Step step = new Step { StepId = 1, Trip = new Trip { TripId = 10, TripOwner = "ABC123" } };
+            tc.Steps.Add(step);
+
+            ReviewController controller = new ReviewController(tc).WithAuthenticatedUser("ABC123");
+
+            // Act
+            var updatedReview = new Review
+            {
+                ReviewId = 1,
+                PrivateNotes = "New notes",
+                StepId = 1,
+                Rating = 4,
+                PicturesUrl = new List<string> { "picture1", "picture2" }
+            };
+            var result = await controller.Edit(updatedReview);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(RedirectToRouteResult));
+        }
+
+        [TestMethod]
+        public async Task CannotEditSomebodyElseReview()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            var review = new Review
+            {
+                ReviewId = 1,
+                PrivateNotes = "Test Private",
+                StepId = 1,
+                Rating = 3,
+                PicturesUrl = new List<string> { "picture1", "picture2" }
+            };
+            tc.Reviews.Add(review);
+            Step step = new Step { StepId = 1, Trip = new Trip { TripId = 10, TripOwner = "ABC123" } };
+            tc.Steps.Add(step);
+
+            ReviewController controller = new ReviewController(tc).WithAuthenticatedUser("AnotherUser");
+
+            // Act
+            var updatedReview = new Review
+            {
+                ReviewId = 1,
+                PrivateNotes = "New notes",
+                StepId = 1,
+                Rating = 4,
+                PicturesUrl = new List<string> { "picture1", "picture2" }
+            };
+            var result = await controller.Edit(updatedReview) as ViewResult;
+
+            // Assert
+            Assert.AreEqual("CustomisedError", result.ViewName);
         }
 
         [TestMethod()]

@@ -1,7 +1,7 @@
 ﻿@model TrekStories.Models.Review
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Review";
 }
 
 <style>
@@ -12,8 +12,15 @@
         max-width: 100%;
     }
 </style>
+
 <div id="form-container">
     <h3>Review Step @ViewBag.From to @ViewBag.To</h3>
+    <blockquote class="hidden-xs" style="border-left:none; padding-top:4px; padding-bottom:2px;">
+        <p class="site-colour" style="font-size:0.8em;">
+            Traveling - it leaves you speechless, then turns you into a story teller.
+            <small class="blockquote-footer" style="display:inline">Ibn Battuta</small>
+        </p>
+    </blockquote>
     <hr />
 
     @using (Html.BeginForm("Edit","Review"))
@@ -25,7 +32,7 @@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Rating, htmlAttributes: new { @class = "control-label" })
-                <input type="hidden" name="Rating" id="Rating" value="0" />
+                <input type="hidden" name="Rating" id="Rating" value="@ViewBag.Rating" />
                 @Html.ValidationMessageFor(model => model.Rating, "", new { @class = "text-danger" })
                     <div onmouseout="CRateSelected()">
                         <span class="far fa-star" id="Rate1" onclick="CRate(1)" onmouseover="CRateOver(1)" onmouseout="CRateOut(1)"></span>
@@ -49,6 +56,22 @@
                 @Html.ValidationMessageFor(model => model.PrivateNotes, "", new { @class = "text-danger" })
                 <small id="privateHelp" class="form-text text-muted">Private notes will not be shared with other users.</small>
             </div>
+
+            @*<div>
+                @foreach (var item in Model.PicturesUrl)
+                {
+                    <div>
+                            //use form!          
+                            @using (Html.BeginForm("Delete", "Admin"))
+                            {
+                                @Html.Hidden("ProductID", item.ProductID)
+                                <input type="submit"
+                                       class="btn btn-default btn-xs"
+                                       value="Delete" />
+                            }
+                    </div>
+                }
+            </div>*@
 
             <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-trekstories" />
