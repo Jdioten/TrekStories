@@ -339,7 +339,15 @@ namespace TrekStories.Controllers
         {
             List<ActivityThreadViewModel> activityThread = new List<ActivityThreadViewModel>();
 
-            //add to list the leisure activities
+            AddLeisureToActivityThread(ref activityThread, step);
+            AddTransportToActivityThread(ref activityThread, step);
+            AddAccommodationToActivityThread(ref activityThread, step);
+
+            return activityThread.OrderBy(a => a.StartTime.TimeOfDay).ToList();
+        }
+
+        private void AddLeisureToActivityThread(ref List<ActivityThreadViewModel> activityThread, Step step)
+        {
             foreach (LeisureActivity activity in db.Activities.OfType<LeisureActivity>().Where(a => a.StepId == step.StepId).ToList())
             {
                 activityThread.Add(new ActivityThreadViewModel
@@ -350,11 +358,12 @@ namespace TrekStories.Controllers
                     Price = activity.Price,
                     Icon = GetIcon(activity.LeisureCategory.ToString()),
                     Controller = "Activities"
-                }
-            );
+                });
             }
+        }
 
-            //add to list the transports
+        private void AddTransportToActivityThread(ref List<ActivityThreadViewModel> activityThread, Step step)
+        {
             var stepActivities = db.Activities.OfType<Transport>().Where(a => a.StepId == step.StepId).ToList();
             foreach (Transport activity in stepActivities)
             {
@@ -367,15 +376,14 @@ namespace TrekStories.Controllers
                     Icon = GetIcon(activity.TransportType.ToString()),
                     ArrivalTime = activity.GetArrivalTime(),
                     Controller = "Activities"
-                }
-            );
+                });
             }
 
             var transportsArrivingOnDay = (from s in step.Trip.Steps
-                                          join a in db.Activities.OfType<Transport>()
-                                          on s.StepId equals a.StepId
-                                          where a.GetArrivalTime().Date == step.Date.Date
-                                          select a).Except(stepActivities);
+                                           join a in db.Activities.OfType<Transport>()
+                                           on s.StepId equals a.StepId
+                                           where a.GetArrivalTime().Date == step.Date.Date
+                                           select a).Except(stepActivities);
             foreach (Transport activity in transportsArrivingOnDay.ToList())
             {
                 activityThread.Add(new ActivityThreadViewModel
@@ -387,14 +395,16 @@ namespace TrekStories.Controllers
                     Icon = GetIcon(activity.TransportType.ToString()),
                     ArrivalTime = null,
                     Controller = "Activities"
-                }
-            );
+                });
             }
+        }
 
+        private void AddAccommodationToActivityThread(ref List<ActivityThreadViewModel> activityThread, Step step)
+        {
             //Add check-in if happening on step date
             if (step.Accommodation != null)
             {
-                //needs to search in accommodations for matching check-in --separate method?
+                //needs to search in accommodations for matching check-in
                 if (step.Accommodation.CheckIn.Date == step.Date.Date)
                 {
                     activityThread.Add(new ActivityThreadViewModel
@@ -405,32 +415,28 @@ namespace TrekStories.Controllers
                         Price = step.Accommodation.Price,
                         Icon = "fas fa-bed",
                         Controller = "Accommodation"
-                    }
-                    );
+                    });
                 }
             }
 
             //Add check-out if happening on step date
             var tripAccommodation = (from s in step.Trip.Steps
-                                    join a in db.Accommodations
-                                    on s.AccommodationId equals a.AccommodationId
-                                    where a.CheckOut.Date == step.Date.Date
-                                    select a).Distinct().SingleOrDefault();
+                                     join a in db.Accommodations
+                                     on s.AccommodationId equals a.AccommodationId
+                                     where a.CheckOut.Date == step.Date.Date
+                                     select a).Distinct().SingleOrDefault();
             if (tripAccommodation != null)
+            {
+                activityThread.Add(new ActivityThreadViewModel
                 {
-                    activityThread.Add(new ActivityThreadViewModel
-                    {
-                        ID = tripAccommodation.AccommodationId,
-                        StartTime = tripAccommodation.CheckOut,
-                        Name = "Check-Out at " + tripAccommodation.Name,
-                        Price = tripAccommodation.Price,
-                        Icon = "fas fa-bed",
-                        Controller = "Accommodation"
-                    }
-                    );
-                }
-            
-            return activityThread.OrderBy(a => a.StartTime.TimeOfDay).ToList();
+                    ID = tripAccommodation.AccommodationId,
+                    StartTime = tripAccommodation.CheckOut,
+                    Name = "Check-Out at " + tripAccommodation.Name,
+                    Price = tripAccommodation.Price,
+                    Icon = "fas fa-bed",
+                    Controller = "Accommodation"
+                });
+            }
         }
 
         public string GetIcon(string type)
@@ -450,7 +456,7 @@ namespace TrekStories.Controllers
                 case "foot": return "fas fa-walking";
 
                 case "aquatic": return "fas fa-swimmer";
-                case "sports": return "fas fa-dribble";
+                case "sports": return "fas fa-dribbble";
                 case "musical": return "fas fa-music";
                 case "cultural": return "fas fa-university";
                 case "nature": return "fas fa-paw";
