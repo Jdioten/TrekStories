@@ -28,15 +28,15 @@
                             </span>
                         </a>
                         &emsp;
-                        <a href="@Url.Action("GetSummaryReport", new { id = Model.TripId })" class="btn btn-sm btn-info">
+                        <a href="@Url.Action("GetSummaryReport", new { id = Model.TripId })" class="btn btn-sm btn-trekstories">
                             <span class="fas fa-file-download mytooltip">
                                 <span class="mytooltiptext">Get Summary Report</span>
                             </span>
                         </a>
                         &emsp;
-                        <a href="@Url.Action("Index", "Review", new { id = Model.TripId })" class="btn btn-sm btn-trekstories">
-                            <span class="fas fa-book-open mytooltip">
-                                <span class="mytooltiptext">Review Trip</span>
+                        <a href="@Url.Action("GetSouvenirReport", new { id = Model.TripId })" class="btn btn-sm btn-trekstories">
+                            <span class="fas fa-file-image mytooltip">
+                                <span class="mytooltiptext">Get Souvenir Report</span>
                             </span>
                         </a>
                     </p>

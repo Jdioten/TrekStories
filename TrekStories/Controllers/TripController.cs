@@ -81,9 +81,9 @@ namespace TrekStories.Controllers
                     }
                     else
                     {
-                    db.Trips.Add(trip);
-                    await db.SaveChangesAsync();
-                    return RedirectToAction("Details", new { id = trip.TripId});
+                        db.Trips.Add(trip);
+                        await db.SaveChangesAsync();
+                        return RedirectToAction("Details", new { id = trip.TripId });
                     }
                 }
             }
@@ -112,7 +112,7 @@ namespace TrekStories.Controllers
             if (trip.TripOwner != User.Identity.GetUserId())
             {
                 return View("CustomisedError", new HandleErrorInfo(
-                    new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot edit it."), 
+                    new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot edit it."),
                     "Trip", "Index"));
             }
             ViewBag.CountryList = Trip.GetCountries();
@@ -273,16 +273,17 @@ namespace TrekStories.Controllers
             ViewBag.TripSteps = tripSteps;
 
             var tripAccommodations = from s in trip.Steps
-                                         join a in db.Accommodations
-                                         on s.AccommodationId equals a.AccommodationId
-                                         select a;
+                                     join a in db.Accommodations
+                                     on s.AccommodationId equals a.AccommodationId
+                                     select a;
             ViewBag.TripAccommodations = tripAccommodations.Distinct().OrderBy(a => a.Name);
             return new RotativaHQ.MVC5.ViewAsPdf("Summary", tripSteps) { FileName = "TripSummary.pdf" };
         }
 
-        /*public void GenerateSouvenirReport()
+        [AllowAnonymous]
+        public async Task<ActionResult> GetSouvenirReport(int id)
         {
-
-        }*/
+            throw new NotImplementedException();
+        }
     }
 }
