@@ -198,31 +198,31 @@ namespace TrekStories.Controllers
             }
         }
 
-        // GET: Review/Delete/5
-        public async Task<ActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Review review = await db.Reviews.FindAsync(id);
-            if (review == null)
-            {
-                return HttpNotFound();
-            }
-            return View(review);
-        }
+        //// GET: Review/Delete/5
+        //public async Task<ActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Review review = await db.Reviews.FindAsync(id);
+        //    if (review == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(review);
+        //}
 
-        // POST: Review/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
-        {
-            Review review = await db.Reviews.FindAsync(id);
-            db.Reviews.Remove(review);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
+        //// POST: Review/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> DeleteConfirmed(int id)
+        //{
+        //    Review review = await db.Reviews.FindAsync(id);
+        //    db.Reviews.Remove(review);
+        //    await db.SaveChangesAsync();
+        //    return RedirectToAction("Index");
+        //}
 
         protected override void Dispose(bool disposing)
         {
