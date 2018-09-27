@@ -261,12 +261,17 @@
     <Compile Include="Migrations\201807262022036_AddressIntoStreetAndCity.Designer.cs">
       <DependentUpon>201807262022036_AddressIntoStreetAndCity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809272155228_ReviewImagesAdded.cs" />
+    <Compile Include="Migrations\201809272155228_ReviewImagesAdded.Designer.cs">
+      <DependentUpon>201809272155228_ReviewImagesAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Accommodation.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\ActivityThreadViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Image.cs" />
     <Compile Include="Models\LeisureActivity.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Review.cs" />
@@ -427,6 +432,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201807262022036_AddressIntoStreetAndCity.resx">
       <DependentUpon>201807262022036_AddressIntoStreetAndCity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809272155228_ReviewImagesAdded.resx">
+      <DependentUpon>201809272155228_ReviewImagesAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

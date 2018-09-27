@@ -15,6 +15,7 @@ namespace TrekStories.Abstract
         DbSet<Accommodation> Accommodations { get; }
         DbSet<Activity> Activities { get; }
         DbSet<Review> Reviews { get; }
+        DbSet<Image> Images { get; }
         int SaveChanges();
         Task<int> SaveChangesAsync();
         void MarkAsDeleted(Object item);

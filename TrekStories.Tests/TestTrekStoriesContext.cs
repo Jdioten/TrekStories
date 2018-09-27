@@ -15,6 +15,7 @@ namespace TrekStories.Tests
             this.Accommodations = new TestAccommodationDbSet();
             this.Activities = new TestActivityDbSet();
             this.Reviews = new TestReviewDbSet();
+            this.Images = new TestImageDbSet();
         }
 
         public DbSet<Trip> Trips { get; set; }
@@ -22,6 +23,7 @@ namespace TrekStories.Tests
         public DbSet<Accommodation> Accommodations { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         public int SaveChanges()
         {

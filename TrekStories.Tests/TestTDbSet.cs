@@ -94,4 +94,22 @@ namespace TrekStories.Tests
             return Task.FromResult(Find(keyValues));
         }
     }
+
+    class TestImageDbSet : TestDbSet<Image>
+    {
+        public override Image Find(params object[] keyValues)
+        {
+            return this.SingleOrDefault(image => image.Id == (int)keyValues.Single());
+        }
+
+        public override Task<Image> FindAsync(params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
+        }
+
+        public override Task<Image> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            return Task.FromResult(Find(keyValues));
+        }
+    }
 }

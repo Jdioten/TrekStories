@@ -16,6 +16,7 @@ namespace TrekStories.DAL
         public DbSet<Accommodation> Accommodations { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

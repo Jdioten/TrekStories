@@ -24,8 +24,7 @@ namespace TrekStories.Models
         [StringLength(2000, ErrorMessage = "Notes are limited to 2000 characters maximum.")]
         public string PublicNotes { get; set; }
 
-        [Display(Name = "Pictures")]
-        public List<string> PicturesUrl { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
 
         [Required]
         public int StepId { get; set; }
