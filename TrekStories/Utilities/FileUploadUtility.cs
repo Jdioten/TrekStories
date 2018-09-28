@@ -12,10 +12,23 @@ namespace TrekStories.Utilities
 
         private static string[] supportedFileExtensions = new[] { ".png", ".jpg", ".gif", ".pdf", ".msg", ".txt" };
 
-        public static bool ValidFileExtension(HttpPostedFileBase file)
+        public static bool InvalidFileExtension(HttpPostedFileBase file)
         {
             string extension = Path.GetExtension(file.FileName);
-            if (supportedFileExtensions.Contains(extension))
+            if (supportedFileExtensions.Contains(extension.ToLower()))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public static bool InvalidFileSize(HttpPostedFileBase file)
+        {
+            int size = file.ContentLength;
+            if (size > MAX_FILESIZE)
             {
                 return true;
             }
@@ -25,17 +38,14 @@ namespace TrekStories.Utilities
             }
         }
 
-        public static bool ValidFileSize(HttpPostedFileBase file)
+        public static String GetFilenameWithTimestamp(string filename)
         {
-            int size = file.ContentLength;
-            if (size > MAX_FILESIZE)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return Path.GetFileNameWithoutExtension(filename) + "_" + FileUploadUtility.GetTimestamp(DateTime.Now) + Path.GetExtension(filename);
+        }
+
+        public static String GetTimestamp(DateTime value)
+        {
+            return value.ToString("yyyyMMddHHmmssff");
         }
     }
 }

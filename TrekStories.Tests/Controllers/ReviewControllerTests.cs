@@ -9,6 +9,7 @@ using TrekStories.Tests;
 using TrekStories.Models;
 using System.Web.Mvc;
 using TrekStories.Tests.UnitTestHelpers;
+using System.IO;
 
 namespace TrekStories.Controllers.Tests
 {
@@ -117,8 +118,7 @@ namespace TrekStories.Controllers.Tests
                 ReviewId = 1,
                 PrivateNotes = "Test Private",
                 StepId = 1,
-                Rating = 3,
-                PicturesUrl = new List<string> { "picture1", "picture2" }
+                Rating = 3
             };
             tc.Reviews.Add(expectedReview);
             tc.Steps.Add(new Step { StepId = 1 });
@@ -132,7 +132,6 @@ namespace TrekStories.Controllers.Tests
             // assert
             Assert.AreEqual(expectedReview.Rating, resultData.Rating);
             Assert.AreEqual(expectedReview.PrivateNotes, resultData.PrivateNotes);
-            Assert.AreEqual(expectedReview.PicturesUrl.Count, resultData.PicturesUrl.Count);
         }
 
         [TestMethod]
@@ -144,8 +143,7 @@ namespace TrekStories.Controllers.Tests
                 ReviewId = 1,
                 PrivateNotes = "Test Private",
                 StepId = 1,
-                Rating = 3,
-                PicturesUrl = new List<string> { "picture1", "picture2" }
+                Rating = 3
             };
             tc.Reviews.Add(review);
             var controller = new ReviewController(tc);
@@ -176,8 +174,7 @@ namespace TrekStories.Controllers.Tests
                 ReviewId = 1,
                 PrivateNotes = "Test Private",
                 StepId = 1,
-                Rating = 3,
-                PicturesUrl = new List<string> { "picture1", "picture2" }
+                Rating = 3
             };
             tc.Reviews.Add(review);
             Step step = new Step { StepId = 1, Trip = new Trip { TripId = 10, TripOwner = "ABC123" } };
@@ -191,8 +188,7 @@ namespace TrekStories.Controllers.Tests
                 ReviewId = 1,
                 PrivateNotes = "New notes",
                 StepId = 1,
-                Rating = 4,
-                PicturesUrl = new List<string> { "picture1", "picture2" }
+                Rating = 4
             };
             var result = await controller.Edit(updatedReview);
 
@@ -209,8 +205,7 @@ namespace TrekStories.Controllers.Tests
                 ReviewId = 1,
                 PrivateNotes = "Test Private",
                 StepId = 1,
-                Rating = 3,
-                PicturesUrl = new List<string> { "picture1", "picture2" }
+                Rating = 3
             };
             tc.Reviews.Add(review);
             Step step = new Step { StepId = 1, Trip = new Trip { TripId = 10, TripOwner = "ABC123" } };
@@ -224,8 +219,7 @@ namespace TrekStories.Controllers.Tests
                 ReviewId = 1,
                 PrivateNotes = "New notes",
                 StepId = 1,
-                Rating = 4,
-                PicturesUrl = new List<string> { "picture1", "picture2" }
+                Rating = 4
             };
             var result = await controller.Edit(updatedReview) as ViewResult;
 
@@ -234,21 +228,69 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
-        public void UploadImageTest()
+        public async Task CannotUploadNullImage()
         {
-            throw new NotImplementedException();
+            ReviewController controller = new ReviewController();
+            var result = await controller.UploadImage(null, 1) as ViewResult;
+            Assert.AreEqual("Please browse for a file to upload.", controller.TempData["message"]);
         }
 
         [TestMethod()]
-        public void DeleteTest()
+        public async Task CannotUploadImageWithInvalidSize()
         {
-            throw new NotImplementedException();
+            ReviewController controller = new ReviewController();
+            var result = await controller.UploadImage(new TestPostedFileBase(7168001), 1) as ViewResult;
+            Assert.AreEqual("The file cannot be bigger than 7MB.", controller.TempData["message"]);
         }
 
         [TestMethod()]
-        public void DeleteConfirmedTest()
+        public async Task CannotUploadImageWithInvalidExtension()
         {
-            throw new NotImplementedException();
+            ReviewController controller = new ReviewController();
+            var result = await controller.UploadImage(new TestPostedFileBase("test.js"), 1) as ViewResult;
+            Assert.AreEqual("The file type is not authorized for upload.", controller.TempData["message"]);
+        }
+
+        //[TestMethod()]
+        //public async Task CanUploadImage()
+        //{
+        //    TestTrekStoriesContext tc = new TestTrekStoriesContext();
+        //    var review = new Review
+        //    {
+        //        ReviewId = 1,
+        //        PrivateNotes = "Test Private",
+        //        StepId = 1,
+        //        Rating = 3
+        //    };
+        //    tc.Reviews.Add(review);
+        //    Image image1 = new Image { Id = 25, ReviewId = 1, Url = "url1" };
+        //    tc.Images.Add(image1);
+        //    //Step step = new Step { StepId = 1, Trip = new Trip { TripId = 10, TripOwner = "ABC123" } };
+        //    //tc.Steps.Add(step);
+
+        //    ReviewController controller = new ReviewController(tc);
+        //    TestPostedFileBase testFile = new TestPostedFileBase("test.txt", 800, new MemoryStream(Encoding.UTF8.GetBytes("whatever")));
+
+        //    var result = await controller.UploadImage(testFile, 1) as RedirectToRouteResult;
+        //    var imagesCount = tc.Images.Where(i => i.ReviewId == 1).Count();
+
+        //    Assert.AreEqual("Edit", result.RouteValues["action"]);
+        //    Assert.AreEqual("test", controller.TempData["message"]);
+        //    Assert.AreEqual(2, imagesCount);
+        //}
+
+        [TestMethod()]
+        public async Task CanDeleteImage()
+        {
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Image image1 = new Image { Id = 25, ReviewId = 1, Url = "url1" };
+            tc.Images.Add(image1);
+            ReviewController controller = new ReviewController(tc);
+
+            var result = await controller.DeleteImage(25) as RedirectToRouteResult;
+
+            Assert.AreEqual("Edit", result.RouteValues["action"]);
+            Assert.IsNull(tc.Images.Find(25));
         }
     }
 }
