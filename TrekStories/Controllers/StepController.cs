@@ -52,8 +52,22 @@ namespace TrekStories.Controllers
             //create activity thread
             ViewBag.ActivityThread = CreateActivityThread(step);
             ViewBag.HideReview = step.Date > DateTime.Today ? "hidden" : "";
+            ViewBag.PhotoCount = GetReviewPicturesCount(step);
 
             return View(step);
+        }
+
+        [NonAction]
+        public static int GetReviewPicturesCount(Step step)
+        {
+            if (step.Review == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return step.Review.Images.Count;
+            }
         }
 
         // GET: Step/Create

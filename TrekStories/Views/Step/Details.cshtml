@@ -201,9 +201,24 @@
             {
                 @Html.ActionLink("Edit", "Edit", "Review", new { id = Model.StepId }, null)
                 <span> | </span>
-                        @Html.ActionLink("Delete", "Delete", "Review", new { id = Model.StepId }, null)
+                @Html.ActionLink("Delete", "Delete", "Review", new { id = Model.StepId }, null)
             }
         </p>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-warning">You have @ViewBag.PhotoCount Photo(s) </div>
+            </div>
+            @if (ViewBag.PhotoCount > 0)
+            {
+                foreach (var item in Model.Review.Images)
+                {
+                    <div class="col-md-4 col-sm-6 col-xs-12 thumb">
+                        <a class="thumbnail" href="@item.Url" target="_blank">
+                            <img class="img-responsive" src="@item.Url" style="height: 300px;width:100%;" alt="">
+                        </a>
+                    </div>
+                }
+            } 
+        </div>
     </section>
-
 </div>
