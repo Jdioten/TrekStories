@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
-using TrekStories.Abstract;
-using System.IO;
 using TrekStories.Utilities;
-using Microsoft.AspNet.Identity;
 
 namespace TrekStories.Controllers
 {
@@ -20,6 +18,8 @@ namespace TrekStories.Controllers
     [Authorize]
     public class ReviewController : Controller
     {
+        private const string IMAGES_CONTAINER_NAME = "trekstories-reviewimages-blobcontainer";
+
         private ITrekStoriesContext db = new TrekStoriesContext();
         private BlobUtility utility;
 
@@ -81,6 +81,7 @@ namespace TrekStories.Controllers
             ViewBag.From = step.From;
             ViewBag.To = step.To;
             ViewBag.Rating = 0;
+            ViewBag.PhotoCount = 0;
             return View("Edit", new Review() { StepId = id.Value});
         }
 
@@ -120,6 +121,7 @@ namespace TrekStories.Controllers
             ViewBag.StepId = id.Value;
             ViewBag.From = step.From;
             ViewBag.To = step.To;
+            ViewBag.PhotoCount = StepController.GetReviewPicturesCount(step);
             return View(review);
         }
 
@@ -161,41 +163,86 @@ namespace TrekStories.Controllers
         }
 
         [HttpPost]
-        public ActionResult UploadImage(HttpPostedFileBase file)
+        public async Task<ActionResult> UploadImage(HttpPostedFileBase file, int revId)
         {
             if (file != null)
-            {
-                string containerName = "trekstories-reviewimages-blobcontainer"; //hardcoded container name for review images 
+            { 
                 file = file ?? Request.Files["file"];
 
                 //check file size and extension
-                //... using methods from fileuploadutility
-
-                string fileName = Path.GetFileName(file.FileName);
-                Stream imageStream = file.InputStream;
-                var result = utility.UploadBlob(fileName, containerName, imageStream);
-                if (result != null)
+                if (FileUploadUtility.InvalidFileSize(file))
                 {
-                    //change below to just add image url to list of url string?
-                    
-                    //string loggedInUserId = User.Identity.GetUserId();
-                    //UserImage userimage = new UserImage();
-                    //userimage.Id = new Random().Next().ToString();
-                    //userimage.UserId = loggedInUserId;
-                    //userimage.ImageUrl = result.Uri.ToString();
-                    //db.UserImages.Add(userimage);
-                    //db.SaveChanges();
-                    return RedirectToAction("Index");
+                    TempData["message"] = "The file cannot be bigger than 7MB.";
+                }
+                else if (FileUploadUtility.InvalidFileExtension(file))
+                {
+                    TempData["message"] = "The file type is not authorized for upload.";
                 }
                 else
                 {
-                    return RedirectToAction("Index");
-                }
+                    Review review = await db.Reviews.FindAsync(revId);
+                    if (review == null)
+                    {
+                        return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the review you want to add images to does not exist."),
+                                "Trip", "Index"));
+                    }
+
+                    //build filename with timestamp to reduce risk of duplicates
+                    string fileName = FileUploadUtility.GetFilenameWithTimestamp(file.FileName);
+
+                    Stream imageStream = file.InputStream;
+                    CloudBlockBlob result;
+
+                    try
+                    {
+                        result = utility.UploadBlob(fileName, IMAGES_CONTAINER_NAME, imageStream);    
+                    }
+                    catch (Exception e)
+                    {
+                        TempData["message"] = e.Message;
+                        return RedirectToAction("Edit", new { id = revId });
+                    }
+                    Image uploadedImage = new Image { ReviewId = review.ReviewId, Url = result.Uri.ToString() };
+                    db.Images.Add(uploadedImage);
+                    db.SaveChanges();
+                } 
             }
             else
             {
-                return RedirectToAction("Index");
+                TempData["message"] = "Please browse for a file to upload.";
             }
+            return RedirectToAction("Edit", new { id = revId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteImage(int ImgId)
+        {
+            Image imageToDelete = await db.Images.FindAsync(ImgId);
+
+            if (imageToDelete == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            int revId = imageToDelete.Review.ReviewId;
+
+            //remove from database
+            db.Images.Remove(imageToDelete);
+            db.SaveChanges();
+
+            //remove from Cloud Storage
+            string blobNameToDelete = imageToDelete.Url.Split('/').Last();
+
+            try
+            {
+                utility.DeleteBlob(blobNameToDelete, IMAGES_CONTAINER_NAME);
+            }
+            catch (Exception e)
+            {
+                TempData["message"] = "There was an error when deleting the file from Blob Storage. Error Message: " + e.Message;
+            }
+            return RedirectToAction("Edit", new { id = revId });
         }
 
         //// GET: Review/Delete/5

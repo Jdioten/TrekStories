@@ -21,7 +21,7 @@ namespace TrekStories.Utilities
         public CloudBlockBlob UploadBlob(string blobName, string containerName, Stream stream)
         {
             CloudBlobContainer container = GetCloudBlobContainer(containerName);
-            container.CreateIfNotExists();
+            container.CreateIfNotExists(BlobContainerPublicAccessType.Container, null, null);
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
 
             try
@@ -31,8 +31,7 @@ namespace TrekStories.Utilities
             }
             catch (Exception e)
             {
-                var r = e.Message;
-                return null;
+                throw new Exception(e.Message);
             }
         }
 
