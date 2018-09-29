@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Edit Review";
+    string hidden = ViewBag.Create ? "hidden" : "";
 }
 
 <style>
@@ -14,6 +15,13 @@
 </style>
 
 <div id="form-container">
+    @if (TempData["message"] != null)
+    {
+        <div class="alert alert-dismissible alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            @TempData["message"]
+        </div>
+    }
     <h3>Review Step @ViewBag.From to @ViewBag.To</h3>
     <blockquote class="hidden-xs" style="border-left:none; padding-top:4px; padding-bottom:2px;">
         <p class="site-colour" style="font-size:0.8em;">
@@ -22,7 +30,6 @@
         </p>
     </blockquote>
     <hr />
-
     @using (Html.BeginForm("Edit","Review"))
     {
         @Html.AntiForgeryToken()
@@ -56,22 +63,7 @@
                 @Html.ValidationMessageFor(model => model.PrivateNotes, "", new { @class = "text-danger" })
                 <small id="privateHelp" class="form-text text-muted">Private notes will not be shared with other users.</small>
             </div>
-
-            @*<div>
-                @foreach (var item in Model.PicturesUrl)
-                {
-                    <div>
-                            //use form!          
-                            @using (Html.BeginForm("Delete", "Admin"))
-                            {
-                                @Html.Hidden("ProductID", item.ProductID)
-                                <input type="submit"
-                                       class="btn btn-default btn-xs"
-                                       value="Delete" />
-                            }
-                    </div>
-                }
-            </div>*@
+            
 
             <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-trekstories" />
@@ -79,6 +71,54 @@
                     @Html.ActionLink("Cancel", "Details", "Step", new { id = ViewBag.StepId }, new { @class = "btn btn-default" })
             </div>
     }
+    <div class="@hidden">
+        <br />
+        <div class="row">
+            @using (Html.BeginForm("UploadImage", "Review", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="panel panel-trekstories">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Save Photos for this Step</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4">
+                                <input type="file" name="file" />
+                                <input type="hidden" name="revId" value="@Model.ReviewId" />
+                                <br />
+                                <input type="submit" class="btn btn-trekstories form-control" value="Save Photo" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-warning">You have @ViewBag.PhotoCount Photo(s)</div>
+            </div>
+            @if (@ViewBag.PhotoCount > 0)
+            {
+                foreach (var item in Model.Images)
+                {
+                    <div class="col-md-4 col-sm-6 col-xs-12 thumb">
+                        <a class="thumbnail rev-img-thumb" href="@item.Url" target="_blank">
+                            <img class="img-responsive" src="@item.Url" style="height: 300px;width:100%;" alt="">
+                        </a>
+                        @using (Html.BeginForm("DeleteImage", "Review", FormMethod.Post, new { @class = "btn btn-default btn-block no-padding" }))
+                    {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("ImgId", item.Id)
+                            <button type="submit" class="btn btn-danger" style="width:100%;margin:0px;">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
 </div>
 <script>
     //code copied from http://www.dotnetfunda.com/articles/show/3438/star-rating-system-in-aspnet-mvc

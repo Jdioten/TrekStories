@@ -90,8 +90,6 @@ namespace TrekStories.Controllers
                                 new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add a step to it."),
                                 "Trip", "Index"));
             }
-            //ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name");
-            //ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes");
             ViewBag.TripId = tripId;
             ViewBag.SeqNo = seqNo;
             ViewBag.TripTitle = trip.Title;
@@ -160,8 +158,6 @@ namespace TrekStories.Controllers
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
             }
-            //ViewBag.AccommodationId = new SelectList(db.Accommodations, "AccommodationId", "Name", step.AccommodationId);
-            //ViewBag.StepId = new SelectList(db.Reviews, "ReviewId", "PrivateNotes", step.StepId);
             ViewBag.TripId = stepViewModel.TripId;
             ViewBag.SeqNo = stepViewModel.SequenceNo;
             ViewBag.TripTitle = trip.Title;

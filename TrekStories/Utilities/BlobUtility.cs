@@ -41,15 +41,5 @@ namespace TrekStories.Utilities
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
             blockBlob.DeleteIfExists();
         }
-
-
-        //This method will most probably not be required as it can be downloaded straight from URL
-        //public CloudBlockBlob DownloadBlob(string blobName, string containerName)
-        //{
-        //    CloudBlobContainer container = GetCloudBlobContainer(containerName);
-        //    CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
-        //    // blockBlob.DownloadToStream(Response.OutputStream);
-        //    return blockBlob;
-        //}
     }
 }

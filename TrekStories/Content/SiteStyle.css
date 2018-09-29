@@ -187,12 +187,6 @@ blockquote small {
     margin-bottom: 0 !important;
 }
 
-/* --- Panel Styling --- */
-
-/*.panel-trekstories > .panel-heading {
-    background-color: #f8f3e8;
-}*/
-
 /* --- Tooltip Styling --- */
 
 .mytooltip {
@@ -388,6 +382,48 @@ table.tripdetailstable > tbody > tr > td {
     display:inline;
 }
 
+/*Panel for File Upload*/
+.panel-trekstories {
+    border-color: #eb6864;
+    max-width: 90%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+    .panel-trekstories > .panel-heading {
+        color: #ffffff;
+        background-color: #eb6864;
+        border-color: #eb6864;
+    }
+
+        .panel-trekstories > .panel-heading + .panel-collapse > .panel-body {
+            border-top-color: #eb6864;
+        }
+
+        .panel-trekstories > .panel-heading .badge {
+            color: #eb6864;
+            background-color: #ffffff;
+        }
+
+    .panel-trekstories > .panel-footer + .panel-collapse > .panel-body {
+        border-bottom-color: #eb6864;
+    }
+
+    .panel-trekstories .btn-trekstories {
+        background-color: #eb6864;
+    }
+
+/*Review Images Styling*/
+.rev-img-thumb {
+    margin-bottom:5px;
+}
+
+.thumb {
+    margin-bottom:20px;
+}
+
+
+
 .site-colour {
     color: #729f98;
 }
@@ -399,4 +435,8 @@ table.tripdetailstable > tbody > tr > td {
 
 .text-muted {
     color: #828282;
+}
+
+.no-padding{
+    padding:3px;
 }

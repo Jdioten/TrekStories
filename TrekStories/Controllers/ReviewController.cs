@@ -82,6 +82,7 @@ namespace TrekStories.Controllers
             ViewBag.To = step.To;
             ViewBag.Rating = 0;
             ViewBag.PhotoCount = 0;
+            ViewBag.Create = true;
             return View("Edit", new Review() { StepId = id.Value});
         }
 
@@ -122,6 +123,7 @@ namespace TrekStories.Controllers
             ViewBag.From = step.From;
             ViewBag.To = step.To;
             ViewBag.PhotoCount = StepController.GetReviewPicturesCount(step);
+            ViewBag.Create = false;
             return View(review);
         }
 
@@ -212,6 +214,7 @@ namespace TrekStories.Controllers
             {
                 TempData["message"] = "Please browse for a file to upload.";
             }
+            ViewBag.Create = false;
             return RedirectToAction("Edit", new { id = revId });
         }
 
