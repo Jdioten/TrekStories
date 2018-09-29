@@ -228,7 +228,7 @@ namespace TrekStories.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            int revId = imageToDelete.Review.ReviewId;
+            int revId = imageToDelete.ReviewId;
 
             //remove from database
             db.Images.Remove(imageToDelete);

@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
+using TrekStories.Utilities;
 
 namespace TrekStories.Controllers
 {
@@ -282,6 +283,16 @@ namespace TrekStories.Controllers
                     "Please first edit or delete the accommodation for the step.");
                 return RedirectToAction("Details", "Step", new { id = step.StepId });
             }
+            Review rev = step.Review;
+            if (rev != null)
+            {
+                if (rev.Images.Count > 0)
+                {
+                    TempData["message"] = string.Format("Step " + step.SequenceNo + " cannot be deleted because it is linked to a review with images. " +
+                    "Please first delete the images.");
+                    return RedirectToAction("Details", "Step", new { id = step.StepId });
+                }
+            }
             return View(step);
         }
 
@@ -290,7 +301,7 @@ namespace TrekStories.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Step stepToDelete = await db.Steps.Include(s => s.Trip).Include(s => s.Activities).SingleOrDefaultAsync(s => s.StepId == id);
+            Step stepToDelete = await db.Steps.Include(s => s.Trip).Include(s => s.Activities).Include(s => s.Review).SingleOrDefaultAsync(s => s.StepId == id);
             try
             {
                 if (stepToDelete == null)
@@ -323,6 +334,18 @@ namespace TrekStories.Controllers
                     stepToDelete.Trip.TotalCost -= item.Price;
                 }
 
+                Review rev = stepToDelete.Review;
+                if (rev != null)
+                {
+                    if (rev.Images.Count > 0)
+                    {
+                        TempData["message"] = string.Format("Step " + stepToDelete.SequenceNo + " cannot be deleted because it is linked to a review with images. " +
+                        "Please first delete the images.");
+                        return RedirectToAction("Details", "Step", new { id = stepToDelete.StepId });
+                    }
+                    db.Reviews.Remove(rev);
+                }      
+
                 db.Steps.Remove(stepToDelete);
                 await db.SaveChangesAsync();
             }
@@ -341,8 +364,6 @@ namespace TrekStories.Controllers
             }
             base.Dispose(disposing);
         }
-
-
 
         [NonAction]
         public List<ActivityThreadViewModel> CreateActivityThread(Step step)

@@ -16,30 +16,6 @@ namespace TrekStories.Controllers.Tests
     [TestClass()]
     public class ReviewControllerTests
     {
-        [TestMethod()]
-        public void ReviewControllerTest()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void ReviewControllerTest1()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void IndexTest()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void DetailsTest()
-        {
-            throw new NotImplementedException();
-        }
-
         [TestMethod]
         public async Task CanCreateReviewOnStep()
         {
@@ -94,12 +70,12 @@ namespace TrekStories.Controllers.Tests
         {
             // Arrange - create mock repository
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
-            // Arrange - create the controller
-            ReviewController controller = new ReviewController(tc);
             // Arrange - create a review
             Step step = new Step { StepId = 21, Trip = new Trip { TripId = 321, TripOwner = "ABC123" } };
             tc.Steps.Add(step);
             Review review = new Review() { StepId = 21, Step = step, PrivateNotes = "Test" };
+            // Arrange - create the controller
+            ReviewController controller = new ReviewController(tc).WithAuthenticatedUser("ABC123");
             // Arrange - add an error to the model state
             controller.ModelState.AddModelError("error", "error");
             // Act - try to save the review

@@ -85,32 +85,41 @@
 
         </dl>
 
-        <p>Including the following activities:&nbsp;
-            @if (Model.Activities.Count() == 0)
-            {
-                <span class="small">&nbsp;no activity included in step</span>
-            }
-            else
-            { 
+        @if (Model.Activities.Count() > 0)
+        {
+            <p>
+                Including the following activities:
                 <ul>
-                @{
-                    foreach (var act in Model.Activities.OrderBy(a => a.StartTime))
-                    {
-                        <li>@act.StartTime.ToShortTimeString() - @act.Name</li>
+                    @{
+                        foreach (var act in Model.Activities.OrderBy(a => a.StartTime))
+                        {
+                            <li>@act.StartTime.ToShortTimeString() - @act.Name</li>
+                        }
                     }
-                }
                 </ul>
-            }
-        </p>
+            </p>
+                        }
 
-            @using (Html.BeginForm())
+        @if (Model.Review != null)
+        {
+            <p>
+                Including the following review:
+                <ul>
+                    <li>@Model.Review.Rating / 5</li>
+                    <li>@Model.Review.PrivateNotes</li>
+                    <li>@Model.Review.PublicNotes</li>
+                </ul>
+            </p>
+        }
+
+        @using (Html.BeginForm())
             {
-                @Html.AntiForgeryToken()
+            @Html.AntiForgeryToken()
 
-                <div class="form-actions no-color">
-                    <input type="submit" value="Delete" class="btn btn-danger" /> |
-                    @Html.ActionLink("Back to Trip", "Details", "Trip", new { id = Model.TripId }, null)
-                </div>
-            }
-</div>
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-danger" /> |
+                @Html.ActionLink("Back to Trip", "Details", "Trip", new { id = Model.TripId }, null)
+            </div>
+        }
+    </div>
 </div>
