@@ -24,7 +24,7 @@ namespace TrekStories.Tests.UnitTestHelpers
             where T : Controller
         {
             var context = new Mock<HttpContextBase>();
-            var request = new Mock<HttpRequestBase>();
+            //var request = new Mock<HttpRequestBase>();
             var identity = new GenericIdentity(userId);
             identity.AddClaim(new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", userId));
             var principal = new GenericPrincipal(identity, new[] { "user" });

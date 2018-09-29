@@ -45,7 +45,7 @@ namespace TrekStories.Utilities
 
         public static String GetTimestamp(DateTime value)
         {
-            return value.ToString("yyyyMMddHHmmssff");
+            return value.ToString("yyyyMMddHHmmss");
         }
     }
 }

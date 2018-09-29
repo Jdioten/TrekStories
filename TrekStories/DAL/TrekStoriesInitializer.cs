@@ -11,20 +11,15 @@ namespace TrekStories.DAL
     {
         protected override void Seed(TrekStoriesContext context)
         {
-            var trips = new List<Trip>
-            {
-            new Trip{Title="GR201 in Mallorca", Country="Spain", TripCategory=TripCategory.coast,
-                StartDate = new DateTime(2015, 8, 2), TripOwner = "ABC123"},
-            new Trip{Title="Slieve Bloom Way", Country="Ireland", TripCategory=TripCategory.forest,
-                StartDate = new DateTime(2015, 4, 12), TripOwner = "ABC123"},
-            new Trip{Title="Cooley Peninsula", Country="Ireland", TripCategory=TripCategory.coast,
-                StartDate = new DateTime(2016, 4, 22), TripOwner = "ABC123"},
-            new Trip{Title="Zagori Circuit", Country="Greece", TripCategory=TripCategory.architecture,
-                StartDate = new DateTime(2016, 10, 7), TripOwner = "ABC123"},
-            };
+            //var trips = new List<Trip>
+            //{
+            //new Trip{Title="GR201 in Mallorca", Country="Spain", TripCategory=TripCategory.coast,
+            //    StartDate = new DateTime(2015, 8, 2), TripOwner = "ABC123"},
+            //new Trip{Title="Slieve Bloom Way", Country="Ireland", TripCategory=TripCategory.forest,
+            //    StartDate = new DateTime(2015, 4, 12), TripOwner = "ABC123"},
 
-            trips.ForEach(t => context.Trips.Add(t));
-            context.SaveChanges();
+            //trips.ForEach(t => context.Trips.Add(t));
+            //context.SaveChanges();
         }
     }
 }
