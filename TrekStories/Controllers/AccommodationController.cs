@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,6 +11,7 @@ using TrekStories.DAL;
 using TrekStories.Models;
 using System.Data.Entity.Infrastructure;
 using Microsoft.AspNet.Identity;
+using TrekStories.Utilities;
 
 namespace TrekStories.Controllers
 {
@@ -76,7 +76,7 @@ namespace TrekStories.Controllers
                     break;
             }
 
-            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+            ViewBag.Currency = CurrencyHelper.GetCurrency();
             return View(tripAccommodations.ToList());
         }
 
@@ -102,7 +102,7 @@ namespace TrekStories.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+            ViewBag.Currency = CurrencyHelper.GetCurrency();
             ViewBag.TripId = id;
 
             //pass in steps dates as default
@@ -130,6 +130,8 @@ namespace TrekStories.Controllers
                 {
                     //if before trip start date -> error
                     int tripId = Int32.Parse(accommodation.ConfirmationFileUrl); //temporarily storing tripid in confirmationurl
+
+                    //extract to different method that could apply to different controllers!
                     Trip trip = await db.Trips.FindAsync(tripId);
                     if (trip.TripOwner != User.Identity.GetUserId())
                     {
@@ -137,6 +139,10 @@ namespace TrekStories.Controllers
                                 new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add an accommodation to it."),
                                 "Trip", "Index"));
                     }
+
+
+
+
                     if (accommodation.CheckIn < trip.StartDate)
                     {
                         ModelState.AddModelError("", "The check-in date is before the trip start date (" + trip.StartDate.ToShortDateString() + "). Please correct.");
@@ -156,6 +162,8 @@ namespace TrekStories.Controllers
                             ViewBag.CheckOut = String.Format("{0:dd-MM-yyyy hh:mm tt}", accommodation.CheckOut);
                             return View(accommodation);
                         }
+
+                        //put below within try to be able to delete repetitive viewbag lines
                         accommodation.ConfirmationFileUrl = null;
                         db.Accommodations.Add(accommodation);
 
@@ -352,10 +360,7 @@ namespace TrekStories.Controllers
                 {
                     throw new ArgumentException("An accommodation already exists for Step " + step.SequenceNo);
                 }
-                else
-                {
-                    step.AccommodationId = acc.AccommodationId;
-                }
+                step.AccommodationId = acc.AccommodationId;
             }
         }
     }

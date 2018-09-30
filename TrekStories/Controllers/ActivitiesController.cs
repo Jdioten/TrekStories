@@ -2,13 +2,13 @@
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Globalization;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
+using TrekStories.Utilities;
 
 namespace TrekStories.Controllers
 {
@@ -69,7 +69,7 @@ namespace TrekStories.Controllers
             ViewBag.StepId = stepId;
             ViewBag.From = step.From;
             ViewBag.To = step.To;
-            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+            ViewBag.Currency = CurrencyHelper.GetCurrency();
             return View("EditLeisure", new LeisureActivity());
         }
 
@@ -89,7 +89,7 @@ namespace TrekStories.Controllers
             ViewBag.StepId = stepId;
             ViewBag.From = step.From;
             ViewBag.To = step.To;
-            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+            ViewBag.Currency = CurrencyHelper.GetCurrency();
             return View("EditTransport", new Transport());
         }
 
@@ -111,7 +111,7 @@ namespace TrekStories.Controllers
             ViewBag.StepId = activity.StepId;
             ViewBag.From = activity.Step.From;
             ViewBag.To = activity.Step.To;
-            ViewBag.Currency = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+            ViewBag.Currency = CurrencyHelper.GetCurrency();
             if (activity is LeisureActivity)
             {
                 return View("EditLeisure", activity);

@@ -11,8 +11,6 @@ namespace TrekStories.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Trek Stories help passionate hikers organise their hiking trips around the world.";
-
             return View();
         }
 

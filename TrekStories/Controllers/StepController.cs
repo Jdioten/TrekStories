@@ -370,16 +370,16 @@ namespace TrekStories.Controllers
         {
             List<ActivityThreadViewModel> activityThread = new List<ActivityThreadViewModel>();
 
-            AddLeisureToActivityThread(ref activityThread, step);
+            AddLeisureToActivityThread(ref activityThread, step.StepId);
             AddTransportToActivityThread(ref activityThread, step);
             AddAccommodationToActivityThread(ref activityThread, step);
 
             return activityThread.OrderBy(a => a.StartTime.TimeOfDay).ToList();
         }
 
-        private void AddLeisureToActivityThread(ref List<ActivityThreadViewModel> activityThread, Step step)
+        private void AddLeisureToActivityThread(ref List<ActivityThreadViewModel> activityThread, int stepId)
         {
-            foreach (LeisureActivity activity in db.Activities.OfType<LeisureActivity>().Where(a => a.StepId == step.StepId).ToList())
+            foreach (LeisureActivity activity in db.Activities.OfType<LeisureActivity>().Where(a => a.StepId == stepId).ToList())
             {
                 activityThread.Add(new ActivityThreadViewModel
                 {
@@ -387,7 +387,7 @@ namespace TrekStories.Controllers
                     StartTime = activity.StartTime,
                     Name = activity.Name,
                     Price = activity.Price,
-                    Icon = GetIcon(activity.LeisureCategory.ToString()),
+                    Icon = GetLeisureIcon(activity.LeisureCategory.ToString()),
                     Controller = "Activities"
                 });
             }
@@ -395,38 +395,44 @@ namespace TrekStories.Controllers
 
         private void AddTransportToActivityThread(ref List<ActivityThreadViewModel> activityThread, Step step)
         {
-            var stepActivities = db.Activities.OfType<Transport>().Where(a => a.StepId == step.StepId).ToList();
-            foreach (Transport activity in stepActivities)
-            {
-                activityThread.Add(new ActivityThreadViewModel
-                {
-                    ID = activity.ID,
-                    StartTime = activity.StartTime,
-                    Name = activity.Name,
-                    Price = activity.Price,
-                    Icon = GetIcon(activity.TransportType.ToString()),
-                    ArrivalTime = activity.GetArrivalTime(),
-                    Controller = "Activities"
-                });
-            }
+            var transportActivities = db.Activities.OfType<Transport>();
 
+            var stepActivities = transportActivities.Where(a => a.StepId == step.StepId).ToList();
+            AddStepTransport(ref activityThread, stepActivities, false);
+            
             var transportsArrivingOnDay = (from s in step.Trip.Steps
-                                           join a in db.Activities.OfType<Transport>()
+                                           join a in transportActivities
                                            on s.StepId equals a.StepId
                                            where a.GetArrivalTime().Date == step.Date.Date
-                                           select a).Except(stepActivities);
-            foreach (Transport activity in transportsArrivingOnDay.ToList())
+                                           select a).Except(stepActivities).ToList();
+            AddStepTransport(ref activityThread, transportsArrivingOnDay, true);
+        }
+
+        private void AddStepTransport(ref List<ActivityThreadViewModel> activityThread, List<Transport> stepTransport, bool arrival)
+        {
+            foreach (Transport activity in stepTransport)
             {
-                activityThread.Add(new ActivityThreadViewModel
+                ActivityThreadViewModel activityVm = new ActivityThreadViewModel
                 {
                     ID = activity.ID,
-                    StartTime = activity.GetArrivalTime(),
-                    Name = "Arrival " + activity.Name,
                     Price = activity.Price,
-                    Icon = GetIcon(activity.TransportType.ToString()),
-                    ArrivalTime = null,
+                    Icon = GetTransportIcon(activity.TransportType.ToString()),
                     Controller = "Activities"
-                });
+                };
+
+                if (arrival)
+                {
+                    activityVm.StartTime = activity.GetArrivalTime();
+                    activityVm.Name = "Arrival " + activity.Name;
+                    activityVm.ArrivalTime = null;
+                }
+                else
+                {
+                    activityVm.StartTime = activity.StartTime;
+                    activityVm.Name = activity.Name;
+                    activityVm.ArrivalTime = activity.GetArrivalTime();
+                }
+                activityThread.Add(activityVm);
             }
         }
 
@@ -435,22 +441,32 @@ namespace TrekStories.Controllers
             //Add check-in if happening on step date
             if (step.Accommodation != null)
             {
-                //needs to search in accommodations for matching check-in
-                if (step.Accommodation.CheckIn.Date == step.Date.Date)
-                {
-                    activityThread.Add(new ActivityThreadViewModel
-                    {
-                        ID = step.Accommodation.AccommodationId,
-                        StartTime = step.Accommodation.CheckIn,
-                        Name = "Check-In at " + step.Accommodation.Name,
-                        Price = step.Accommodation.Price,
-                        Icon = "fas fa-bed",
-                        Controller = "Accommodation"
-                    });
-                }
+                AddChekInToActivityThread(ref activityThread, step.Accommodation, step.Date);
             }
 
             //Add check-out if happening on step date
+            AddChekOutToActivityThread(ref activityThread, step);
+        }
+
+        private void AddChekInToActivityThread(ref List<ActivityThreadViewModel> activityThread, Accommodation accommodation, DateTime date)
+        {
+            //needs to search in accommodations for matching check-in
+            if (accommodation.CheckIn.Date == date.Date)
+            {
+                activityThread.Add(new ActivityThreadViewModel
+                {
+                    ID = accommodation.AccommodationId,
+                    StartTime = accommodation.CheckIn,
+                    Name = "Check-In at " + accommodation.Name,
+                    Price = accommodation.Price,
+                    Icon = "fas fa-bed",
+                    Controller = "Accommodation"
+                });
+            }
+        }
+
+        private void AddChekOutToActivityThread(ref List<ActivityThreadViewModel> activityThread, Step step)
+        {
             var tripAccommodation = (from s in step.Trip.Steps
                                      join a in db.Accommodations
                                      on s.AccommodationId equals a.AccommodationId
@@ -470,7 +486,7 @@ namespace TrekStories.Controllers
             }
         }
 
-        public string GetIcon(string type)
+        public string GetTransportIcon(string type)
         {
             switch (type)
             {
@@ -486,6 +502,14 @@ namespace TrekStories.Controllers
                 case "bike": return "fas fa-bicycle";
                 case "foot": return "fas fa-walking";
 
+                default: return "";
+            }
+        }
+
+        public string GetLeisureIcon(string type)
+        {
+            switch (type)
+            {
                 case "aquatic": return "fas fa-swimmer";
                 case "sports": return "fas fa-dribbble";
                 case "musical": return "fas fa-music";
