@@ -3,6 +3,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace TrekStories.Utilities
@@ -18,16 +19,16 @@ namespace TrekStories.Utilities
             return container;
         }
 
-        public CloudBlockBlob UploadBlob(string blobName, string containerName, Stream stream)
+        public async Task<string> UploadBlobAsync(string blobName, string containerName, Stream stream)
         {
             CloudBlobContainer container = GetCloudBlobContainer(containerName);
-            container.CreateIfNotExists(BlobContainerPublicAccessType.Container, null, null);
+            await container.CreateIfNotExistsAsync(BlobContainerPublicAccessType.Container, null, null);
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
 
             try
             {
-                blockBlob.UploadFromStream(stream);
-                return blockBlob;
+                await blockBlob.UploadFromStreamAsync(stream);
+                return blockBlob.Uri.ToString();
             }
             catch (Exception e)
             {
@@ -35,11 +36,11 @@ namespace TrekStories.Utilities
             }
         }
 
-        public void DeleteBlob(string blobName, string containerName)
+        public async Task DeleteBlobAsync(string blobName, string containerName)
         {
             CloudBlobContainer container = GetCloudBlobContainer(containerName);
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
-            blockBlob.DeleteIfExists();
+            await blockBlob.DeleteIfExistsAsync();
         }
     }
 }

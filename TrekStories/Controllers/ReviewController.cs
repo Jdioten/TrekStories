@@ -165,7 +165,7 @@ namespace TrekStories.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> UploadImage(HttpPostedFileBase file, int revId)
+        public async Task<ActionResult> UploadImageAsync(HttpPostedFileBase file, int revId)
         {
             if (file != null)
             { 
@@ -194,18 +194,18 @@ namespace TrekStories.Controllers
                     string fileName = FileUploadUtility.GetFilenameWithTimestamp(file.FileName);
 
                     Stream imageStream = file.InputStream;
-                    CloudBlockBlob result;
+                    string result;
 
                     try
                     {
-                        result = utility.UploadBlob(fileName, IMAGES_CONTAINER_NAME, imageStream);    
+                        result = await utility.UploadBlobAsync(fileName, IMAGES_CONTAINER_NAME, imageStream);    
                     }
                     catch (Exception e)
                     {
                         TempData["message"] = e.Message;
                         return RedirectToAction("Edit", new { id = revId });
                     }
-                    Image uploadedImage = new Image { ReviewId = review.ReviewId, Url = result.Uri.ToString() };
+                    Image uploadedImage = new Image { ReviewId = review.ReviewId, Url = result };
                     db.Images.Add(uploadedImage);
                     db.SaveChanges();
                 } 
@@ -220,7 +220,7 @@ namespace TrekStories.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteImage(int ImgId)
+        public async Task<ActionResult> DeleteImageAsync(int ImgId)
         {
             Image imageToDelete = await db.Images.FindAsync(ImgId);
 
@@ -239,7 +239,7 @@ namespace TrekStories.Controllers
 
             try
             {
-                utility.DeleteBlob(blobNameToDelete, IMAGES_CONTAINER_NAME);
+                await utility.DeleteBlobAsync(blobNameToDelete, IMAGES_CONTAINER_NAME);
             }
             catch (Exception e)
             {

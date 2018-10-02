@@ -74,7 +74,7 @@
     <div class="@hidden">
         <br />
         <div class="row">
-            @using (Html.BeginForm("UploadImage", "Review", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("UploadImageAsync", "Review", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 <div class="panel panel-trekstories">
                     <div class="panel-heading">
@@ -106,7 +106,7 @@
                         <a class="thumbnail rev-img-thumb" href="@item.Url" target="_blank">
                             <img class="img-responsive" src="@item.Url" style="height: 300px;width:100%;" alt="">
                         </a>
-                        @using (Html.BeginForm("DeleteImage", "Review", FormMethod.Post, new { @class = "btn btn-default btn-block no-padding" }))
+                        @using (Html.BeginForm("DeleteImageAsync", "Review", FormMethod.Post, new { @class = "btn btn-default btn-block no-padding" }))
                     {
                             @Html.AntiForgeryToken()
                             @Html.Hidden("ImgId", item.Id)
