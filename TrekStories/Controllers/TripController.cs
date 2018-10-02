@@ -280,10 +280,20 @@ namespace TrekStories.Controllers
             return new RotativaHQ.MVC5.ViewAsPdf("Summary", tripSteps) { FileName = "TripSummary.pdf" };
         }
 
-        [AllowAnonymous]
         public async Task<ActionResult> GetSouvenirReport(int id)
         {
-            throw new NotImplementedException();
+            Trip trip = await db.Trips.Include(t => t.Steps).SingleOrDefaultAsync(t => t.TripId == id);
+            if (trip == null)
+            {
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again."),
+                                "Trip", "Index"));
+            }
+            ViewBag.TripTitle = trip.Title;
+
+            var tripSteps = trip.Steps.OrderBy(s => s.SequenceNo).ToList();
+
+            return new RotativaHQ.MVC5.ViewAsPdf("Souvenir", tripSteps) { FileName = "SouvenirReport.pdf" };
         }
     }
 }

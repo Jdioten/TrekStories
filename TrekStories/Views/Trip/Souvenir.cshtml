@@ -1,0 +1,54 @@
+﻿@using TrekStories.Models
+@model IEnumerable<TrekStories.Models.Step>
+
+@{
+    Layout = null;
+    ViewBag.Title = "Souvenir Report";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Trek Stories</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="mycontainer">
+        <h2 class="text-center">@ViewBag.TripTitle</h2>
+        <br />
+        @foreach (var step in Model)
+        {
+            <p>
+                <strong><u>@step.Date.ToLongDateString()</u></strong> / From @step.From to @step.To &nbsp;
+                @if (step.Review != null)
+                {
+                    for (int i = 0; i < step.Review.Rating; i++)
+                    {
+                        <span class="glyphicon glyphicon-star"></span>
+                    }
+                }
+            </p>
+            if (step.Review != null)
+            {
+                <p><em>@step.Review.PrivateNotes</em></p>
+                <p class="description">@step.Review.PublicNotes</p>
+                if (step.Review.Images.Count > 0)
+                {
+                    <div class="row">
+                        @foreach (var img in step.Review.Images)
+                        {
+                        <div class="col-sm-4">
+                                <img class="img-responsive" src="@img.Url">
+                        </div>
+                        }
+                    </div>
+                }
+            }
+            <br />
+        }
+    </div>
+</body>
+</html>
