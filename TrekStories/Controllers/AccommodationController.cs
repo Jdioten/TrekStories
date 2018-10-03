@@ -12,6 +12,8 @@ using TrekStories.Models;
 using System.Data.Entity.Infrastructure;
 using Microsoft.AspNet.Identity;
 using TrekStories.Utilities;
+using System.Web;
+using System.IO;
 
 namespace TrekStories.Controllers
 {
@@ -19,13 +21,20 @@ namespace TrekStories.Controllers
     [Authorize]
     public class AccommodationController : Controller
     {
-        private ITrekStoriesContext db = new TrekStoriesContext();
+        private const string BOOKING_CONTAINER_NAME = "trekstories-bookingconfirm-blobcontainer";
 
-        public AccommodationController() { }
+        private ITrekStoriesContext db = new TrekStoriesContext();
+        private BlobUtility utility;
+
+        public AccommodationController()
+        {
+            utility = new BlobUtility();
+        }
 
         public AccommodationController(ITrekStoriesContext context)
         {
             db = context;
+            utility = new BlobUtility();
         }
 
         // GET: Accommodation
@@ -141,8 +150,6 @@ namespace TrekStories.Controllers
                     }
 
 
-
-
                     if (accommodation.CheckIn < trip.StartDate)
                     {
                         ModelState.AddModelError("", "The check-in date is before the trip start date (" + trip.StartDate.ToShortDateString() + "). Please correct.");
@@ -206,7 +213,7 @@ namespace TrekStories.Controllers
         // POST: Accommodation/Edit/5
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditPost(int? id)
+        public async Task<ActionResult> EditPost(int? id, HttpPostedFileBase file)
         {
             if (id == null)
             {
@@ -260,7 +267,6 @@ namespace TrekStories.Controllers
                                     oldStep.AccommodationId = null;
                                 }
                             }
-
                         }
                         catch (ArgumentException ex)
                         {
@@ -269,6 +275,22 @@ namespace TrekStories.Controllers
                             return View(accommodationToUpdate);
                         }
                     }
+
+                    if (file != null)
+                    {
+                        file = file ?? Request.Files["ConfirmationFileUrl"];
+
+                        try
+                        {
+                            accommodationToUpdate.ConfirmationFileUrl = await utility.UploadBlobAsync(file, BOOKING_CONTAINER_NAME);
+                        }
+                        catch (Exception e)
+                        {
+                            TempData["message"] = e.Message;
+                            return View(accommodationToUpdate);
+                        }
+                    }
+
                     //update trip budget
                     trip.TotalCost = trip.TotalCost - oldPrice + accommodationToUpdate.Price;
 

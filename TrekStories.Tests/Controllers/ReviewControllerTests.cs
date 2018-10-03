@@ -207,7 +207,7 @@ namespace TrekStories.Controllers.Tests
         public async Task CannotUploadNullImage()
         {
             ReviewController controller = new ReviewController();
-            var result = await controller.UploadImage(null, 1) as ViewResult;
+            var result = await controller.UploadImageAsync(null, 1) as ViewResult;
             Assert.AreEqual("Please browse for a file to upload.", controller.TempData["message"]);
         }
 
@@ -215,7 +215,7 @@ namespace TrekStories.Controllers.Tests
         public async Task CannotUploadImageWithInvalidSize()
         {
             ReviewController controller = new ReviewController();
-            var result = await controller.UploadImage(new TestPostedFileBase(7168001), 1) as ViewResult;
+            var result = await controller.UploadImageAsync(new TestPostedFileBase(7168001), 1) as ViewResult;
             Assert.AreEqual("The file cannot be bigger than 7MB.", controller.TempData["message"]);
         }
 
@@ -223,7 +223,7 @@ namespace TrekStories.Controllers.Tests
         public async Task CannotUploadImageWithInvalidExtension()
         {
             ReviewController controller = new ReviewController();
-            var result = await controller.UploadImage(new TestPostedFileBase("test.js"), 1) as ViewResult;
+            var result = await controller.UploadImageAsync(new TestPostedFileBase("test.js"), 1) as ViewResult;
             Assert.AreEqual("The file type is not authorized for upload.", controller.TempData["message"]);
         }
 
@@ -263,7 +263,7 @@ namespace TrekStories.Controllers.Tests
             tc.Images.Add(image1);
             ReviewController controller = new ReviewController(tc);
 
-            var result = await controller.DeleteImage(25) as RedirectToRouteResult;
+            var result = await controller.DeleteImageAsync(25) as RedirectToRouteResult;
 
             Assert.AreEqual("Edit", result.RouteValues["action"]);
             Assert.IsNull(tc.Images.Find(25));

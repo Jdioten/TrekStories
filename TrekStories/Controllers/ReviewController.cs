@@ -168,47 +168,30 @@ namespace TrekStories.Controllers
         public async Task<ActionResult> UploadImageAsync(HttpPostedFileBase file, int revId)
         {
             if (file != null)
-            { 
+            {
                 file = file ?? Request.Files["file"];
 
-                //check file size and extension
-                if (FileUploadUtility.InvalidFileSize(file))
+                Review review = await db.Reviews.FindAsync(revId);
+                if (review == null)
                 {
-                    TempData["message"] = "The file cannot be bigger than 7MB.";
+                    return View("CustomisedError", new HandleErrorInfo(
+                            new UnauthorizedAccessException("Oops, the review you want to add images to does not exist."),
+                            "Trip", "Index"));
                 }
-                else if (FileUploadUtility.InvalidFileExtension(file))
+
+                string result;
+                try
                 {
-                    TempData["message"] = "The file type is not authorized for upload.";
+                    result = await utility.UploadBlobAsync(file, IMAGES_CONTAINER_NAME);
                 }
-                else
+                catch (Exception e)
                 {
-                    Review review = await db.Reviews.FindAsync(revId);
-                    if (review == null)
-                    {
-                        return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the review you want to add images to does not exist."),
-                                "Trip", "Index"));
-                    }
-
-                    //build filename with timestamp to reduce risk of duplicates
-                    string fileName = FileUploadUtility.GetFilenameWithTimestamp(file.FileName);
-
-                    Stream imageStream = file.InputStream;
-                    string result;
-
-                    try
-                    {
-                        result = await utility.UploadBlobAsync(fileName, IMAGES_CONTAINER_NAME, imageStream);    
-                    }
-                    catch (Exception e)
-                    {
-                        TempData["message"] = e.Message;
-                        return RedirectToAction("Edit", new { id = revId });
-                    }
-                    Image uploadedImage = new Image { ReviewId = review.ReviewId, Url = result };
-                    db.Images.Add(uploadedImage);
-                    db.SaveChanges();
-                } 
+                    TempData["message"] = e.Message;
+                    return RedirectToAction("Edit", new { id = revId });
+                }
+                Image uploadedImage = new Image { ReviewId = review.ReviewId, Url = result };
+                db.Images.Add(uploadedImage);
+                db.SaveChanges();
             }
             else
             {

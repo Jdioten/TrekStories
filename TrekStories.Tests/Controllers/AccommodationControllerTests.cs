@@ -228,7 +228,7 @@ namespace TrekStories.Controllers.Tests
             }).WithAuthenticatedUser("ABC123");
 
             // Act - try to save the accommodation
-            var result = await controller.EditPost(1) as RedirectToRouteResult;
+            var result = await controller.EditPost(1, null) as RedirectToRouteResult;
             Trip updatedTrip = tc.Trips.Find(11);
 
             // Assert - check the method result type
@@ -256,7 +256,7 @@ namespace TrekStories.Controllers.Tests
             }).WithAuthenticatedUser("ABC123");
 
             // Act - try to save the accommodation
-            var result = await controller.EditPost(1) as ViewResult;
+            var result = await controller.EditPost(1, null) as ViewResult;
 
             // Assert - check the method result type
             Assert.IsFalse(result.ViewData.ModelState.IsValid);
@@ -293,7 +293,7 @@ namespace TrekStories.Controllers.Tests
             }).WithAuthenticatedUser("ABC123");
 
             // Act - try to save the activity
-            var result = await controller.EditPost(1) as ViewResult;
+            var result = await controller.EditPost(1, null) as ViewResult;
 
             // Assert - check the method result type
             Assert.IsInstanceOfType(result, typeof(ViewResult));

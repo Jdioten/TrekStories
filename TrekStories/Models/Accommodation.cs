@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Web;
 
 namespace TrekStories.Models
 {
@@ -41,6 +43,9 @@ namespace TrekStories.Models
         [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:c}")]
         [Range(0, double.MaxValue, ErrorMessage = "Please enter a positive price.")]
         public double Price { get; set; }
+
+        [NotMapped]
+        public HttpPostedFileBase File { get; set; }
 
 
         public bool IsCheckInBeforeCheckOut()

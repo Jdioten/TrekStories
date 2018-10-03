@@ -142,7 +142,10 @@
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.Accommodation.ConfirmationFileUrl)
+                        @if (Model.Accommodation.ConfirmationFileUrl != null)
+                        {
+                            <a href="@Model.Accommodation.ConfirmationFileUrl" target="_blank">View file</a>
+                        }                 
                     </dd>
                 </dl>
             </div>

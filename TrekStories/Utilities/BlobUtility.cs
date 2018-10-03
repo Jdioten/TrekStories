@@ -19,15 +19,29 @@ namespace TrekStories.Utilities
             return container;
         }
 
-        public async Task<string> UploadBlobAsync(string blobName, string containerName, Stream stream)
+        public async Task<string> UploadBlobAsync(HttpPostedFileBase file, string containerName)
         {
+            //check file size and extension
+            if (FileUploadUtility.InvalidFileSize(file))
+            {
+                throw new FileLoadException("The file cannot be bigger than 7MB.");
+            }
+            if (FileUploadUtility.InvalidFileExtension(file))
+            {
+                throw new FileLoadException("The file type is not authorized for upload.");
+            }
+
             CloudBlobContainer container = GetCloudBlobContainer(containerName);
-            await container.CreateIfNotExistsAsync(BlobContainerPublicAccessType.Container, null, null);
+            await container.CreateIfNotExistsAsync(BlobContainerPublicAccessType.Blob, null, null);
+
+            //build filename with timestamp to reduce risk of duplicates 
+            string blobName = FileUploadUtility.GetFilenameWithTimestamp(file.FileName);
+
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
 
             try
             {
-                await blockBlob.UploadFromStreamAsync(stream);
+                await blockBlob.UploadFromStreamAsync(file.InputStream);
                 return blockBlob.Uri.ToString();
             }
             catch (Exception e)
