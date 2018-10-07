@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
-using Microsoft.WindowsAzure.Storage.Blob;
 using System;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
@@ -178,6 +175,12 @@ namespace TrekStories.Controllers
                             new UnauthorizedAccessException("Oops, the review you want to add images to does not exist."),
                             "Trip", "Index"));
                 }
+                if (review.Step.Trip.TripOwner != User.Identity.GetUserId())
+                {
+                    return View("CustomisedError", new HandleErrorInfo(
+                                    new UnauthorizedAccessException("Oops, this review doesn't seem to be yours, you cannot add images to it."),
+                                    "Trip", "Index"));
+                }
 
                 string result;
                 try
@@ -213,16 +216,21 @@ namespace TrekStories.Controllers
             }
             int revId = imageToDelete.ReviewId;
 
+            if (imageToDelete.Review.Step.Trip.TripOwner != User.Identity.GetUserId())
+            {
+                return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this review doesn't seem to be yours, you cannot delete its images."),
+                                "Trip", "Index"));
+            }
+
             //remove from database
             db.Images.Remove(imageToDelete);
             db.SaveChanges();
 
             //remove from Cloud Storage
-            string blobNameToDelete = imageToDelete.Url.Split('/').Last();
-
             try
             {
-                await utility.DeleteBlobAsync(blobNameToDelete, IMAGES_CONTAINER_NAME);
+                await utility.DeleteBlobAsync(imageToDelete.Url, IMAGES_CONTAINER_NAME);
             }
             catch (Exception e)
             {

@@ -25,6 +25,9 @@ namespace TrekStories.Controllers
             db = context;
         }
 
+        const string NULL_ACTIVITY_ERROR = "Oops, the activity you are looking for doesn't seem to exist. Please try navigating to the main page again.";
+        const string NULL_STEP_ERROR = "Oops, the step you want to add an activity to doesn't seem to exist. Please try navigating to the main page again.";
+
         // GET: Activities
         //public async Task<ActionResult> Index()
         //{
@@ -38,9 +41,7 @@ namespace TrekStories.Controllers
             var activity = await db.Activities.FindAsync(id);
             if (activity == null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the activity you are looking for doesn't seem to exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                return View("CustomisedError", new HandleErrorInfo( new UnauthorizedAccessException(NULL_ACTIVITY_ERROR), "Trip", "Index"));
             }
             if (activity is LeisureActivity)
             {
@@ -62,9 +63,7 @@ namespace TrekStories.Controllers
             Step step = await db.Steps.FindAsync(stepId);
             if (step == null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the activity you are looking for doesn't seem to exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(NULL_STEP_ERROR), "Trip", "Index"));
             }
             ViewBag.StepId = stepId;
             ViewBag.From = step.From;
@@ -82,9 +81,7 @@ namespace TrekStories.Controllers
             Step step = await db.Steps.FindAsync(stepId);
             if (step == null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the activity you are looking for doesn't seem to exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(NULL_STEP_ERROR), "Trip", "Index"));
             }
             ViewBag.StepId = stepId;
             ViewBag.From = step.From;
@@ -103,9 +100,7 @@ namespace TrekStories.Controllers
             var activity = await db.Activities.FindAsync(id);
             if (activity == null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the activity you are looking for doesn't seem to exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(NULL_ACTIVITY_ERROR), "Trip", "Index"));
             }
             
             ViewBag.StepId = activity.StepId;
