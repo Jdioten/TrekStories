@@ -19,126 +19,133 @@ body {
     max-height: 65.5px;
 }
 
-.navbar-inverse {
-    background-color: #f0eceb;
-    border-color: #283018;
+@media (max-width: 768px) {
+    .navbar {
+        max-height: none;
+    }
 }
 
-.navbar-inverse .navbar-brand {
-        color: #141b13;
+    .navbar-inverse {
+        background-color: #f0eceb;
+        border-color: #283018;
     }
 
-.navbar-inverse .navbar-text {
-        color: #283018;
+        .navbar-inverse .navbar-brand {
+            color: #141b13;
+        }
+
+        .navbar-inverse .navbar-text {
+            color: #283018;
+        }
+
+        .navbar-inverse .navbar-nav > li > a {
+            color: #283018;
+        }
+
+    .big-search {
+        font-size: 20px;
     }
 
-.navbar-inverse .navbar-nav > li > a {
-        color: #283018;
+    /* --- Footer Styling --- */
+    html {
+        height: 100%;
+        box-sizing: border-box;
     }
 
-.big-search{
-    font-size: 20px;
-}
+    *,
+    *:before,
+    *:after {
+        box-sizing: inherit;
+    }
 
-/* --- Footer Styling --- */
-html {
-    height: 100%;
-    box-sizing: border-box;
-}
+    body {
+        position: relative;
+        margin: 0;
+        padding-top: 40px;
+        padding-bottom: 6rem; /*check if ok with all pages?*/
+        min-height: 100%;
+        /*font-family: "Helvetica Neue", Arial, sans-serif;*/
+    }
 
-*,
-*:before,
-*:after {
-    box-sizing: inherit;
-}
+    #outer {
+        margin: 0 auto;
+    }
 
-body {
-    position: relative;
-    margin: 0;
-    padding-top: 40px;
-    padding-bottom: 6rem; /*check if ok with all pages?*/
-    min-height: 100%;
-    /*font-family: "Helvetica Neue", Arial, sans-serif;*/
-}
+    footer {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        /*padding: 1rem;*/
+        width: 100%;
+        background: #242b15; /*#283018;*/
+        border-top: 1px solid black;
+        padding-top: 15px;
+        color: #f0eceb;
+    }
 
-#outer {
-    margin: 0 auto;
-}
+        footer ul {
+            list-style-type: none;
+        }
 
-footer {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    /*padding: 1rem;*/
-    width: 100%;
-    background: #242b15; /*#283018;*/
-    border-top: 1px solid black;
-    padding-top: 15px;
-    color: #f0eceb;
-}
-
-footer ul {
-    list-style-type: none;
-}
-footer ul li {
-    display: inline;
-}
+            footer ul li {
+                display: inline;
+            }
 
 
-/* --- Form Styling --- */
-#form-container {
-    background-image: linear-gradient(to top, rgba(205, 156, 242, 0.40) 0%, rgba(246, 255, 255, 0.71) 100%);
-    box-shadow: 0 15px 30px 1px rgba(128, 128, 128, 0.31);
-    border-radius: 5px;
-    margin: 3em auto;
-    background: rgba(255, 255, 255, 0.75);
-    padding: 1em;
-}
+    /* --- Form Styling --- */
+    #form-container {
+        background-image: linear-gradient(to top, rgba(205, 156, 242, 0.40) 0%, rgba(246, 255, 255, 0.71) 100%);
+        box-shadow: 0 15px 30px 1px rgba(128, 128, 128, 0.31);
+        border-radius: 5px;
+        margin: 3em auto;
+        background: rgba(255, 255, 255, 0.75);
+        padding: 1em;
+    }
 
-input, select, textarea {
-    max-width: 450px;
-}
+    input, select, textarea {
+        max-width: 450px;
+    }
 
-.form-control::-moz-placeholder {
-    color: #7d7d7d;
-    opacity: 1;
-}
+    .form-control::-moz-placeholder {
+        color: #7d7d7d;
+        opacity: 1;
+    }
 
-.form-control:-ms-input-placeholder {
-    color: #7d7d7d;
-}
+    .form-control:-ms-input-placeholder {
+        color: #7d7d7d;
+    }
 
-.form-control::-webkit-input-placeholder {
-    color: #7d7d7d;
-}
+    .form-control::-webkit-input-placeholder {
+        color: #7d7d7d;
+    }
 
-.input-group-addon {
-    border-left: 0;
-    border-right: 0;
-}
+    .input-group-addon {
+        border-left: 0;
+        border-right: 0;
+    }
 
-/* --- Search Box Styling --- */
-.search-box{
-    text-align:right;
-    margin-bottom:10px;
-    margin-top:0px;
-    padding-top:0px;
-}
+    /* --- Search Box Styling --- */
+    .search-box {
+        text-align: right;
+        margin-bottom: 10px;
+        margin-top: 0px;
+        padding-top: 0px;
+    }
 
-.search-box input {
-    max-width:180px;
-}
-/* --- Button Styling --- */
-.btn-trekstories {
-    color: white /*#141b13*/;
-    background-color: #668f88;
-    border-color: #cccccc; /*#f0eceb;*/
-}
+        .search-box input {
+            max-width: 180px;
+        }
+    /* --- Button Styling --- */
+    .btn-trekstories {
+        color: white /*#141b13*/;
+        background-color: #668f88;
+        border-color: #cccccc; /*#f0eceb;*/
+    }
 
-#activity-menu btn-trekstories {
-    background-color: #9ebaae;
-}
+    #activity-menu btn-trekstories {
+        background-color: #9ebaae;
+    }
 
     .btn-trekstories:hover,
     .btn-trekstories:focus,
@@ -150,214 +157,218 @@ input, select, textarea {
         border-color: #adadad;
     }
 
-.btn-trekstories:active,
-.btn-trekstories.active,
-.open .dropdown-toggle.btn-trekstories {
-    background-image: none;
-}
-
-.btn-default {
-    color: #202613;
-}
-
-
-/* --- Blockquote Styling --- */
-
-blockquote {
-    margin: 0 0 1rem;
-    margin-bottom: 1rem;
-    font-style: italic;
-    border-left: none;
-}
-
-blockquote small {
-        color: #868e96;
+    .btn-trekstories:active,
+    .btn-trekstories.active,
+    .open .dropdown-toggle.btn-trekstories {
+        background-image: none;
     }
 
-.jumbotron {
-    padding-bottom: 15px;
-}
-
-.jumbotron p {
-    margin-bottom: 15px;
-    font-size: 16px;
-}
-
-.mb-0{
-    margin-bottom: 0 !important;
-}
-
-/* --- Tooltip Styling --- */
-
-.mytooltip {
-    position: relative;
-    display: inline-block;
-}
-
-    .mytooltip .mytooltiptext {
-        visibility: hidden;
-        width: 140px;
-        background-color: #242b15;
-        color: #fff;
-        text-align: center;
-        padding: 5px 0;
-        border-radius: 6px;
-        position: absolute;
-        z-index: 1;
-        bottom: 180%;
-        left: 50%;
-        margin-left: -70px;
+    .btn-default {
+        color: #202613;
     }
 
-.mytooltip:hover .mytooltiptext {
-        visibility: visible;
-}
 
-.mytooltip .mytooltiptext::after {
-        content: " ";
-        position: absolute;
-        top: 100%; /* At the bottom of the tooltip */
-        left: 50%;
-        margin-left: -5px;
-        border-width: 5px;
-        border-style: solid;
-        border-color: black transparent transparent transparent;
-}
+    /* --- Blockquote Styling --- */
 
-/* Keep content out of nav bar and footer */
-.mycontainer {
-    margin: 2.5em auto;
-    padding: 1em;
-}
+    blockquote {
+        margin: 0 0 1rem;
+        margin-bottom: 1rem;
+        font-style: italic;
+        border-left: none;
+    }
+
+        blockquote small {
+            color: #868e96;
+        }
+
+    .jumbotron {
+        padding-bottom: 15px;
+    }
+
+        .jumbotron p {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+    .mb-0 {
+        margin-bottom: 0 !important;
+    }
+
+    /* --- Tooltip Styling --- */
+
+    .mytooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+        .mytooltip .mytooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: #242b15;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 1;
+            bottom: 180%;
+            left: 50%;
+            margin-left: -70px;
+        }
+
+        .mytooltip:hover .mytooltiptext {
+            visibility: visible;
+        }
+
+        .mytooltip .mytooltiptext::after {
+            content: " ";
+            position: absolute;
+            top: 100%; /* At the bottom of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
+
+    /* Keep content out of nav bar and footer */
+    .mycontainer {
+        margin: 2.5em auto;
+        padding: 1em;
+    }
 
 
-/* Display thumbnails on same line */
-.row.display-flex {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom:25px;
-}
+    /* Display thumbnails on same line */
+    .row.display-flex {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+    }
 
-.thumbnail {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.thumbnail .caption {
+    .thumbnail {
+        height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        height: 100%;
     }
 
-/* Trip details table styling*/
-.tripdetailstable td:first-child{
-    width:20%;
-}
-.tripdetailstable td:last-child {
-    width: 20%;
-}
-table.tripdetailstable {
-    border-color: #b4c78c;
-}
+        .thumbnail .caption {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
 
-table.tripdetailstable > thead > tr > th {
-    border-color: #b4c78c;
-}
-
-table.tripdetailstable > tbody > tr > td {
-    border-color: #b4c78c;
-}
-.first-add-step-btn {
-    position: absolute;
-    margin-left: -12px;
-    margin-top: -12px;
-}
-.add-step-btn {
-    position: absolute;
-    margin-left: -22px;
-    margin-top: -2px;
-}
-
-
-/*Transform cursor into hand and highlight when hovering over table cell of trip details*/
-.hand-cursor{
-    cursor:pointer;
-}
-.hand-cursor:hover {
-    background-color: #f0eceb;
-
-}
-
-/*Step Details Page Styling*/
-
-.pagination {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-    .pagination > li > a,
-    .pagination > li > span {
-        background-color: #f7f5f5;
+    /* Trip details table styling*/
+    .tripdetailstable td:first-child {
+        width: 20%;
     }
 
-    .pagination > .active > a,
-    .pagination > .active > span,
-    .pagination > .active > a:hover,
-    .pagination > .active > span:hover,
-    .pagination > .active > a:focus,
-    .pagination > .active > span:focus {
-        background-color: #eb6864; /*punchier #ff3500*/
-        border-color: #eb6864;
+    .tripdetailstable td:last-child {
+        width: 20%;
     }
 
-    .pagination > li > a:hover,
-    .pagination > li > span:hover,
-    .pagination > li > a:focus,
-    .pagination > li > span:focus {
-        background-color: #eb6864;
-        border-color: #eb6864;
+    table.tripdetailstable {
+        border-color: #b4c78c;
     }
 
-@media (min-width: 480px) {
-    .dl-horizontal dt {
-        float: left;
-        width: 160px;
-        clear: left;
-        text-align: right;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        table.tripdetailstable > thead > tr > th {
+            border-color: #b4c78c;
+        }
+
+        table.tripdetailstable > tbody > tr > td {
+            border-color: #b4c78c;
+        }
+
+    .first-add-step-btn {
+        position: absolute;
+        margin-left: -12px;
+        margin-top: -12px;
     }
 
-    .dl-horizontal dd {
-        margin-left: 180px;
+    .add-step-btn {
+        position: absolute;
+        margin-left: -22px;
+        margin-top: -2px;
     }
-}
 
-.thick-hr {
-    margin-top: 12px;
-    margin-bottom: 16px;
-    border-top: 3px solid #f0eceb;
-}
 
-/* --- Activity Thread Styling --- */
-
-.activity-thread{
-    margin-top:20px;
-    margin-right:auto;
-    margin-left:auto;
-    max-width:650px;
-    display:block;
-}
-
-    .activity-thread .col-xs-10{
-        border-left: solid 4px #729f98;
-        padding-bottom: 45px;
-        padding-left: 40px;
-        padding-right: 60px;
+    /*Transform cursor into hand and highlight when hovering over table cell of trip details*/
+    .hand-cursor {
+        cursor: pointer;
     }
+
+        .hand-cursor:hover {
+            background-color: #f0eceb;
+        }
+
+    /*Step Details Page Styling*/
+
+    .pagination {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+        .pagination > li > a,
+        .pagination > li > span {
+            background-color: #f7f5f5;
+        }
+
+        .pagination > .active > a,
+        .pagination > .active > span,
+        .pagination > .active > a:hover,
+        .pagination > .active > span:hover,
+        .pagination > .active > a:focus,
+        .pagination > .active > span:focus {
+            background-color: #eb6864; /*punchier #ff3500*/
+            border-color: #eb6864;
+        }
+
+        .pagination > li > a:hover,
+        .pagination > li > span:hover,
+        .pagination > li > a:focus,
+        .pagination > li > span:focus {
+            background-color: #eb6864;
+            border-color: #eb6864;
+        }
+
+    @media (min-width: 480px) {
+        .dl-horizontal dt {
+            float: left;
+            width: 160px;
+            clear: left;
+            text-align: right;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .dl-horizontal dd {
+            margin-left: 180px;
+        }
+    }
+
+    .thick-hr {
+        margin-top: 12px;
+        margin-bottom: 16px;
+        border-top: 3px solid #f0eceb;
+    }
+
+    /* --- Activity Thread Styling --- */
+
+    .activity-thread {
+        margin-top: 20px;
+        margin-right: auto;
+        margin-left: auto;
+        max-width: 650px;
+        display: block;
+    }
+
+        .activity-thread .col-xs-10 {
+            border-left: solid 4px #729f98;
+            padding-bottom: 45px;
+            padding-left: 40px;
+            padding-right: 60px;
+        }
 
         .activity-thread .icon {
             position: absolute;
@@ -377,66 +388,78 @@ table.tripdetailstable > tbody > tr > td {
         }
 
 
-/*Display Delete Activity button inline in modal*/
-.inline-form{
-    display:inline;
-}
+    /*Display Delete Activity button inline in modal*/
+    .inline-form {
+        display: inline;
+    }
 
-/*Panel for File Upload*/
-.panel-trekstories {
-    border-color: #eb6864;
-    max-width: 90%;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-    .panel-trekstories > .panel-heading {
-        color: #ffffff;
-        background-color: #eb6864;
+    /*Panel for File Upload*/
+    .panel-trekstories {
         border-color: #eb6864;
+        max-width: 90%;
+        margin-right: auto;
+        margin-left: auto;
     }
 
-        .panel-trekstories > .panel-heading + .panel-collapse > .panel-body {
-            border-top-color: #eb6864;
+        .panel-trekstories > .panel-heading {
+            color: #ffffff;
+            background-color: #eb6864;
+            border-color: #eb6864;
         }
 
-        .panel-trekstories > .panel-heading .badge {
-            color: #eb6864;
-            background-color: #ffffff;
+            .panel-trekstories > .panel-heading + .panel-collapse > .panel-body {
+                border-top-color: #eb6864;
+            }
+
+            .panel-trekstories > .panel-heading .badge {
+                color: #eb6864;
+                background-color: #ffffff;
+            }
+
+        .panel-trekstories > .panel-footer + .panel-collapse > .panel-body {
+            border-bottom-color: #eb6864;
         }
 
-    .panel-trekstories > .panel-footer + .panel-collapse > .panel-body {
-        border-bottom-color: #eb6864;
+        .panel-trekstories .btn-trekstories {
+            background-color: #eb6864;
+        }
+
+    /*Review Images Styling*/
+    .rev-img-thumb {
+        margin-bottom: 5px;
     }
 
-    .panel-trekstories .btn-trekstories {
-        background-color: #eb6864;
+    .thumb {
+        margin-bottom: 20px;
     }
 
-/*Review Images Styling*/
-.rev-img-thumb {
-    margin-bottom:5px;
-}
-
-.thumb {
-    margin-bottom:20px;
-}
 
 
+    .site-colour {
+        color: #729f98;
+    }
 
-.site-colour {
-    color: #729f98;
-}
+    .description {
+        font-size: 90%;
+        color: slategray;
+    }
 
-.description {
-    font-size: 90%;
-    color: slategray;
-}
+    .text-muted {
+        color: #828282;
+    }
 
-.text-muted {
-    color: #828282;
-}
+    .no-padding {
+        padding: 3px;
+    }
 
-.no-padding{
-    padding:3px;
-}
+
+    .crop {
+        height: 300px;
+        overflow: hidden;
+    }
+
+        .crop img {
+            height: auto;
+            width: 100%;
+            object-fit: contain;
+        }
