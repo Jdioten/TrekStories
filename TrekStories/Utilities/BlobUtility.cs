@@ -3,6 +3,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -50,9 +51,10 @@ namespace TrekStories.Utilities
             }
         }
 
-        public async Task DeleteBlobAsync(string blobName, string containerName)
+        public async Task DeleteBlobAsync(string url, string containerName)
         {
             CloudBlobContainer container = GetCloudBlobContainer(containerName);
+            string blobName = url.Split('/').Last();
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
             await blockBlob.DeleteIfExistsAsync();
         }

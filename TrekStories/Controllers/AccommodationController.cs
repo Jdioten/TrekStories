@@ -1,19 +1,18 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
-using System.Data.Entity.Infrastructure;
-using Microsoft.AspNet.Identity;
 using TrekStories.Utilities;
-using System.Web;
-using System.IO;
 
 namespace TrekStories.Controllers
 {
@@ -22,6 +21,7 @@ namespace TrekStories.Controllers
     public class AccommodationController : Controller
     {
         private const string BOOKING_CONTAINER_NAME = "trekstories-bookingconfirm-blobcontainer";
+        private const string NULL_ACCOMMODATION_ERROR = "Oops, the accommodation you are looking for doesn't seem to exist. Please try navigating to the main page again.";
 
         private ITrekStoriesContext db = new TrekStoriesContext();
         private BlobUtility utility;
@@ -50,9 +50,7 @@ namespace TrekStories.Controllers
             Trip trip = await db.Trips.Include(t => t.Steps).SingleOrDefaultAsync(t => t.TripId == tripId);
             if (trip == null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the accommodation you are looking for doesn't seem to exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                return View("CustomisedError", new HandleErrorInfo( new UnauthorizedAccessException(NULL_ACCOMMODATION_ERROR), "Trip", "Index"));
             }
             if (trip.TripOwner != User.Identity.GetUserId())
             {
@@ -96,9 +94,7 @@ namespace TrekStories.Controllers
             Accommodation accommodation = await db.Accommodations.FindAsync(id);
             if (accommodation == null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the accommodation you are looking for doesn't seem to exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(NULL_ACCOMMODATION_ERROR), "Trip", "Index"));
             }
             return View(accommodation);
         }
@@ -140,7 +136,6 @@ namespace TrekStories.Controllers
                     //if before trip start date -> error
                     int tripId = Int32.Parse(accommodation.ConfirmationFileUrl); //temporarily storing tripid in confirmationurl
 
-                    //extract to different method that could apply to different controllers!
                     Trip trip = await db.Trips.FindAsync(tripId);
                     if (trip.TripOwner != User.Identity.GetUserId())
                     {
@@ -203,9 +198,7 @@ namespace TrekStories.Controllers
             Accommodation accommodation = await db.Accommodations.FindAsync(id);
             if (accommodation == null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the accommodation you are looking for doesn't seem to exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(NULL_ACCOMMODATION_ERROR), "Trip", "Index"));
             }
             return View(accommodation);
         }
@@ -345,6 +338,12 @@ namespace TrekStories.Controllers
             foreach (Step s in steps)
             {
                 s.AccommodationId = null;
+            }
+
+            //delete confirmation file from blob storage
+            if (accommodation.ConfirmationFileUrl != null)
+            {
+                await utility.DeleteBlobAsync(accommodation.ConfirmationFileUrl, BOOKING_CONTAINER_NAME);
             }
 
             db.Accommodations.Remove(accommodation);
