@@ -96,7 +96,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    @*<button type="button" class="btn btn-danger">Delete Activity</button>*@
                     @using (Html.BeginForm("Delete", "Activities", FormMethod.Post, new { @class = "inline-form"}))
                     {
                         @Html.AntiForgeryToken()
@@ -107,5 +106,4 @@
             </div>
         </div>
     </div>
-
 </div>

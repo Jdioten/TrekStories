@@ -377,7 +377,6 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Trip\Create.cshtml" />
-    <Content Include="Views\Trip\Delete.cshtml" />
     <Content Include="Views\Trip\Details.cshtml" />
     <Content Include="Views\Trip\Edit.cshtml" />
     <Content Include="Views\Trip\Index.cshtml" />
@@ -385,13 +384,10 @@
     <Content Include="Views\Step\Delete.cshtml" />
     <Content Include="Views\Step\Details.cshtml" />
     <Content Include="Views\Step\Edit.cshtml" />
-    <Content Include="Views\Step\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutWithDatePicker.cshtml" />
     <Content Include="Views\Activities\EditTransport.cshtml" />
-    <Content Include="Views\Activities\Delete.cshtml" />
     <Content Include="Views\Activities\DetailsLeisure.cshtml" />
     <Content Include="Views\Activities\EditLeisure.cshtml" />
-    <Content Include="Views\Activities\Index.cshtml" />
     <Content Include="Views\Accommodation\Create.cshtml" />
     <Content Include="Views\Accommodation\Delete.cshtml" />
     <Content Include="Views\Accommodation\Details.cshtml" />
@@ -401,11 +397,7 @@
     <Content Include="Views\Activities\DetailsTransport.cshtml" />
     <Content Include="Views\Shared\CustomisedError.cshtml" />
     <Content Include="Views\Trip\Summary.cshtml" />
-    <Content Include="Views\Review\Create.cshtml" />
-    <Content Include="Views\Review\Delete.cshtml" />
-    <Content Include="Views\Review\Details.cshtml" />
     <Content Include="Views\Review\Edit.cshtml" />
-    <Content Include="Views\Review\Index.cshtml" />
     <Content Include="Views\Trip\Souvenir.cshtml" />
   </ItemGroup>
   <ItemGroup>
