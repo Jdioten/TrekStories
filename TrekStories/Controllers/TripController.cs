@@ -289,9 +289,21 @@ namespace TrekStories.Controllers
                                 new UnauthorizedAccessException("Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again."),
                                 "Trip", "Index"));
             }
+            if (trip.TripOwner != User.Identity.GetUserId())
+            {
+                return View("CustomisedError", new HandleErrorInfo(
+                    new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot access the souvenir report."),
+                    "Trip", "Index"));
+            }
             ViewBag.TripTitle = trip.Title;
 
             var tripSteps = trip.Steps.OrderBy(s => s.SequenceNo).ToList();
+            if (tripSteps.Count == 0)
+            {
+                return View("CustomisedError", new HandleErrorInfo(
+                    new UnauthorizedAccessException("Please first add steps to the trip."),
+                    "Trip", "Index"));
+            }
 
             return new RotativaHQ.MVC5.ViewAsPdf("Souvenir", tripSteps) { FileName = "SouvenirReport.pdf" };
         }

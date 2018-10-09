@@ -259,9 +259,10 @@ namespace TrekStories.Controllers.Tests
         public async Task CanDeleteImage()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
-            Image image1 = new Image { Id = 25, ReviewId = 1, Url = "url1" };
+            Step step = new Step { StepId = 12, Trip = new Trip { TripId = 214, TripOwner = "User1" } };
+            Image image1 = new Image { Id = 25, ReviewId = 1, Url = "url1", Review = new Review { ReviewId = 1, Step = step } };
             tc.Images.Add(image1);
-            ReviewController controller = new ReviewController(tc);
+            ReviewController controller = new ReviewController(tc).WithAuthenticatedUser("User1");
 
             var result = await controller.DeleteImageAsync(25) as RedirectToRouteResult;
 
