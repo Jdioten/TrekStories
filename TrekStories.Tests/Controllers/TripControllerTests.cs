@@ -54,7 +54,7 @@ namespace TrekStories.Controllers.Tests
             var viewResult = await controller.Index(null) as ViewResult;
             Trip[] result = ((IEnumerable<Trip>)viewResult.ViewData.Model).ToArray();
             // Assert - ordered descending + only show trips from ABC123
-            Assert.AreEqual(result.Length, 3);
+            Assert.AreEqual(3, result.Length);
             Assert.AreEqual("Trip 3", result[0].Title);
             Assert.AreEqual("Trip 2", result[1].Title);
             Assert.AreEqual("Trip 1", result[2].Title);

@@ -214,15 +214,33 @@ namespace TrekStories.Controllers.Tests
         [TestMethod()]
         public async Task CannotUploadImageWithInvalidSize()
         {
-            ReviewController controller = new ReviewController();
-            var result = await controller.UploadImageAsync(new TestPostedFileBase(7168001), 1) as ViewResult;
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Step step = new Step { StepId = 12, Trip = new Trip { TripId = 214, TripOwner = "User1" } };
+            var review = new Review
+            {
+                ReviewId = 1,
+                PrivateNotes = "Test Private",
+                Step = step
+            };
+            tc.Reviews.Add(review);
+            ReviewController controller = new ReviewController(tc).WithAuthenticatedUser("User1");
+            var result = await controller.UploadImageAsync(new TestPostedFileBase(7168020), 1) as ViewResult;
             Assert.AreEqual("The file cannot be bigger than 7MB.", controller.TempData["message"]);
         }
 
         [TestMethod()]
         public async Task CannotUploadImageWithInvalidExtension()
         {
-            ReviewController controller = new ReviewController();
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Step step = new Step { StepId = 12, Trip = new Trip { TripId = 214, TripOwner = "User1" } };
+            var review = new Review
+            {
+                ReviewId = 1,
+                PrivateNotes = "Test Private",
+                Step = step
+            };
+            tc.Reviews.Add(review);
+            ReviewController controller = new ReviewController(tc).WithAuthenticatedUser("User1");
             var result = await controller.UploadImageAsync(new TestPostedFileBase("test.js"), 1) as ViewResult;
             Assert.AreEqual("The file type is not authorized for upload.", controller.TempData["message"]);
         }
