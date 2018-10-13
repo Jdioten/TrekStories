@@ -11,7 +11,6 @@ body {
     left: 48%;
     background-color: #729f98;
     border-radius: 30px;
-    /*font-family: Bookman, "Times New Roman", Times, serif;*/
     font-size: 22px;
 }
 
@@ -62,9 +61,8 @@ body {
         position: relative;
         margin: 0;
         padding-top: 40px;
-        padding-bottom: 6rem; /*check if ok with all pages?*/
+        padding-bottom: 6rem;
         min-height: 100%;
-        /*font-family: "Helvetica Neue", Arial, sans-serif;*/
     }
 
     #outer {
@@ -76,9 +74,8 @@ body {
         right: 0;
         bottom: 0;
         left: 0;
-        /*padding: 1rem;*/
         width: 100%;
-        background: #242b15; /*#283018;*/
+        background: #242b15;
         border-top: 1px solid black;
         padding-top: 15px;
         color: #f0eceb;
@@ -138,9 +135,9 @@ body {
         }
     /* --- Button Styling --- */
     .btn-trekstories {
-        color: white /*#141b13*/;
+        color: white;
         background-color: #668f88;
-        border-color: #cccccc; /*#f0eceb;*/
+        border-color: #cccccc;
     }
 
     #activity-menu btn-trekstories {
@@ -153,7 +150,7 @@ body {
     .btn-trekstories.active,
     .open .dropdown-toggle.btn-trekstories {
         color: #202613;
-        background-color: #729f98; /*#9cbbb6;*/
+        background-color: #729f98;
         border-color: #adadad;
     }
 
@@ -463,3 +460,21 @@ body {
             width: 100%;
             object-fit: contain;
         }
+
+#photos {
+    /* Prevent vertical gaps */   
+    line-height: 0;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 0px;
+    -moz-column-count: 3;
+    -moz-column-gap: 0px;
+    column-count: 3;
+    column-gap: 0px;
+}
+
+    #photos img {
+        /* Just in case there are inline attributes */
+        display: inline-block;
+        width: 100% !important;
+        height: auto !important;
+    }

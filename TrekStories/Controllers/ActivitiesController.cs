@@ -28,13 +28,6 @@ namespace TrekStories.Controllers
         const string NULL_ACTIVITY_ERROR = "Oops, the activity you are looking for doesn't seem to exist. Please try navigating to the main page again.";
         const string NULL_STEP_ERROR = "Oops, the step you want to add an activity to doesn't seem to exist. Please try navigating to the main page again.";
 
-        // GET: Activities
-        //public async Task<ActionResult> Index()
-        //{
-        //    var activities = db.Activities.Include(a => a.Step);
-        //    return View(await activities.ToListAsync());
-        //}
-
         // GET: Activities/Details/5
         public async Task<ActionResult> Details(int id = 1)
         {
@@ -115,7 +108,6 @@ namespace TrekStories.Controllers
             {
                 return View("EditTransport", activity);
             }
-            //IQueryable<LeisureActivity> bla = from b in db.Activities.OfType<LeisureActivity>() select b;
         }
 
         // POST: Activities/Edit/5
@@ -132,7 +124,6 @@ namespace TrekStories.Controllers
                     {
                         db.Activities.Add(leisureActivity);
 
-                        //REFACTOR THIS METHOD?
                         //update trip budget
                         Step step = await db.Steps.Include(s => s.Trip).FirstOrDefaultAsync(s => s.StepId == leisureActivity.StepId);
                         if (step.Trip.TripOwner != User.Identity.GetUserId())
@@ -168,9 +159,8 @@ namespace TrekStories.Controllers
                     await db.SaveChangesAsync();
                     return RedirectToAction("Details", "Step", new { id = leisureActivity.StepId });
                 }
-                catch (RetryLimitExceededException /* dex */)
+                catch (RetryLimitExceededException)
                 {
-                    //Log the error (uncomment dex variable name and add a line here to write a log.
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
                 }
             }
@@ -215,33 +205,13 @@ namespace TrekStories.Controllers
                     await db.SaveChangesAsync();
                     return RedirectToAction("Details", "Step", new { id = transport.StepId });
                 }
-                catch (RetryLimitExceededException /* dex */)
+                catch (RetryLimitExceededException)
                 {
-                    //Log the error (uncomment dex variable name and add a line here to write a log.
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
                 }
             }
             return View(transport);
         }
-
-        // GET: Activities/Delete/5
-        //public async Task<ActionResult> Delete(int? id, bool? saveChangesError = false)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    if (saveChangesError.GetValueOrDefault())
-        //    {
-        //        ViewBag.ErrorMessage = "Delete failed. Please try again, and if the problem persists, contact the system administrator.";
-        //    }
-        //    Activity activity = await db.Activities.FindAsync(id);
-        //    if (activity == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(activity);
-        //}
 
         // POST: Activities/Delete/5
         [HttpPost]

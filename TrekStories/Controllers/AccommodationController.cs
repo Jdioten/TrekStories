@@ -154,27 +154,22 @@ namespace TrekStories.Controllers
                         try
                         {
                             AssignAccommodationToStep(accommodation, trip, true);
+
+                            accommodation.ConfirmationFileUrl = null;
+                            db.Accommodations.Add(accommodation);
+
+                            //increase trip budget
+                            trip.TotalCost += accommodation.Price;
+
+                            await db.SaveChangesAsync();
+                            //return update view in case user wants to attach confirmation file
+                            return RedirectToAction("Edit", new { id = accommodation.AccommodationId });
                         }
                         catch (ArgumentException ex)
                         {
                             //give feedback to user about which step to check
                             ViewBag.ErrorMessage = ex.Message;
-                            ViewBag.TripId = accommodation.ConfirmationFileUrl;
-                            ViewBag.CheckIn = String.Format("{0:dd-MM-yyyy hh:mm tt}", accommodation.CheckIn);
-                            ViewBag.CheckOut = String.Format("{0:dd-MM-yyyy hh:mm tt}", accommodation.CheckOut);
-                            return View(accommodation);
                         }
-
-                        //put below within try to be able to delete repetitive viewbag lines
-                        accommodation.ConfirmationFileUrl = null;
-                        db.Accommodations.Add(accommodation);
-
-                        //increase trip budget
-                        trip.TotalCost += accommodation.Price;
-
-                        await db.SaveChangesAsync();
-                        //return update view in case user wants to attach confirmation file
-                        return RedirectToAction("Edit", new { id = accommodation.AccommodationId });
                     }
                 }
             }

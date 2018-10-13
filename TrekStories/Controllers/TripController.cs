@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNet.Identity;
-//using Rotativa;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -191,45 +190,6 @@ namespace TrekStories.Controllers
             return View(tripToUpdate);
         }
 
-        // GET: Trip/Delete/5
-        //public ActionResult Delete(int? id, bool? saveChangesError = false)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    if (saveChangesError.GetValueOrDefault())
-        //    {
-        //        ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists, contact the system administrator.";
-        //    }
-        //    Trip trip = db.Trips.Find(id);
-        //    if (trip == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(trip);
-        //}
-
-        //// POST: Trip/Delete/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Delete(int id)
-        //{
-
-        //    try
-        //    {
-        //        Trip tripToDelete = new Trip() { TripId = id };
-        //        db.Entry(tripToDelete).State = EntityState.Deleted;
-        //        db.SaveChanges();
-        //    }
-        //    catch (RetryLimitExceededException/* dex */)
-        //    {
-        //        //Log the error (uncomment dex variable name and add a line here to write a log.
-        //        return RedirectToAction("Delete", new { id = id, saveChangesError = true });
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -238,16 +198,6 @@ namespace TrekStories.Controllers
             }
             base.Dispose(disposing);
         }
-
-        /*public ActionResult DisplayFullTripDetails()
-        {
-
-        }*/
-
-        //public ActionResult GetSummaryReport(int id)
-        //{
-        //    return new ActionAsPdf("Summary", new { id = id }) { FileName = "TripSummary.pdf" };
-        //}
 
         [AllowAnonymous]
         public async Task<ActionResult> GetSummaryReport(int id)
@@ -305,6 +255,7 @@ namespace TrekStories.Controllers
                     "Trip", "Index"));
             }
 
+            //return View("Souvenir", tripSteps);
             return new RotativaHQ.MVC5.ViewAsPdf("Souvenir", tripSteps) { FileName = "SouvenirReport.pdf" };
         }
     }

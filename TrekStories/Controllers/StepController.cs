@@ -27,13 +27,6 @@ namespace TrekStories.Controllers
             db = context;
         }
 
-        // GET: Step
-        //public async Task<ActionResult> Index()
-        //{
-        //    var steps = db.Steps.Include(s => s.Accommodation).Include(s => s.Review).Include(s => s.Trip);
-        //    return View(await steps.ToListAsync());
-        //}
-
         // GET: Step/Details/5
         [AllowAnonymous]
         public async Task<ActionResult> Details(int id = 1)
@@ -152,9 +145,8 @@ namespace TrekStories.Controllers
                     return RedirectToAction("Details", new { id = newStep.StepId });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
             }
             ViewBag.TripId = stepViewModel.TripId;
@@ -171,17 +163,10 @@ namespace TrekStories.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Step step = await db.Steps.FindAsync(id);
-            if (step == null)
+            string nullOrOwnerError = StepNullOrNotOwnedByUserError(step);
+            if (nullOrOwnerError != null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
-            }
-            if (step.Trip.TripOwner != User.Identity.GetUserId())
-            {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot edit it."),
-                                "Trip", "Index"));
+                return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(nullOrOwnerError), "Trip", "Index"));
             }
             StepViewModel stepToEdit = new StepViewModel()
             {
@@ -211,19 +196,11 @@ namespace TrekStories.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            //Step stepToUpdate = await db.Steps.FindAsync(vm.StepId.Value); //chnage to below to avoid object reference null
             Step stepToUpdate = await db.Steps.Include(t => t.Trip).FirstOrDefaultAsync(x => x.StepId == vm.StepId.Value);
-            if (stepToUpdate == null)
+            string nullOrOwnerError = StepNullOrNotOwnedByUserError(stepToUpdate);
+            if (nullOrOwnerError != null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
-            }
-            if (stepToUpdate.Trip.TripOwner != User.Identity.GetUserId())
-            {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot edit it."),
-                                "Trip", "Index"));
+                return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(nullOrOwnerError), "Trip", "Index"));
             }
             if (ModelState.IsValid)
             {
@@ -237,14 +214,12 @@ namespace TrekStories.Controllers
                     stepToUpdate.To = vm.To;
                     stepToUpdate.WalkingDistance = vm.WalkingDistance;
                     stepToUpdate.WalkingTime = vm.WalkingTimeHours + vm.WalkingTimeMinutes / 60.0;
-                    //stepToUpdate.Trip =
 
                     await db.SaveChangesAsync();
                     return RedirectToAction("Details", "Trip", new { id = stepToUpdate.TripId});
                 }
-                catch (RetryLimitExceededException /* dex */)
+                catch (RetryLimitExceededException)
                 {
-                    //Log the error (uncomment dex variable name and add a line here to write a log.
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
                 }
             }
@@ -263,34 +238,20 @@ namespace TrekStories.Controllers
                 ViewBag.ErrorMessage = "Delete failed. Please try again, and if the problem persists, contact the system administrator.";
             }
             Step step = await db.Steps.FindAsync(id);
-            if (step == null)
+
+            string nullOrOwnerError = StepNullOrNotOwnedByUserError(step);
+            if (nullOrOwnerError != null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the step you are trying to delete doesn't exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(nullOrOwnerError), "Trip", "Index"));
             }
-            if (step.Trip.TripOwner != User.Identity.GetUserId())
+
+            string AccommodationOrIamgesNotNullError = AccommodationOrReviewImagesNotNullError(step);
+            if (AccommodationOrIamgesNotNullError != null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot delete it."),
-                                "Trip", "Index"));
-            }
-            if (step.Accommodation != null)
-            {
-                TempData["message"] = string.Format("Step " + step.SequenceNo + " cannot be deleted because it is linked to an accommodation. " +
-                    "Please first edit or delete the accommodation for the step.");
+                TempData["message"] = AccommodationOrIamgesNotNullError;
                 return RedirectToAction("Details", "Step", new { id = step.StepId });
             }
-            Review rev = step.Review;
-            if (rev != null)
-            {
-                if (rev.Images.Count > 0)
-                {
-                    TempData["message"] = string.Format("Step " + step.SequenceNo + " cannot be deleted because it is linked to a review with images. " +
-                    "Please first delete the images.");
-                    return RedirectToAction("Details", "Step", new { id = step.StepId });
-                }
-            }
+
             return View(step);
         }
 
@@ -299,25 +260,21 @@ namespace TrekStories.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Step stepToDelete = await db.Steps.Include(s => s.Trip).Include(s => s.Activities).Include(s => s.Review).SingleOrDefaultAsync(s => s.StepId == id);
+            Step stepToDelete = await db.Steps.Include(s => s.Trip).Include(s => s.Accommodation).Include(s => s.Activities).Include(s => s.Review).SingleOrDefaultAsync(s => s.StepId == id);
             try
             {
-                if (stepToDelete == null)
+                string nullOrOwnerError = StepNullOrNotOwnedByUserError(stepToDelete);
+                if (nullOrOwnerError != null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(nullOrOwnerError), "Trip", "Index"));
                 }
-                if (stepToDelete.Trip.TripOwner != User.Identity.GetUserId())
+                string AccommodationOrIamgesNotNullError = AccommodationOrReviewImagesNotNullError(stepToDelete);
+                if (AccommodationOrIamgesNotNullError != null)
                 {
-                    return View("CustomisedError", new HandleErrorInfo(
-                                    new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot edit it."),
-                                    "Trip", "Index"));
-                }
-                if (stepToDelete.Accommodation != null)
-                {
-                    TempData["message"] = string.Format("Step " + stepToDelete.SequenceNo + " cannot be deleted because it is linked to an accommodation. " +
-                        "Please first edit or delete the accommodation for the step.");
+                    TempData["message"] = AccommodationOrIamgesNotNullError;
                     return RedirectToAction("Details", "Step", new { id = stepToDelete.StepId });
                 }
+                
                 //retrieve all subsequent steps and update seq no
                 foreach (Step step in db.Steps.Where(s => s.TripId == stepToDelete.TripId))
                 {
@@ -332,17 +289,7 @@ namespace TrekStories.Controllers
                     stepToDelete.Trip.TotalCost -= item.Price;
                 }
 
-                Review rev = stepToDelete.Review;
-                if (rev != null)
-                {
-                    if (rev.Images.Count > 0)
-                    {
-                        TempData["message"] = string.Format("Step " + stepToDelete.SequenceNo + " cannot be deleted because it is linked to a review with images. " +
-                        "Please first delete the images.");
-                        return RedirectToAction("Details", "Step", new { id = stepToDelete.StepId });
-                    }
-                    db.Reviews.Remove(rev);
-                }      
+                db.Reviews.Remove(stepToDelete.Review);
 
                 db.Steps.Remove(stepToDelete);
                 await db.SaveChangesAsync();
@@ -362,6 +309,42 @@ namespace TrekStories.Controllers
             }
             base.Dispose(disposing);
         }
+
+        private string StepNullOrNotOwnedByUserError(Step step)
+        {
+            if (step == null)
+            {
+                return "Oops, it looks like you are trying to access a step that does not exist. Please try navigating to the main page again.";
+            }
+            else if (step.Trip.TripOwner != User.Identity.GetUserId())
+            {
+                return "Oops, this step doesn't seem to be yours, you cannot perform this action.";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        private string AccommodationOrReviewImagesNotNullError(Step step)
+        {
+            if (step.Accommodation != null)
+            {
+                return string.Format("Step " + step.SequenceNo + " cannot be deleted because it is linked to an accommodation. " +
+                    "Please first edit or delete the accommodation for the step.");
+            }
+            Review rev = step.Review;
+            if (rev != null)
+            {
+                if (rev.Images.Count > 0)
+                {
+                   return string.Format("Step " + step.SequenceNo + " cannot be deleted because it is linked to a review with images. " +
+                    "Please first delete the images.");
+                }
+            }
+            return "";
+        }
+
 
         [NonAction]
         public List<ActivityThreadViewModel> CreateActivityThread(Step step)

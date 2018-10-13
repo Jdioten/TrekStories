@@ -31,28 +31,6 @@ namespace TrekStories.Controllers
             utility = new BlobUtility();
         }
 
-        //// GET: Review
-        //public async Task<ActionResult> Index()  //passing trip id??
-        //{
-        //    var reviews = db.Reviews.Include(r => r.Step);
-        //    return View(await reviews.ToListAsync());
-        //}
-
-        //// GET: Review/Details/5
-        //public async Task<ActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Review review = await db.Reviews.FindAsync(id);
-        //    if (review == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(review);
-        //}
-
         // GET: Review/Create
         public async Task<ActionResult> Create(int? id)  //stepId
         {
@@ -82,23 +60,6 @@ namespace TrekStories.Controllers
             ViewBag.Create = true;
             return View("Edit", new Review() { StepId = id.Value});
         }
-
-        //// POST: Review/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        ////will most probably need a view model!
-        //public async Task<ActionResult> Create([Bind(Include = "Rating,PrivateNotes,PublicNotes")] Review review)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Reviews.Add(review);
-        //        await db.SaveChangesAsync();
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    ViewBag.ReviewId = new SelectList(db.Steps, "StepId", "From", review.ReviewId);
-        //    return View(review);
-        //}
 
         // GET: Review/Edit/5
         public async Task<ActionResult> Edit(int? id)
@@ -238,32 +199,6 @@ namespace TrekStories.Controllers
             }
             return RedirectToAction("Edit", new { id = revId });
         }
-
-        //// GET: Review/Delete/5
-        //public async Task<ActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Review review = await db.Reviews.FindAsync(id);
-        //    if (review == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(review);
-        //}
-
-        //// POST: Review/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> DeleteConfirmed(int id)
-        //{
-        //    Review review = await db.Reviews.FindAsync(id);
-        //    db.Reviews.Remove(review);
-        //    await db.SaveChangesAsync();
-        //    return RedirectToAction("Index");
-        //}
 
         protected override void Dispose(bool disposing)
         {
