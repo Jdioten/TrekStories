@@ -118,6 +118,7 @@ namespace TrekStories.Controllers
                 ViewBag.StepId = review.StepId;
                 ViewBag.From = step.From;
                 ViewBag.To = step.To;
+                ViewBag.Create = true;
                 return View(review);
             }    
         }

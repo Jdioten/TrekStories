@@ -11,7 +11,7 @@ namespace TrekStories.Models
     {
         [Key, ForeignKey("Step")]
         public int ReviewId { get; set; }
-        [Range(1,5)]
+        [Range(1,5, ErrorMessage = "Please assign a rating between 1 and 5.")]
         public int Rating { get; set; }
 
         [Display(Name = "Private Notes")]

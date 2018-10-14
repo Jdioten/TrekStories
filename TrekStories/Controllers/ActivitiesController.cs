@@ -182,11 +182,23 @@ namespace TrekStories.Controllers
 
                         //update trip budget
                         Step step = await db.Steps.Include(s => s.Trip).FirstOrDefaultAsync(s => s.StepId == transport.StepId);
+                        if (step.Trip.TripOwner != User.Identity.GetUserId())
+                        {
+                            return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this step doesn't seem to be yours, you cannot add an activity to it."),
+                                "Trip", "Index"));
+                        }
                         step.Trip.TotalCost += transport.Price;
                     }
                     else
                     {
                         Transport dbEntry = (Transport)db.Activities.FindAsync(transport.ID).Result;
+                        if (dbEntry.Step.Trip.TripOwner != User.Identity.GetUserId())
+                        {
+                            return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException("Oops, this activity doesn't seem to be yours, you cannot edit it."),
+                                "Trip", "Index"));
+                        }
                         //update trip budget
                         dbEntry.Step.Trip.TotalCost = dbEntry.Step.Trip.TotalCost - dbEntry.Price + transport.Price;
                         if (dbEntry != null)
