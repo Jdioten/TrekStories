@@ -91,12 +91,12 @@ namespace TrekStories.Controllers.Tests
         {
             //Arrange
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
-            ActivitiesController controller = new ActivitiesController(tc);
-            Trip trip = new Trip { TripId = 1, TotalCost = 10, StartDate = new DateTime(2018, 7, 15, 9, 30, 0) };
+            Trip trip = new Trip { TripId = 1, TotalCost = 10, StartDate = new DateTime(2018, 7, 15, 9, 30, 0), TripOwner = "User1" };
             Step step = new Step { StepId = 2, TripId = 1, Trip = trip, SequenceNo = 1 };
             tc.Trips.Add(trip);
             tc.Steps.Add(step);
             Transport transportToCreate = new Transport() { Name = "Train to Paris", StartTime = new DateTime(2018, 7, 16, 9, 30, 0), Duration = 120, Price = 23, StepId = 2, Step = step };
+            ActivitiesController controller = new ActivitiesController(tc).WithAuthenticatedUser("User1");
             // Act
             var result = await controller.EditTransport(transportToCreate) as RedirectToRouteResult;
             // Assert
@@ -202,10 +202,9 @@ namespace TrekStories.Controllers.Tests
         {
             // Arrange - create mock repository
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
-            // Arrange - create the controller
-            ActivitiesController controller = new ActivitiesController(tc);
+            
             // Arrange - create a transport
-            Trip trip = new Trip { TripId = 321, TotalCost = 100 };
+            Trip trip = new Trip { TripId = 321, TotalCost = 100, TripOwner = "User1" };
             Transport transport = new Transport() { ID = 1, Name = "Bus Transportation", Price = 60 };
             transport.Step = new Step { StepId = 123, Trip = trip };
             tc.Trips.Add(trip);
@@ -219,6 +218,8 @@ namespace TrekStories.Controllers.Tests
                 StartTime = new DateTime(2018,8,1,9,30,0),
                 Price = 50
             };
+            // Arrange - create the controller
+            ActivitiesController controller = new ActivitiesController(tc).WithAuthenticatedUser("User1");
             // Act - try to save the activity
             ActionResult result = await controller.EditTransport(updatedTransport);
 

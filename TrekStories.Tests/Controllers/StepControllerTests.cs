@@ -311,7 +311,7 @@ namespace TrekStories.Controllers.Tests
             {
                 StepId = 123,
                 Trip = new Trip { TripId = 111, TripOwner = "ABC123" }
-        };
+            };
             tc.Steps.Add(step);
             StepViewModel stepVm = new StepViewModel { StepId = 123, TripId = 111 };
 

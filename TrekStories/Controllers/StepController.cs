@@ -164,7 +164,7 @@ namespace TrekStories.Controllers
             }
             Step step = await db.Steps.FindAsync(id);
             string nullOrOwnerError = StepNullOrNotOwnedByUserError(step);
-            if (nullOrOwnerError != null)
+            if (nullOrOwnerError != "")
             {
                 return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(nullOrOwnerError), "Trip", "Index"));
             }
@@ -198,7 +198,7 @@ namespace TrekStories.Controllers
 
             Step stepToUpdate = await db.Steps.Include(t => t.Trip).FirstOrDefaultAsync(x => x.StepId == vm.StepId.Value);
             string nullOrOwnerError = StepNullOrNotOwnedByUserError(stepToUpdate);
-            if (nullOrOwnerError != null)
+            if (nullOrOwnerError != "")
             {
                 return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(nullOrOwnerError), "Trip", "Index"));
             }
@@ -240,13 +240,13 @@ namespace TrekStories.Controllers
             Step step = await db.Steps.FindAsync(id);
 
             string nullOrOwnerError = StepNullOrNotOwnedByUserError(step);
-            if (nullOrOwnerError != null)
+            if (nullOrOwnerError != "")
             {
                 return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(nullOrOwnerError), "Trip", "Index"));
             }
 
             string AccommodationOrIamgesNotNullError = AccommodationOrReviewImagesNotNullError(step);
-            if (AccommodationOrIamgesNotNullError != null)
+            if (AccommodationOrIamgesNotNullError != "")
             {
                 TempData["message"] = AccommodationOrIamgesNotNullError;
                 return RedirectToAction("Details", "Step", new { id = step.StepId });
@@ -264,12 +264,12 @@ namespace TrekStories.Controllers
             try
             {
                 string nullOrOwnerError = StepNullOrNotOwnedByUserError(stepToDelete);
-                if (nullOrOwnerError != null)
+                if (nullOrOwnerError != "")
                 {
                     return View("CustomisedError", new HandleErrorInfo(new UnauthorizedAccessException(nullOrOwnerError), "Trip", "Index"));
                 }
                 string AccommodationOrIamgesNotNullError = AccommodationOrReviewImagesNotNullError(stepToDelete);
-                if (AccommodationOrIamgesNotNullError != null)
+                if (AccommodationOrIamgesNotNullError != "")
                 {
                     TempData["message"] = AccommodationOrIamgesNotNullError;
                     return RedirectToAction("Details", "Step", new { id = stepToDelete.StepId });
