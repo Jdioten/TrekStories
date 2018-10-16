@@ -280,6 +280,7 @@
     <Compile Include="Models\StepViewModel.cs" />
     <Compile Include="Models\Transport.cs" />
     <Compile Include="Models\Trip.cs" />
+    <Compile Include="Models\TripSearchModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\BlobUtility.cs" />

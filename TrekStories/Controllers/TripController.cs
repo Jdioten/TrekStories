@@ -41,6 +41,42 @@ namespace TrekStories.Controllers
             return View(await trips.OrderByDescending(t => t.StartDate).ToListAsync());
         }
 
+        [AllowAnonymous]
+        public async Task<ActionResult> Search(TripSearchModel searchModel)
+        {
+            List<Trip> trips = await GetTrips(searchModel).ToListAsync();
+            return View(trips);
+        }
+
+        private IQueryable<Trip> GetTrips(TripSearchModel searchModel)
+        {
+            var result = db.Trips.AsQueryable();
+            if (searchModel != null)
+            {
+                if (!string.IsNullOrEmpty(searchModel.TitleKeyword))
+                {
+                    result = result.Where(t => t.Title.Contains(searchModel.TitleKeyword));
+                }   
+                if (searchModel.TripCategory.HasValue)
+                {
+                    result = result.Where(t => t.TripCategory == searchModel.TripCategory);
+                }   
+                if (!string.IsNullOrEmpty(searchModel.Country))
+                {
+                    result = result.Where(t => t.Country == searchModel.Country);
+                }   
+                if (searchModel.MinDuration.HasValue)
+                {
+                    result = result.Where(t => t.Duration >= searchModel.MinDuration);
+                }  
+                if (searchModel.MaxDuration.HasValue)
+                {
+                    result = result.Where(t => t.Duration <= searchModel.MaxDuration);
+                }   
+            }
+            return result;
+        }
+
         // GET: Trip/Details/5
         [AllowAnonymous]
         public async Task<ActionResult> Details(int id = 1)
