@@ -61,6 +61,55 @@ namespace TrekStories.Controllers.Tests
         }
 
         [TestMethod()]
+        public async Task CanSearchTrip()
+        {
+            // Arrange - create the mock repository
+            TestTrekStoriesContext tc = new TestTrekStoriesContext();
+            Trip trip1 = new Trip
+            {
+                Title = "Trip 1",
+                StartDate = new DateTime(2015, 4, 12),
+                TripOwner = "ABC123",
+                TripCategory = TripCategory.architecture
+            };
+            Trip trip2 = new Trip
+            {
+                Title = "Trip 2",
+                StartDate = new DateTime(2015, 4, 13),
+                TripOwner = "ABC123",
+                TripCategory = TripCategory.forest
+            };
+            Trip trip3 = new Trip
+            {
+                Title = "Another Title",
+                StartDate = new DateTime(2015, 4, 16),
+                TripOwner = "ABC123"
+            };
+            Trip trip4 = new Trip
+            {
+                Title = "Trip 4",
+                StartDate = new DateTime(2018, 4, 16),
+                TripOwner = "AnotherUser",
+                TripCategory = TripCategory.architecture
+            };
+            tc.Trips.Add(trip1);
+            tc.Trips.Add(trip2);
+            tc.Trips.Add(trip3);
+            tc.Trips.Add(trip4);
+
+            // Arrange - create a controller
+            var controller = new TripController(tc);
+            // Action
+            TripSearchModel searchModel = new TripSearchModel { TripCategory = TripCategory.architecture, TitleKeyword = "Trip" };
+            var viewResult = await controller.Search(searchModel) as ViewResult;
+            List<Trip> result = (List<Trip>)viewResult.ViewData.Model;
+            // Assert - ordered descending + only show trips from ABC123
+            Assert.AreEqual(2, result.Count);
+            CollectionAssert.Contains(result, trip1);
+            CollectionAssert.Contains(result, trip4);
+        }
+
+        [TestMethod()]
         public async Task DetailsReturnsCorrectTrip()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
