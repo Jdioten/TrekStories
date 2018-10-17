@@ -48,8 +48,8 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="visible-xs">@Html.ActionLink("Search", "Index", "Home")</li>
-                        <li class="hidden-xs"><a href=@Url.Action("Index", "Search")><span class="glyphicon glyphicon-search big-search"></span></a></li>
+                        <li class="visible-xs">@Html.ActionLink("Search", "Search", "Trip")</li>
+                        <li class="hidden-xs"><a href=@Url.Action("Search", "Trip")><span class="glyphicon glyphicon-search big-search"></span></a></li>
                         <li>@Html.ActionLink("My Trips", "Index", "Trip")</li>
                         <li>@Html.ActionLink("Start Planning", "Create", "Trip")</li>
                     </ul>

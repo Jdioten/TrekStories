@@ -45,6 +45,8 @@ namespace TrekStories.Controllers
         public async Task<ActionResult> Search(TripSearchModel searchModel)
         {
             List<Trip> trips = await GetTrips(searchModel).ToListAsync();
+            ViewBag.PreviousSearch = searchModel;
+            ViewBag.CountryList = Trip.GetCountries();
             return View(trips);
         }
 
@@ -291,8 +293,8 @@ namespace TrekStories.Controllers
                     "Trip", "Index"));
             }
 
-            //return View("Souvenir", tripSteps);
-            return new RotativaHQ.MVC5.ViewAsPdf("Souvenir", tripSteps) { FileName = "SouvenirReport.pdf" };
+            return View("Souvenir", tripSteps);
+            //return new RotativaHQ.MVC5.ViewAsPdf("Souvenir", tripSteps) { FileName = "SouvenirReport.pdf" };
         }
     }
 }
