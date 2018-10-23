@@ -160,7 +160,8 @@ body {
         background-image: none;
     }
 
-.search-box .btn-trekstories {
+.search-box .btn-trekstories,
+.search-form .btn-trekstories {
     background-color: #eb6864;
 }
 
