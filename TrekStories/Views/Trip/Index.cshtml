@@ -9,7 +9,7 @@
         <p class="mb-0">The gladdest moment in human life, me thinks, is a departure into unknown lands.</p>
         <small class="blockquote-footer">Sir Richard Burton</small>
     </blockquote>
-    <p class="text-center"><a href="@Url.Action("Create")" class="btn btn-primary btn">Prepare the Next Adventure &raquo;</a></p>
+    <p class="text-center"><a href="@Url.Action("Create")" class="btn btn-trekstories">Prepare the Next Adventure &raquo;</a></p>
 </div>
 <div class="row">
     <div class="col-xs-3">
@@ -21,7 +21,7 @@
                 <label class="sr-only" for="search-text">Trip Name</label>
                 @Html.TextBox("SearchString", "", new { @class = "form-control", @placeholder = "Search Trip Name" })
             </div>
-            <button type="submit" class="btn btn-success" id="search-btn">Search</button>
+            <button type="submit" class="btn btn-trekstories" id="search-btn">Search</button>
         </form>
     </div>
 </div>
@@ -34,7 +34,7 @@
                 <div class="caption">
                     <h3>@item.Title</h3>
                     <p>@item.Duration days in @item.Country&emsp;-&emsp;<em>@item.TotalWalkingDistance Km</em></p>
-                    <p><a href="@Url.Action("Details", new { id = item.TripId })" class="btn btn-primary" role="button" style="width:100%;">MORE</a></p>
+                    <p><a href="@Url.Action("Details", new { id = item.TripId })" class="btn btn-trekstories" role="button" style="width:100%;">MORE</a></p>
                 </div>
             </div>
         </div>

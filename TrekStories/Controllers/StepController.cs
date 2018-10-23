@@ -492,7 +492,7 @@ namespace TrekStories.Controllers
             switch (type)
             {
                 case "aquatic": return "fas fa-swimmer";
-                case "sports": return "fas fa-dribbble";
+                case "sports": return "fas fa-football-ball";
                 case "musical": return "fas fa-music";
                 case "cultural": return "fas fa-university";
                 case "nature": return "fas fa-paw";

@@ -160,6 +160,10 @@ body {
         background-image: none;
     }
 
+.search-box .btn-trekstories {
+    background-color: #eb6864;
+}
+
     .btn-default {
         color: #202613;
     }
