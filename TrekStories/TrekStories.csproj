@@ -326,7 +326,6 @@
     <None Include="Scripts\jquery-1.12.4-vsdoc.js" />
     <Content Include="Images\lens-1427469.jpg" />
     <Content Include="Images\mountains.jpg" />
-    <Content Include="Images\shoeprint-1425635.jpg" />
     <Content Include="Images\unclassifiable.jpg" />
     <Content Include="Images\Waterfall.jpg" />
     <Content Include="Rotativa\help-wkhtmltoimage.txt" />
