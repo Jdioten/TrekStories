@@ -90,6 +90,7 @@ namespace TrekStories.Controllers
                                 new UnauthorizedAccessException("Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again."),
                                 "Trip", "Index"));
             }
+            ViewBag.HideActions = trip.TripOwner != User.Identity.GetUserId();
             return View(trip);
         }
 
@@ -265,6 +266,7 @@ namespace TrekStories.Controllers
                                      on s.AccommodationId equals a.AccommodationId
                                      select a;
             ViewBag.TripAccommodations = tripAccommodations.Distinct().OrderBy(a => a.Name);
+            ViewBag.HideDates = trip.TripOwner == User.Identity.GetUserId() ? "" : "hidden";
             return new RotativaHQ.MVC5.ViewAsPdf("Summary", tripSteps) { FileName = "TripSummary.pdf" };
         }
 

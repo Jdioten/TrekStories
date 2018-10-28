@@ -44,6 +44,7 @@ namespace TrekStories.Controllers
             //create activity thread
             ViewBag.ActivityThread = CreateActivityThread(step);
             ViewBag.HideReview = step.Date > DateTime.Today ? "hidden" : "";
+            ViewBag.HideActions = step.Trip.TripOwner != User.Identity.GetUserId() ? "hidden" : "";
             ViewBag.PhotoCount = GetReviewPicturesCount(step);
 
             return View(step);

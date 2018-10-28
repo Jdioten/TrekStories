@@ -26,7 +26,7 @@
                 <th>
 
                 </th>
-                <th>
+                <th class="@ViewBag.HideDates">
                     Date
                 </th>
                 <th>
@@ -55,7 +55,7 @@
                     <td align="center">
                         @Html.DisplayFor(modelItem => item.SequenceNo)
                     </td>
-                    <td>
+                    <td class="@ViewBag.HideDates">
                         @Html.DisplayFor(modelItem => item.Date)
                     </td>
                     <td>
@@ -84,7 +84,7 @@
         <br />
         @for (int i = 0; i < ViewBag.TripSteps.Length; i++)
         {
-            <p><strong>@ViewBag.TripSteps[i].Date.ToLongDateString()</strong> / From @ViewBag.TripSteps[i].From to @ViewBag.TripSteps[i].To</p>
+            <p><span class="@ViewBag.HideDates"><strong>@ViewBag.TripSteps[i].Date.ToLongDateString()</strong> / </span>From @ViewBag.TripSteps[i].From to @ViewBag.TripSteps[i].To</p>
             <p class="description">@ViewBag.TripSteps[i].Description</p>
             @Html.Partial("_ActivityThread", (List<ActivityThreadViewModel>)ViewBag.ActivityThread[i])
             <br />
@@ -106,7 +106,7 @@
                     </address>
                 </div>
                 <div class="col-sm-5">
-                    <p>
+                    <p class="@ViewBag.HideDates">
                         <i>Check-In:</i> @item.CheckIn <br />
                         <i>Check-Out:</i> @item.CheckOut
                     </p>

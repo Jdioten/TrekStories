@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Details";
+    string trClass = ViewBag.HideActions ? "hidden" : "";
 }
 
 <div class="mycontainer">
@@ -14,7 +15,7 @@
                     <h3>@Model.Title</h3>
                     <p>
                         @(Model.TotalWalkingDistance) Km in <em>@Model.Country</em><br />
-                        @Model.Duration  Day(s) starting on <strong>@Model.StartDate.ToLongDateString()</strong><br />
+                        @Model.Duration  Day(s) <span class="@trClass">starting on <strong>@Model.StartDate.ToLongDateString()</strong></span><br />
                         Budget: <span class="site-colour">@string.Format("{0:C}", Model.TotalCost)</span><br />
                         <button type="button" class="btn btn-info btn-xs" data-toggle="collapse" data-target="#notescontent">Notes</button>
                         <div id="notescontent" class="collapse">
@@ -22,7 +23,7 @@
                         </div>
                     </p>
                     <p class="text-right">
-                        <a href="@Url.Action("Edit", new { id = Model.TripId })" class="btn btn-sm btn-trekstories">
+                        <a href="@Url.Action("Edit", new { id = Model.TripId })" class="@trClass btn btn-sm btn-trekstories">
                             <span class="fas fa-pen mytooltip">
                                 <span class="mytooltiptext">Edit Trip Details</span>
                             </span>
@@ -34,7 +35,7 @@
                             </span>
                         </a>
                         &emsp;
-                        <a href="@Url.Action("GetSouvenirReport", new { id = Model.TripId })" class="btn btn-sm btn-trekstories">
+                        <a href="@Url.Action("GetSouvenirReport", new { id = Model.TripId })" class="@trClass btn btn-sm btn-trekstories">
                             <span class="fas fa-file-image mytooltip">
                                 <span class="mytooltiptext">Get Souvenir Report</span>
                             </span>
@@ -43,7 +44,7 @@
                 </div>
         </div> @*end panel heading*@
         <div class="panel-body">
-            <a class="btn btn-success btn-xs first-add-step-btn" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = 1})"
+            <a class="@trClass btn btn-success btn-xs first-add-step-btn" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = 1})"
                title="Insert a Step Here">
                 <span class="fas fa-plus mytooltip">
                     <span class="mytooltiptext">Insert a Step Here</span>
@@ -56,8 +57,8 @@
                     <tr>
                         <td>
                             <h5>Day @item.SequenceNo</h5>
-                            <p>@item.Date.ToShortDateString()</p>
-                            <a class="btn btn-success btn-xs add-step-btn" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = (item.SequenceNo + 1) })">
+                            <p class="@trClass">@item.Date.ToShortDateString()</p>
+                            <a class="@trClass btn btn-success btn-xs add-step-btn" href="@Url.Action("Create", "Step", new { tripId = Model.TripId, seqNo = (item.SequenceNo + 1) })">
                                 <span class="fas fa-plus mytooltip">
                                     <span class="mytooltiptext">Insert a Step Here</span>
                                 </span>
@@ -67,7 +68,7 @@
                             <h5>From @item.From to @item.To</h5>
                             @item.WalkingDistance Km in @item.GetWalkingTime()
                         </td>
-                        <td align="center" style="vertical-align:middle;">
+                        <td align="center" style="vertical-align:middle;" class="@trClass">
                             <a class="btn btn-trekstories btn-sm" href="@Url.Action("Edit", "Step", new { id = item.StepId})">
                                 <span class="fas fa-pen mytooltip">
                                     <span class="mytooltiptext">Edit Step</span>
@@ -86,5 +87,5 @@
             </table>
         </div>
     </div>
-    <p>@Html.ActionLink("View All Trip Accommodations", "Index", "Accommodation", new { tripId = Model.TripId}, null)</p>
+    <p>@Html.ActionLink("View All Trip Accommodations", "Index", "Accommodation", new { tripId = Model.TripId}, new { @class = trClass })</p>
 </div> @*end of container*@

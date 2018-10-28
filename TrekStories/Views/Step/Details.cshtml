@@ -25,7 +25,7 @@
             }
         </ul>
     </div>
-    <h4 style="margin-top:0;">@Model.Trip.Title - Day @Model.SequenceNo <small>(@Model.Date.ToShortDateString())</small></h4>
+    <h4 style="margin-top:0;">@Model.Trip.Title - Day @Model.SequenceNo <small class="@ViewBag.HideActions">(@Model.Date.ToShortDateString())</small></h4>
     <hr class="thick-hr"/>
     <section>
         <div class="row">
@@ -91,7 +91,7 @@
             </div>
         </div>
         <p>
-            @Html.ActionLink("Edit", "Edit", new { id = Model.StepId }) |
+            <span class="@ViewBag.HideActions">@Html.ActionLink("Edit", "Edit", new { id = Model.StepId }) |</span>
             @Html.ActionLink("Back to Trip", "Details", "Trip", new { id = Model.TripId}, null)
         </p>
     </section>
@@ -112,7 +112,7 @@
                 </address>
             </div>
             <div class="col-md-6">
-                <dl class="dl-horizontal">
+                <dl class="@ViewBag.HideActions dl-horizontal">
                     <dt>
                         @Html.DisplayNameFor(model => model.Accommodation.CheckIn)
                     </dt>
@@ -151,7 +151,7 @@
             </div>
             }
         </div>
-        <p>
+        <p class="@ViewBag.HideActions">
             @if (Model.Accommodation == null)
             {
                 @Html.ActionLink("Add", "Create", "Accommodation", new { id = Model.TripId, cIn = Model.Date, cOut = cOut }, null)
@@ -167,7 +167,7 @@
     <hr class="thick-hr" />
     <section>
         <strong><em>Activities</em></strong>
-        <div class="pull-right" id="activity-menu">
+        <div class="pull-right @ViewBag.HideActions" id="activity-menu">
             <div class="btn-group btn-group-sm" role="group">
                 <a class="btn btn-trekstories" href="@Url.Action("CreateTransport", "Activities", new { stepId = Model.StepId})">Add Transport</a>
                 <a class="btn btn-trekstories" href="@Url.Action("CreateLeisure", "Activities", new { stepId = Model.StepId})">Add Leisure Activity</a>
@@ -191,11 +191,11 @@
                         }
                     </p>
                     <p>@Model.Review.PublicNotes</p>
-                    <p><em>@Model.Review.PrivateNotes</em></p>
+                    <p class="@ViewBag.HideActions"><em>@Model.Review.PrivateNotes</em></p>
                 }
             </div>
         </div>
-        <p>
+        <p class="@ViewBag.HideActions">
             @if (Model.Review == null)
             {
                 @Html.ActionLink("Add", "Create", "Review", new { id = Model.StepId }, null)
@@ -205,7 +205,7 @@
                 @Html.ActionLink("Edit", "Edit", "Review", new { id = Model.StepId }, null)
             }
         </p>
-        <div class="row">
+        <div class="row @ViewBag.HideActions">
             <div class="col-lg-12">
                 <div class="alert alert-warning">You have @ViewBag.PhotoCount Photo(s) </div>
             </div>

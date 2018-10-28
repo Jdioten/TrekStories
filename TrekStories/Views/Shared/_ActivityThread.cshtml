@@ -1,5 +1,9 @@
 ﻿@model List<TrekStories.Models.ActivityThreadViewModel>
 
+@{
+    bool disabled = ViewBag.HideActions == "hidden";
+}
+
     <div class="activity-thread">
         <div class="row">
             @foreach (var item in Model)
@@ -9,8 +13,15 @@
                 </div>
                 <div class="col-xs-10">
                     <span class="icon @item.Icon"></span>
-                    @Html.ActionLink(item.Name, "Details", item.Controller, new { id = item.ID }, null) &nbsp;&nbsp;
-                    <small>(@string.Format("{0:C}", item.Price))</small> <br />
+                    @if (disabled)
+                    {
+                        <a href="" class="isDisabled">@item.Name</a>
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Name, "Details", item.Controller, new { id = item.ID }, null) 
+                    }
+                    &nbsp; &nbsp;<small>(@string.Format("{0:C}", item.Price))</small> <br />
                     @if (item.ArrivalTime.HasValue)
                     {
                         <span><em>Arriving at @item.ArrivalTime.Value.ToShortTimeString()</em></span>

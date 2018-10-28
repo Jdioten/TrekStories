@@ -435,6 +435,13 @@ body {
         margin-bottom: 20px;
     }
 
+/*Search Form Styling*/
+.search-form {
+    background-image: url(../../Images/lens-1427469.jpg);
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 
 
     .site-colour {
@@ -453,6 +460,15 @@ body {
     .no-padding {
         padding: 3px;
     }
+
+.isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: none;
+    display: inline-block;
+    pointer-events: none;
+}
 
 
     .crop {
