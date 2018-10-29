@@ -1,12 +1,5 @@
 ﻿@model TrekStories.Models.TripSearchModel
 
-<style>
-    .search-form {
-        background-image: url(../../Images/lens-1427469.jpg);
-        background-size: cover;
-    }
-</style>
-
 <div class="search-form">
     <div id="form-container">
         @using (Html.BeginForm("Search", "Trip", FormMethod.Get, new { id = "searchForm" }))
