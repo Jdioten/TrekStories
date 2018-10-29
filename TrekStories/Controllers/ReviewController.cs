@@ -163,7 +163,7 @@ namespace TrekStories.Controllers
                 TempData["message"] = "Please browse for a file to upload.";
             }
             ViewBag.Create = false;
-            return RedirectToAction("Edit", new { id = revId });
+            return new RedirectResult(Url.Action("Edit", new { id = revId }) + "#AddPhoto");
         }
 
         [HttpPost]
@@ -198,7 +198,7 @@ namespace TrekStories.Controllers
             {
                 TempData["message"] = "There was an error when deleting the file from Blob Storage. Error Message: " + e.Message;
             }
-            return RedirectToAction("Edit", new { id = revId });
+            return new RedirectResult(Url.Action("Edit", new { id = revId }) + "#AddPhoto");
         }
 
         protected override void Dispose(bool disposing)
