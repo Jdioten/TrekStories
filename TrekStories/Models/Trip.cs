@@ -29,7 +29,7 @@ namespace TrekStories.Models
         public TripCategory TripCategory { get; set; }
 
         [Required(ErrorMessage = "Please indicate the trip start date.")]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 

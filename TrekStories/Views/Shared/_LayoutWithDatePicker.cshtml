@@ -12,12 +12,12 @@
     <script type='text/javascript'>
     $(function(){
         $('.date-picker').datepicker(
-            { dateFormat: 'dd-mm-yy'}
+            { dateFormat: 'yy-mm-dd'}
         );
-        @if (ViewBag.Title == "EditTrip")
+        @*@if (ViewBag.Title == "EditTrip")
         {
         <text>$(".date-picker").datepicker("setDate", '@Model.StartDate');</text>
-        }
+        }*@
         $('input[type="time"]').attr('type', 'text');  //to prevent default timepicker on Edge and Chrome
         $('.time-picker').timepicker(
             {
