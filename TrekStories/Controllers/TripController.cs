@@ -76,7 +76,7 @@ namespace TrekStories.Controllers
                     result = result.Where(t => t.Duration <= searchModel.MaxDuration);
                 }   
             }
-            return result;
+            return result.OrderByDescending(t => t.Duration);
         }
 
         // GET: Trip/Details/5
