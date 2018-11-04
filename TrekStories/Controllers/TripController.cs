@@ -295,8 +295,8 @@ namespace TrekStories.Controllers
                     "Trip", "Index"));
             }
 
-            return View("Souvenir", tripSteps);
-            //return new RotativaHQ.MVC5.ViewAsPdf("Souvenir", tripSteps) { FileName = "SouvenirReport.pdf" };
+            //return View("Souvenir", tripSteps);
+            return new RotativaHQ.MVC5.ViewAsPdf("Souvenir", tripSteps) { FileName = "SouvenirReport.pdf" };
         }
     }
 }
