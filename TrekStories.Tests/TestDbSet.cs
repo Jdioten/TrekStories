@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -10,39 +10,39 @@ using System.Threading.Tasks;
 
 namespace TrekStories.Tests
 {
-    class TestDbSet<T> : DbSet<T>, IQueryable<T>, IEnumerable<T>, IDbAsyncEnumerable<T>
-        where T : class
+    public class TestDbSet<TEntity> : DbSet<TEntity>, IQueryable, IEnumerable<TEntity>, IDbAsyncEnumerable<TEntity>
+       where TEntity : class
     {
-        ICollection<T> _data;
-        IQueryable<T> _query;
+        ObservableCollection<TEntity> _data;
+        IQueryable _query;
 
         public TestDbSet()
         {
-            _data = new List<T>();
+            _data = new ObservableCollection<TEntity>();
             _query = _data.AsQueryable();
         }
 
-        public override T Add(T item)
+        public override TEntity Add(TEntity item)
         {
             _data.Add(item);
             return item;
         }
 
-        public override T Remove(T item)
+        public override TEntity Remove(TEntity item)
         {
             _data.Remove(item);
             return item;
         }
 
-        public override T Attach(T item)
+        public override TEntity Attach(TEntity item)
         {
             _data.Add(item);
             return item;
         }
 
-        public override T Create()
+        public override TEntity Create()
         {
-            return Activator.CreateInstance<T>();
+            return Activator.CreateInstance<TEntity>();
         }
 
         public override TDerivedEntity Create<TDerivedEntity>()
@@ -50,73 +50,39 @@ namespace TrekStories.Tests
             return Activator.CreateInstance<TDerivedEntity>();
         }
 
-        //public override ObservableCollection<T> Local
-        //{
-        //    get { return new ObservableCollection<T>(_data); }
-        //}
+        public override ObservableCollection<TEntity> Local
+        {
+            get { return _data; }
+        }
 
-        public Type ElementType
+        Type IQueryable.ElementType
         {
             get { return _query.ElementType; }
         }
 
-        public Expression Expression
+        Expression IQueryable.Expression
         {
             get { return _query.Expression; }
         }
 
-        //public IQueryProvider Provider
-        //{
-        //    get { return _query.Provider; }
-        //}
-
-
-        public IQueryProvider Provider
+        IQueryProvider IQueryable.Provider
         {
-            get { return new TestDbAsyncQueryProvider<T>(_query.Provider); }
+            get { return new TestDbAsyncQueryProvider<TEntity>(_query.Provider); }
         }
 
-        //https://msdn.microsoft.com/en-us/data/dn314431 ef testing eith your own test doubles
-
-
-        //System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        //{
-        //    return _data.GetEnumerator();
-        //}
-
-        //IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        //{
-        //    return _data.GetEnumerator();
-        //}
-
-        IEnumerator IEnumerable.GetEnumerator()
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return _query.GetEnumerator();
+            return _data.GetEnumerator();
         }
 
-        public IEnumerator<T> GetEnumerator()
+        IEnumerator<TEntity> IEnumerable<TEntity>.GetEnumerator()
         {
-            return _query.GetEnumerator();
+            return _data.GetEnumerator();
         }
 
-        //IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
-        //{
-        //    return ((IDbAsyncEnumerable)_query).GetAsyncEnumerator();
-        //}
-
-        //public IDbAsyncEnumerator<T> GetAsyncEnumerator()
-        //{
-        //    return ((IDbAsyncEnumerable<T>)_query).GetAsyncEnumerator();
-        //}
-
-        public IDbAsyncEnumerator<T> GetAsyncEnumerator()
+        IDbAsyncEnumerator<TEntity> IDbAsyncEnumerable<TEntity>.GetAsyncEnumerator()
         {
-            return new FakeDbAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
-        }
-
-        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
-        {
-            return GetAsyncEnumerator();
+            return new TestDbAsyncEnumerator<TEntity>(_data.GetEnumerator());
         }
     }
 
@@ -217,5 +183,5 @@ namespace TrekStories.Tests
     }
 }
 
-//code copied from https://docs.microsoft.com/en-us/aspnet/web-api/overview/testing-and-debugging/mocking-entity-framework-when-unit-testing-aspnet-web-api-2#create-test-context
-// and from https://gist.github.com/axelheer/bdbbd2f92600a45f22d6 for Async
+
+//code copied from https://docs.microsoft.com/en-gb/ef/ef6/fundamentals/testing/writing-test-doubles
