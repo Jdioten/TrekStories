@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using TrekStories.Models;
 using TrekStories.Tests;
 using TrekStories.Tests.UnitTestHelpers;
+using Moq;
 
 namespace TrekStories.Controllers.Tests
 {
@@ -78,7 +79,7 @@ namespace TrekStories.Controllers.Tests
             Assert.IsInstanceOfType(result, typeof(ViewResult));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public async Task EditReviewReturnsCorrectDetails()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
@@ -124,7 +125,7 @@ namespace TrekStories.Controllers.Tests
             Assert.AreEqual("CustomisedError", badResult.ViewName);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public async Task EditForNullIdReturnsBadRequest()
         {
             var controller = new ReviewController(new TestTrekStoriesContext());
@@ -201,7 +202,13 @@ namespace TrekStories.Controllers.Tests
         public async Task CannotUploadNullImage()
         {
             ReviewController controller = new ReviewController();
-            var result = await controller.UploadImageAsync(null, 1) as ViewResult;
+
+            //mock Url used in RedirectResult
+            var UrlHelperMock = new Mock<UrlHelper>();
+            controller.Url = UrlHelperMock.Object;
+            UrlHelperMock.Setup(x => x.Action("Edit", "Review", new { id = "1#AddPhoto" })).Returns("testUrl");
+
+            await controller.UploadImageAsync(null, 1);
             Assert.AreEqual("Please browse for a file to upload.", controller.TempData["message"]);
         }
 
@@ -276,9 +283,12 @@ namespace TrekStories.Controllers.Tests
             tc.Images.Add(image1);
             ReviewController controller = new ReviewController(tc).WithAuthenticatedUser("User1");
 
+            var UrlHelperMock = new Mock<UrlHelper>();
+            controller.Url = UrlHelperMock.Object;
+            UrlHelperMock.Setup(x => x.Action("Edit", "Review", new { id = "12#AddPhoto" })).Returns("testUrl");
+
             var result = await controller.DeleteImageAsync(25) as RedirectToRouteResult;
 
-            Assert.AreEqual("Edit", result.RouteValues["action"]);
             Assert.IsNull(tc.Images.Find(25));
         }
     }

@@ -17,7 +17,7 @@ namespace TrekStories.Controllers.Tests
         public async Task DetailsReturnsCorrectStep()
         {
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
-            StepController controller = new StepController(tc);
+            StepController controller = new StepController(tc).WithAuthenticatedUser("UserA");
             Step step = new Step() {
                 StepId = 123,
                 SequenceNo = 2,
@@ -26,7 +26,7 @@ namespace TrekStories.Controllers.Tests
                 WalkingDistance = 0,
                 WalkingTime = 3.5
             };
-            step.Trip = new Trip { TripId = 1, Steps = new List<Step>() { step } };
+            step.Trip = new Trip { TripId = 1, Steps = new List<Step>() { step }, TripOwner = "UserB" };
             tc.Steps.Add(step);
 
             ViewResult result = await controller.Details(123) as ViewResult;

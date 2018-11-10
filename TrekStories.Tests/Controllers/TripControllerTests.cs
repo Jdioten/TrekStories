@@ -125,7 +125,7 @@ namespace TrekStories.Controllers.Tests
             };
             tc.Trips.Add(trip);
 
-            var controller = new TripController(tc);
+            var controller = new TripController(tc).WithAuthenticatedUser("Whatever");
 
             var result = await controller.Details(1) as ViewResult;
             Trip t = (Trip)((ViewResult)result).Model;
