@@ -14,7 +14,7 @@ namespace TrekStories.Models
 
         [Required(ErrorMessage ="The start time is required to order the activities chronologically.")]
         [Display(Name = "Start Time")]
-        [DataType(DataType.Time)]
+        //[DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{0:hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime StartTime { get; set; }
 

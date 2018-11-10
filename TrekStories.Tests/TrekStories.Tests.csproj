@@ -118,7 +118,6 @@
     <Compile Include="Controllers\AccommodationControllerTests.cs" />
     <Compile Include="Controllers\ActivitiesControllerTests.cs" />
     <Compile Include="Controllers\ReviewControllerTests.cs" />
-    <Compile Include="FakeDbAsyncEnumerator.cs" />
     <Compile Include="Controllers\StepControllerTests.cs" />
     <Compile Include="Controllers\TripControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

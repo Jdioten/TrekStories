@@ -14,10 +14,6 @@
         $('.date-picker').datepicker(
             { dateFormat: 'yy-mm-dd'}
         );
-        @*@if (ViewBag.Title == "EditTrip")
-        {
-        <text>$(".date-picker").datepicker("setDate", '@Model.StartDate');</text>
-        }*@
         $('input[type="time"]').attr('type', 'text');  //to prevent default timepicker on Edge and Chrome
         $('.time-picker').timepicker(
             {
@@ -25,10 +21,6 @@
                 scrollDefault: 'now'
             }
         );
-        @if (ViewBag.Title == "EditLeisure" || ViewBag.Title == "EditTransport")
-        {
-        <text>$(".time-picker").timepicker("setTime", '@Model.StartTime');</text>
-        }
     })
     </script>
     <meta charset="utf-8">
