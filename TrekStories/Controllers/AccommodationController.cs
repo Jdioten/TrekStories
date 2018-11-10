@@ -362,16 +362,17 @@ namespace TrekStories.Controllers
         [NonAction]
         public static void AssignAccommodationToStep(Accommodation acc, Trip trip, bool insert)
         {
-            //for any existing step within dates, check no accommodation exists
+            //check that a step exists for each day covered by accommodation and assign accommodation id
             List<DateTime> dates = acc.GetDatesBetweenInAndOut();
+            var stepsInRange = trip.Steps.Where(s => s.Date.Date >= acc.CheckIn.Date && s.Date.Date < acc.CheckOut.Date);
             foreach (var date in dates)
             {
-                Step step = trip.Steps.FirstOrDefault(s => s.Date.Date == date.Date);
+                Step step = stepsInRange.FirstOrDefault(s => s.Date.Date == date.Date);
                 if (step == null)
                 {
                     throw new ArgumentException("There is no existing step for date " + date.ToShortDateString() + ". Please first create the step.");
                 }
-                //if new accommodation, check that there is no accommodation already on step
+                //if new accommodation, check that there is no other accommodation already on step
                 else if (insert && step.AccommodationId != null && step.AccommodationId != acc.AccommodationId) //to allow for updates
                 {
                     throw new ArgumentException("An accommodation already exists for Step " + step.SequenceNo);
