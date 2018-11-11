@@ -133,7 +133,6 @@ namespace TrekStories.Controllers
                 }
                 else if (ModelState.IsValid)
                 {
-                    //if before trip start date -> error
                     int tripId = Int32.Parse(accommodation.ConfirmationFileUrl); //temporarily storing tripid in confirmationurl
 
                     Trip trip = await db.Trips.FindAsync(tripId);
@@ -143,8 +142,7 @@ namespace TrekStories.Controllers
                                 new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add an accommodation to it."),
                                 "Trip", "Index"));
                     }
-
-
+                    //if before trip start date -> error
                     if (accommodation.CheckIn < trip.StartDate)
                     {
                         ModelState.AddModelError("", "The check-in date is before the trip start date (" + trip.StartDate.ToShortDateString() + "). Please correct.");
@@ -245,16 +243,8 @@ namespace TrekStories.Controllers
                         try
                         {
                             AssignAccommodationToStep(accommodationToUpdate, trip, true);
-
                             //remove accommodation from previously assigned steps now out of range
-                            List<Step> oldSteps = await db.Steps.Where(s => s.AccommodationId == accommodationToUpdate.AccommodationId).Include(s => s.Trip).ToListAsync();
-                            foreach (var oldStep in oldSteps)
-                            {
-                                if (oldStep.Date.Date < accommodationToUpdate.CheckIn.Date || oldStep.Date.Date >= accommodationToUpdate.CheckOut.Date)
-                                {
-                                    oldStep.AccommodationId = null;
-                                }
-                            }
+                            await RemoveAccommodationFromOldSteps(accommodationToUpdate);
                         }
                         catch (ArgumentException ex)
                         {
@@ -291,6 +281,18 @@ namespace TrekStories.Controllers
                 }
             }
             return View(accommodationToUpdate);
+        }
+
+        private async Task RemoveAccommodationFromOldSteps(Accommodation accommodationToUpdate)
+        {
+            List<Step> oldSteps = await db.Steps.Where(s => s.AccommodationId == accommodationToUpdate.AccommodationId).ToListAsync();
+            foreach (var oldStep in oldSteps)
+            {
+                if (oldStep.Date.Date < accommodationToUpdate.CheckIn.Date || oldStep.Date.Date >= accommodationToUpdate.CheckOut.Date)
+                {
+                    oldStep.AccommodationId = null;
+                }
+            }
         }
 
         // GET: Accommodation/Delete/5

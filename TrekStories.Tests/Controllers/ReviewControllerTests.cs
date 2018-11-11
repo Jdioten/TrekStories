@@ -5,6 +5,7 @@ using TrekStories.Models;
 using TrekStories.Tests;
 using TrekStories.Tests.UnitTestHelpers;
 using Moq;
+using System.Collections.Generic;
 
 namespace TrekStories.Controllers.Tests
 {
@@ -89,10 +90,11 @@ namespace TrekStories.Controllers.Tests
                 ReviewId = 1,
                 PrivateNotes = "Test Private",
                 StepId = 1,
-                Rating = 3
+                Rating = 3,
+                Images = new List<Image>()
             };
             tc.Reviews.Add(expectedReview);
-            tc.Steps.Add(new Step { StepId = 1 });
+            tc.Steps.Add(new Step { StepId = 1, From = "A", To = "B", Review = expectedReview });
 
             ReviewController controller = new ReviewController(tc);
 

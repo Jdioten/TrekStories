@@ -8,6 +8,8 @@ using TrekStories.Abstract;
 using TrekStories.DAL;
 using TrekStories.Models;
 using TrekStories.Utilities;
+using System.Data.Entity;
+
 
 namespace TrekStories.Controllers
 {
@@ -38,15 +40,14 @@ namespace TrekStories.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Step step = await db.Steps.FindAsync(id);
+            Step step = await db.Steps.Include(s => s.Review).FirstOrDefaultAsync(s => s.StepId == id);
             if (step == null)
             {
                 return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, the step you are trying to review doesn't seem to exist. Please try navigating to the main page again."),
                                 "Trip", "Index"));
             }
-            Review review = await db.Reviews.FindAsync(id);
-            if (review != null)
+            if (step.Review != null)
             {
                 return View("CustomisedError", new HandleErrorInfo(
                                 new ArgumentException("Oops, this step has already been reviewed, please edit the existing comment instead."),
@@ -68,21 +69,20 @@ namespace TrekStories.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Step step = await db.Steps.FindAsync(id);
+            Step step = await db.Steps.Include(s => s.Review).FirstOrDefaultAsync(s => s.StepId == id);
             if (step == null)
             {
                 return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, the step you are trying to review doesn't seem to exist. Please try navigating to the main page again."),
                                 "Trip", "Index"));
             }
-            Review review = await db.Reviews.FindAsync(id);
-            ViewBag.Rating = review.Rating;
+            ViewBag.Rating = step.Review.Rating;
             ViewBag.StepId = id.Value;
             ViewBag.From = step.From;
             ViewBag.To = step.To;
             ViewBag.PhotoCount = StepController.GetReviewPicturesCount(step);
             ViewBag.Create = false;
-            return View(review);
+            return View(step.Review);
         }
 
         // POST: Review/Edit/5
@@ -98,7 +98,6 @@ namespace TrekStories.Controllers
                                 new UnauthorizedAccessException("Oops, this review doesn't seem to be yours, you cannot add nor edit it."),
                                 "Trip", "Index"));
             }
-
             if (ModelState.IsValid)
             {
                 if (review.ReviewId == 0)
@@ -129,34 +128,24 @@ namespace TrekStories.Controllers
             if (file != null)
             {
                 file = file ?? Request.Files["file"];
-
-                Review review = await db.Reviews.FindAsync(revId);
-                if (review == null)
+                string error = await ErrorForNullReviewOrWrongOwner(revId);
+                if (error != null)
                 {
-                    return View("CustomisedError", new HandleErrorInfo(
-                            new UnauthorizedAccessException("Oops, the review you want to add images to does not exist."),
-                            "Trip", "Index"));
+                     return View("CustomisedError", new HandleErrorInfo(
+                                new UnauthorizedAccessException(error),"Trip", "Index"));
                 }
-                if (review.Step.Trip.TripOwner != User.Identity.GetUserId())
-                {
-                    return View("CustomisedError", new HandleErrorInfo(
-                                    new UnauthorizedAccessException("Oops, this review doesn't seem to be yours, you cannot add images to it."),
-                                    "Trip", "Index"));
-                }
-
-                string result;
                 try
                 {
-                    result = await utility.UploadBlobAsync(file, IMAGES_CONTAINER_NAME);
+                    string result = await utility.UploadBlobAsync(file, IMAGES_CONTAINER_NAME);
+                    Image uploadedImage = new Image { ReviewId = revId, Url = result };
+                    db.Images.Add(uploadedImage);
+                    db.SaveChanges();
                 }
                 catch (Exception e)
                 {
                     TempData["message"] = e.Message;
                     return RedirectToAction("Edit", new { id = revId });
                 }
-                Image uploadedImage = new Image { ReviewId = review.ReviewId, Url = result };
-                db.Images.Add(uploadedImage);
-                db.SaveChanges();
             }
             else
             {
@@ -166,39 +155,51 @@ namespace TrekStories.Controllers
             return new RedirectResult(Url.Action("Edit", new { id = revId }) + "#AddPhoto");
         }
 
+        private async Task<string> ErrorForNullReviewOrWrongOwner(int revId)
+        {
+            Review review = await db.Reviews.FindAsync(revId);
+            if (review == null)
+            {
+                return "Oops, the review you want to add images to does not exist.";
+            }
+            if (review.Step.Trip.TripOwner != User.Identity.GetUserId())
+            {
+                return "Oops, this review doesn't seem to be yours, you cannot add images to it.";
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteImageAsync(int ImgId)
         {
             Image imageToDelete = await db.Images.FindAsync(ImgId);
-
             if (imageToDelete == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            int revId = imageToDelete.ReviewId;
-
             if (imageToDelete.Review.Step.Trip.TripOwner != User.Identity.GetUserId())
             {
                 return View("CustomisedError", new HandleErrorInfo(
                                 new UnauthorizedAccessException("Oops, this review doesn't seem to be yours, you cannot delete its images."),
                                 "Trip", "Index"));
             }
-
             //remove from database
             db.Images.Remove(imageToDelete);
             db.SaveChanges();
-
             //remove from Cloud Storage
             try
             {
                 await utility.DeleteBlobAsync(imageToDelete.Url, IMAGES_CONTAINER_NAME);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                TempData["message"] = "There was an error when deleting the file from Blob Storage. Error Message: " + e.Message;
+                TempData["message"] = "There was an error when deleting the file from Blob Storage.";
             }
-            return new RedirectResult(Url.Action("Edit", new { id = revId }) + "#AddPhoto");
+            return new RedirectResult(Url.Action("Edit", new { id = imageToDelete.ReviewId }) + "#AddPhoto");
         }
 
         protected override void Dispose(bool disposing)

@@ -252,10 +252,10 @@ namespace TrekStories.Controllers.Tests
             TestTrekStoriesContext tc = new TestTrekStoriesContext();
             Trip trip = new Trip { TripId = 1, Title = "Trip Name", TotalCost = 20, TripOwner = "ABC123" };
             tc.Trips.Add(trip);
-            Step step = new Step { StepId = 123, Trip = trip };
+            Step step = new Step { StepId = 123, TripId = 1 };
             tc.Steps.Add(step);
-            tc.Activities.Add(new LeisureActivity() { ID = 1, Name = "Aquapark" });
-            LeisureActivity l2 = new LeisureActivity() { ID = 2, Name = "Test", StepId = 123, Price = 15, Step = step };
+            tc.Activities.Add(new LeisureActivity() { ID = 1, Name = "Aquapark", StepId = 123 });
+            LeisureActivity l2 = new LeisureActivity() { ID = 2, Name = "Test", StepId = 123, Price = 15 };
             tc.Activities.Add(l2);
             // Arrange - create the controller
             ActivitiesController controller = new ActivitiesController(tc).WithAuthenticatedUser("ABC123");
