@@ -18,6 +18,9 @@ namespace TrekStories.Controllers
     [Authorize]
     public class TripController : Controller
     {
+        private const string NULL_TRIP_ERROR = "Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again.";
+        private const string NON_OWNER_TRIP_ERROR = "Oops, this trip doesn't seem to be yours, you cannot edit it.";
+
         private ITrekStoriesContext db = new TrekStoriesContext();
 
         public TripController() { }
@@ -87,8 +90,7 @@ namespace TrekStories.Controllers
             if (trip == null)
             {
                 return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                                new UnauthorizedAccessException(NULL_TRIP_ERROR), "Trip", "Index"));
             }
             ViewBag.HideActions = trip.TripOwner != User.Identity.GetUserId();
             return View(trip);
@@ -140,21 +142,30 @@ namespace TrekStories.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            try
+            {
+                Trip trip = await GetTrip(id);
+                ViewBag.CountryList = Trip.GetCountries();
+                return View(trip);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return View("CustomisedError", new HandleErrorInfo(ex, "Trip", "Index"));
+            }
+        }
+
+        private async Task<Trip> GetTrip(int? id)
+        {
             Trip trip = await db.Trips.FindAsync(id);
             if (trip == null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                throw new UnauthorizedAccessException(NULL_TRIP_ERROR);
             }
             if (trip.TripOwner != User.Identity.GetUserId())
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                    new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot edit it."),
-                    "Trip", "Index"));
+                throw new UnauthorizedAccessException(NON_OWNER_TRIP_ERROR);
             }
-            ViewBag.CountryList = Trip.GetCountries();
-            return View(trip);
+            return trip;
         }
 
         // POST: Trip/Edit/5
@@ -166,48 +177,22 @@ namespace TrekStories.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var tripToUpdate = db.Trips.Find(id);
-
-            if (tripToUpdate.TripOwner != User.Identity.GetUserId())
+            try
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                    new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot edit it."),
-                    "Trip", "Index"));
-            }
+                Trip tripToUpdate = await GetTrip(id);
+                DateTime oldDate = tripToUpdate.StartDate;
 
-            DateTime oldDate = tripToUpdate.StartDate;
-
-            if (TryUpdateModel(tripToUpdate, "",
-               new string[] { "Title", "Country", "TripCategory", "StartDate", "Notes" }))
-            {
-                try
+                if (TryUpdateModel(tripToUpdate, "",
+                   new string[] { "Title", "Country", "TripCategory", "StartDate", "Notes" }))
                 {
-                    //if Start Date was modified, reassign all trip accommodations to steps
-                    DateTime newDate = tripToUpdate.StartDate;
-                    if (oldDate != newDate)
+                    try
                     {
-                        //get all acc on the trip
-                        var tripAccommodations = from s in tripToUpdate.Steps
-                                                 join a in db.Accommodations
-                                                 on s.AccommodationId equals a.AccommodationId
-                                                 select a;
-
-                        //for each accommodation, call 'assign to step' method
-                        foreach (Accommodation acc in tripAccommodations)
+                        //if Start Date was modified, reassign all trip accommodations to steps
+                        if (oldDate != tripToUpdate.StartDate)
                         {
                             try
                             {
-                                AccommodationController.AssignAccommodationToStep(acc, tripToUpdate, false);
-
-                                //remove accommodation from previously assigned steps now out of range
-                                List<Step> oldSteps = await db.Steps.Where(s => s.AccommodationId == acc.AccommodationId).Include(s => s.Trip).ToListAsync();
-                                foreach (var oldStep in oldSteps)
-                                {
-                                    if (oldStep.Date.Date < acc.CheckIn.Date || oldStep.Date.Date >= acc.CheckOut.Date)
-                                    {
-                                        oldStep.AccommodationId = null;
-                                    }
-                                }
+                                await MatchAccommodationToNewStepDates(tripToUpdate);
                             }
                             catch (ArgumentException)
                             {
@@ -216,17 +201,58 @@ namespace TrekStories.Controllers
                                 return View(tripToUpdate);
                             }
                         }
+                        await db.SaveChangesAsync();
+                        return RedirectToAction("Details", new { id = tripToUpdate.TripId });
                     }
-                    await db.SaveChangesAsync();
-                    return RedirectToAction("Details", new { id = tripToUpdate.TripId });
+                    catch (RetryLimitExceededException)
+                    {
+                        ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
+                    }
                 }
-                catch (RetryLimitExceededException)
+                ViewBag.CountryList = Trip.GetCountries();
+                return View(tripToUpdate);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return View("CustomisedError", new HandleErrorInfo(ex, "Trip", "Index"));
+            }
+        }
+
+        private async Task MatchAccommodationToNewStepDates(Trip tripToUpdate)
+        {
+            //get all acc on the trip
+            var tripAccommodations = from s in tripToUpdate.Steps
+                                     join a in db.Accommodations
+                                     on s.AccommodationId equals a.AccommodationId
+                                     select a;
+
+            //for each accommodation, call 'assign to step' method
+            foreach (Accommodation acc in tripAccommodations)
+            {
+                try
                 {
-                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
+                    AccommodationController.AssignAccommodationToStep(acc, tripToUpdate, false);
+
+                    //remove accommodation from previously assigned steps now out of range
+                    await RemoveAccommodationOutOfRange(acc);
+                }
+                catch (ArgumentException)
+                {
+                    throw new ArgumentException();   
                 }
             }
-            ViewBag.CountryList = Trip.GetCountries();
-            return View(tripToUpdate);
+        }
+
+        private async Task RemoveAccommodationOutOfRange(Accommodation acc)
+        {
+            List<Step> oldSteps = await db.Steps.Where(s => s.AccommodationId == acc.AccommodationId).Include(s => s.Trip).ToListAsync();
+            foreach (var oldStep in oldSteps)
+            {
+                if (oldStep.Date.Date < acc.CheckIn.Date || oldStep.Date.Date >= acc.CheckOut.Date)
+                {
+                    oldStep.AccommodationId = null;
+                }
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -245,21 +271,13 @@ namespace TrekStories.Controllers
             if (trip == null)
             {
                 return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                                new UnauthorizedAccessException(NULL_TRIP_ERROR), "Trip", "Index"));
             }
             ViewBag.TripTitle = trip.Title;
 
             var tripSteps = trip.Steps.OrderBy(s => s.SequenceNo).ToArray();
-            List<ActivityThreadViewModel>[] activities = new List<ActivityThreadViewModel>[tripSteps.Length];
-
-            var stepcontroller = new StepController();
-            for (int i = 0; i < tripSteps.Length; i++)
-            {
-                activities[i] = stepcontroller.CreateActivityThread(tripSteps[i]);
-            }
-            ViewBag.ActivityThread = activities;
             ViewBag.TripSteps = tripSteps;
+            ViewBag.ActivityThread = CreateArrayOfActivityThreads(tripSteps);
 
             var tripAccommodations = from s in trip.Steps
                                      join a in db.Accommodations
@@ -270,33 +288,37 @@ namespace TrekStories.Controllers
             return new RotativaHQ.MVC5.ViewAsPdf("Summary", tripSteps) { FileName = "TripSummary.pdf" };
         }
 
+        private List<ActivityThreadViewModel>[] CreateArrayOfActivityThreads(Step[] tripSteps)
+        {
+            List<ActivityThreadViewModel>[] activities = new List<ActivityThreadViewModel>[tripSteps.Length];
+            var stepcontroller = new StepController();
+            for (int i = 0; i < tripSteps.Length; i++)
+            {
+                activities[i] = stepcontroller.CreateActivityThread(tripSteps[i]);
+            }
+            return activities;
+        }
+
         public async Task<ActionResult> GetSouvenirReport(int id)
         {
-            Trip trip = await db.Trips.Include(t => t.Steps).SingleOrDefaultAsync(t => t.TripId == id);
-            if (trip == null)
+            try
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
-            }
-            if (trip.TripOwner != User.Identity.GetUserId())
-            {
-                return View("CustomisedError", new HandleErrorInfo(
-                    new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot access the souvenir report."),
-                    "Trip", "Index"));
-            }
-            ViewBag.TripTitle = trip.Title;
+                Trip trip = await GetTrip(id);
+                ViewBag.TripTitle = trip.Title;
 
-            var tripSteps = trip.Steps.OrderBy(s => s.SequenceNo).ToList();
-            if (tripSteps.Count == 0)
-            {
-                return View("CustomisedError", new HandleErrorInfo(
-                    new UnauthorizedAccessException("Please first add steps to the trip."),
-                    "Trip", "Index"));
+                var tripSteps = trip.Steps.OrderBy(s => s.SequenceNo).ToList();
+                if (tripSteps.Count == 0)
+                {
+                    return View("CustomisedError", new HandleErrorInfo(
+                        new UnauthorizedAccessException("Please first add steps to the trip."),
+                        "Trip", "Index"));
+                }
+                return new RotativaHQ.MVC5.ViewAsPdf("Souvenir", tripSteps) { FileName = "SouvenirReport.pdf" };
             }
-
-            //return View("Souvenir", tripSteps);
-            return new RotativaHQ.MVC5.ViewAsPdf("Souvenir", tripSteps) { FileName = "SouvenirReport.pdf" };
+            catch (UnauthorizedAccessException ex)
+            {
+                return View("CustomisedError", new HandleErrorInfo(ex, "Trip", "Index"));
+            }
         }
     }
 }
