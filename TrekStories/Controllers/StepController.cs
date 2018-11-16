@@ -18,6 +18,8 @@ namespace TrekStories.Controllers
     [Authorize]
     public class StepController : Controller
     {
+        private const string NULL_STEP_ERROR = "Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again.";
+
         private ITrekStoriesContext db = new TrekStoriesContext();
 
         public StepController() { }
@@ -35,8 +37,7 @@ namespace TrekStories.Controllers
             if (step == null)
             {
                 return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                                new UnauthorizedAccessException(NULL_STEP_ERROR), "Trip", "Index"));
             }
             //create array for pagination in view
             ViewBag.Steps = await db.Steps.Where(s => s.TripId == step.TripId).OrderBy(s =>s.SequenceNo).Select(s => s.StepId).ToArrayAsync();
@@ -70,23 +71,31 @@ namespace TrekStories.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            try
+            {
+                await CheckTripNotNullOrNonOwner(tripId);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return View("CustomisedError", new HandleErrorInfo(ex, "Trip", "Index"));
+            }
+            ViewBag.SeqNo = seqNo;
+            return View("Create", new StepViewModel());
+        }
+
+        private async Task CheckTripNotNullOrNonOwner(int? tripId)
+        {
             Trip trip = await db.Trips.FindAsync(tripId);
             if (trip == null)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the step you are looking for doesn't seem to exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                throw new UnauthorizedAccessException(NULL_STEP_ERROR);
             }
             if (trip.TripOwner != User.Identity.GetUserId())
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add a step to it."),
-                                "Trip", "Index"));
+                throw new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add a step to it.");
             }
             ViewBag.TripId = tripId;
-            ViewBag.SeqNo = seqNo;
             ViewBag.TripTitle = trip.Title;
-            return View("Create", new StepViewModel());
         }
 
         // POST: Step/Create
@@ -94,18 +103,13 @@ namespace TrekStories.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(StepViewModel stepViewModel)
         {
-            Trip trip = await db.Trips.FindAsync(stepViewModel.TripId);
-            if (trip == null)
+            try
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, the page you are trying to access does not exist. Please try navigating to the main page again."),
-                                "Trip", "Index"));
+                await CheckTripNotNullOrNonOwner(stepViewModel.TripId);
             }
-            if (trip.TripOwner != User.Identity.GetUserId())
+            catch (UnauthorizedAccessException ex)
             {
-                return View("CustomisedError", new HandleErrorInfo(
-                                new UnauthorizedAccessException("Oops, this trip doesn't seem to be yours, you cannot add a step to it."),
-                                "Trip", "Index"));
+                return View("CustomisedError", new HandleErrorInfo(ex, "Trip", "Index"));
             }
             try
             {
@@ -123,7 +127,6 @@ namespace TrekStories.Controllers
                         Notes = stepViewModel.Notes,
                         TripId = stepViewModel.TripId
                     };
-
                     //retrieve all subsequent steps and update seq no
                     foreach (Step item in db.Steps.Where(s => s.TripId == newStep.TripId && s.SequenceNo >= newStep.SequenceNo))
                     {
@@ -150,9 +153,7 @@ namespace TrekStories.Controllers
             {
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, contact the system administrator.");
             }
-            ViewBag.TripId = stepViewModel.TripId;
             ViewBag.SeqNo = stepViewModel.SequenceNo;
-            ViewBag.TripTitle = trip.Title;
             return View(stepViewModel);
         }
 
@@ -183,7 +184,6 @@ namespace TrekStories.Controllers
                 Notes = step.Notes,
                 TripId = step.TripId
             };
-
             return View(stepToEdit);
         }
 
