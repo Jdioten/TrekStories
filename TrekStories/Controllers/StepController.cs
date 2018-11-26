@@ -43,7 +43,7 @@ namespace TrekStories.Controllers
             ViewBag.Steps = await db.Steps.Where(s => s.TripId == step.TripId).OrderBy(s =>s.SequenceNo).Select(s => s.StepId).ToArrayAsync();
 
             //create activity thread
-            ViewBag.ActivityThread = CreateActivityThread(step);
+            ViewBag.ActivityThread = await CreateActivityThread(step);
             ViewBag.HideReview = step.Date > DateTime.Today ? "hidden" : "";
             ViewBag.HideActions = step.Trip.TripOwner != User.Identity.GetUserId() ? "hidden" : "";
             ViewBag.PhotoCount = GetReviewPicturesCount(step);
@@ -281,7 +281,15 @@ namespace TrekStories.Controllers
                 {
                     if (step.SequenceNo > stepToDelete.SequenceNo)
                     {
-                        step.SequenceNo--;
+                        if (step.Accommodation != null)
+                        {
+                            TempData["message"] = "One of the following steps has an accommodation which first need to be deleted or moved to a previous step.";
+                            return RedirectToAction("Details", "Step", new { id = stepToDelete.StepId });
+                        }
+                        else
+                        {
+                            step.SequenceNo--;
+                        }   
                     }
                 }
 
@@ -291,7 +299,6 @@ namespace TrekStories.Controllers
                 }
 
                 db.Reviews.Remove(stepToDelete.Review);
-
                 db.Steps.Remove(stepToDelete);
                 await db.SaveChangesAsync();
             }
@@ -348,20 +355,20 @@ namespace TrekStories.Controllers
 
 
         [NonAction]
-        public List<ActivityThreadViewModel> CreateActivityThread(Step step)
+        public async Task<List<ActivityThreadViewModel>> CreateActivityThread(Step step)
         {
             List<ActivityThreadViewModel> activityThread = new List<ActivityThreadViewModel>();
 
-            AddLeisureToActivityThread(ref activityThread, step.StepId);
-            AddTransportToActivityThread(ref activityThread, step);
-            AddAccommodationToActivityThread(ref activityThread, step);
+            await AddLeisureToActivityThread(activityThread, step.StepId);
+            await AddTransportToActivityThread(activityThread, step);
+            AddAccommodationToActivityThread(activityThread, step);
 
             return activityThread.OrderBy(a => a.StartTime.TimeOfDay).ToList();
         }
 
-        private void AddLeisureToActivityThread(ref List<ActivityThreadViewModel> activityThread, int stepId)
+        private async Task AddLeisureToActivityThread(List<ActivityThreadViewModel> activityThread, int stepId)
         {
-            foreach (LeisureActivity activity in db.Activities.OfType<LeisureActivity>().Where(a => a.StepId == stepId).ToList())
+            foreach (LeisureActivity activity in await db.Activities.OfType<LeisureActivity>().Where(a => a.StepId == stepId).ToListAsync())
             {
                 activityThread.Add(new ActivityThreadViewModel
                 {
@@ -375,11 +382,11 @@ namespace TrekStories.Controllers
             }
         }
 
-        private void AddTransportToActivityThread(ref List<ActivityThreadViewModel> activityThread, Step step)
+        private async Task AddTransportToActivityThread(List<ActivityThreadViewModel> activityThread, Step step)
         {
             var transportActivities = db.Activities.OfType<Transport>();
 
-            var stepActivities = transportActivities.Where(a => a.StepId == step.StepId).ToList();
+            var stepActivities = await transportActivities.Where(a => a.StepId == step.StepId).ToListAsync();
             AddStepTransport(ref activityThread, stepActivities, false);
             
             var transportsArrivingOnDay = (from s in step.Trip.Steps
@@ -418,19 +425,19 @@ namespace TrekStories.Controllers
             }
         }
 
-        private void AddAccommodationToActivityThread(ref List<ActivityThreadViewModel> activityThread, Step step)
+        private void AddAccommodationToActivityThread(List<ActivityThreadViewModel> activityThread, Step step)
         {
             //Add check-in if happening on step date
             if (step.Accommodation != null)
             {
-                AddChekInToActivityThread(ref activityThread, step.Accommodation, step.Date);
+                AddChekInToActivityThread(activityThread, step.Accommodation, step.Date);
             }
 
             //Add check-out if happening on step date
-            AddChekOutToActivityThread(ref activityThread, step);
+            AddChekOutToActivityThread(activityThread, step);
         }
 
-        private void AddChekInToActivityThread(ref List<ActivityThreadViewModel> activityThread, Accommodation accommodation, DateTime date)
+        private void AddChekInToActivityThread(List<ActivityThreadViewModel> activityThread, Accommodation accommodation, DateTime date)
         {
             //needs to search in accommodations for matching check-in
             if (accommodation.CheckIn.Date == date.Date)
@@ -447,7 +454,7 @@ namespace TrekStories.Controllers
             }
         }
 
-        private void AddChekOutToActivityThread(ref List<ActivityThreadViewModel> activityThread, Step step)
+        private void AddChekOutToActivityThread(List<ActivityThreadViewModel> activityThread, Step step)
         {
             var tripAccommodation = (from s in step.Trip.Steps
                                      join a in db.Accommodations

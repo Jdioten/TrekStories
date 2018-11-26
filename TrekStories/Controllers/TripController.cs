@@ -19,7 +19,7 @@ namespace TrekStories.Controllers
     public class TripController : Controller
     {
         private const string NULL_TRIP_ERROR = "Oops, the trip you are looking for doesn't exist. Please try navigating to the main page again.";
-        private const string NON_OWNER_TRIP_ERROR = "Oops, this trip doesn't seem to be yours, you cannot edit it.";
+        private const string NON_OWNER_TRIP_ERROR = "Oops, this trip doesn't seem to be yours, you cannot perform this action.";
 
         private ITrekStoriesContext db = new TrekStoriesContext();
 
@@ -221,10 +221,17 @@ namespace TrekStories.Controllers
         private async Task MatchAccommodationToNewStepDates(Trip tripToUpdate)
         {
             //get all acc on the trip
-            var tripAccommodations = from s in tripToUpdate.Steps
+            var tripAccommodations = (from s in tripToUpdate.Steps
                                      join a in db.Accommodations
                                      on s.AccommodationId equals a.AccommodationId
-                                     select a;
+                                     select a).Distinct().ToList();
+
+            //for each accommodation, call 'assign to step' method
+            foreach (Accommodation acc in tripAccommodations)
+            {
+                 //remove accommodation from previously assigned steps now out of range
+                 await RemoveAccommodationOutOfRange(acc);
+            }
 
             //for each accommodation, call 'assign to step' method
             foreach (Accommodation acc in tripAccommodations)
@@ -232,9 +239,6 @@ namespace TrekStories.Controllers
                 try
                 {
                     AccommodationController.AssignAccommodationToStep(acc, tripToUpdate, false);
-
-                    //remove accommodation from previously assigned steps now out of range
-                    await RemoveAccommodationOutOfRange(acc);
                 }
                 catch (ArgumentException)
                 {
@@ -288,13 +292,13 @@ namespace TrekStories.Controllers
             return new RotativaHQ.MVC5.ViewAsPdf("Summary", tripSteps) { FileName = "TripSummary.pdf" };
         }
 
-        private List<ActivityThreadViewModel>[] CreateArrayOfActivityThreads(Step[] tripSteps)
+        private async Task<List<ActivityThreadViewModel>[]> CreateArrayOfActivityThreads(Step[] tripSteps)
         {
             List<ActivityThreadViewModel>[] activities = new List<ActivityThreadViewModel>[tripSteps.Length];
             var stepcontroller = new StepController();
             for (int i = 0; i < tripSteps.Length; i++)
             {
-                activities[i] = stepcontroller.CreateActivityThread(tripSteps[i]);
+                activities[i] = await stepcontroller.CreateActivityThread(tripSteps[i]);
             }
             return activities;
         }
