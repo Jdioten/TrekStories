@@ -145,6 +145,7 @@ namespace TrekStories.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Details", "Step", new { id = leisureActivity.StepId });
             }
+            ViewBag.StepId = leisureActivity.StepId;
             return View(leisureActivity);
         }
 
@@ -213,6 +214,7 @@ namespace TrekStories.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Details", "Step", new { id = transport.StepId });
             }
+            ViewBag.StepId = transport.StepId;
             return View(transport);
         }
 

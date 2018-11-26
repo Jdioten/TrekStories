@@ -6,6 +6,9 @@ using TrekStories.Tests;
 using TrekStories.Tests.UnitTestHelpers;
 using Moq;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Linq;
 
 namespace TrekStories.Controllers.Tests
 {
@@ -247,34 +250,6 @@ namespace TrekStories.Controllers.Tests
             var result = await controller.UploadImageAsync(new TestPostedFileBase("test.js"), 1) as ViewResult;
             Assert.AreEqual("The file type is not authorized for upload.", controller.TempData["message"]);
         }
-
-        //[TestMethod()]
-        //public async Task CanUploadImage()
-        //{
-        //    TestTrekStoriesContext tc = new TestTrekStoriesContext();
-        //    var review = new Review
-        //    {
-        //        ReviewId = 1,
-        //        PrivateNotes = "Test Private",
-        //        StepId = 1,
-        //        Rating = 3
-        //    };
-        //    tc.Reviews.Add(review);
-        //    Image image1 = new Image { Id = 25, ReviewId = 1, Url = "url1" };
-        //    tc.Images.Add(image1);
-        //    //Step step = new Step { StepId = 1, Trip = new Trip { TripId = 10, TripOwner = "ABC123" } };
-        //    //tc.Steps.Add(step);
-
-        //    ReviewController controller = new ReviewController(tc);
-        //    TestPostedFileBase testFile = new TestPostedFileBase("test.txt", 800, new MemoryStream(Encoding.UTF8.GetBytes("whatever")));
-
-        //    var result = await controller.UploadImage(testFile, 1) as RedirectToRouteResult;
-        //    var imagesCount = tc.Images.Where(i => i.ReviewId == 1).Count();
-
-        //    Assert.AreEqual("Edit", result.RouteValues["action"]);
-        //    Assert.AreEqual("test", controller.TempData["message"]);
-        //    Assert.AreEqual(2, imagesCount);
-        //}
 
         [TestMethod()]
         public async Task CanDeleteImage()

@@ -62,10 +62,10 @@ namespace TrekStories.Controllers
             ViewBag.TripTitle = trip.Title;
 
             //return accommodations just for trip...
-            var tripAccommodations = from s in trip.Steps
+            var tripAccommodations = (from s in trip.Steps
                                      join a in db.Accommodations
                                      on s.AccommodationId equals a.AccommodationId
-                                     select a;
+                                     select a).Distinct();
 
             switch (sortOrder)
             {
