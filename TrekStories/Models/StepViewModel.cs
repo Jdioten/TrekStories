@@ -23,9 +23,9 @@ namespace TrekStories.Models
         [Required, StringLength(20, ErrorMessage = "Enter an arrival point of maximum 20 characters.")]
         public string To { get; set; }
 
-        [Range(0, 24, ErrorMessage = "Please enter a positive value (24 hours maximum).")]
+        [Range(0, 24, ErrorMessage = "Please enter a value between 0 and 24 hours.")]
         public int WalkingTimeHours { get; set; }
-        [Range(0, 59, ErrorMessage = "Please enter a maximum of 59 minutes, otherwise it's 1 hour.")]
+        [Range(0, 59, ErrorMessage = "Please enter a maximum of 59 minutes.")]
         public int WalkingTimeMinutes { get; set; }
 
 
